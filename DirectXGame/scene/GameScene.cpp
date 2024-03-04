@@ -14,29 +14,43 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	
-
+  #pragma region プレイヤー初期化
+	// 自キャラモデル
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
+	modelPlayerFront_.reset(Model::CreateFromOBJ("player_Front", true));
+	modelPlayerL_.reset(Model::CreateFromOBJ("player_Left", true));
+	modelPlayerR_.reset(Model::CreateFromOBJ("player_Right", true));
+	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
+	//自キャラモデル配列
+	std::vector<Model*> playerModels = {
+	    modelPlayerBody_.get(),
+		modelPlayerFront_.get(), 
+		modelPlayerL_.get(),
+	    modelPlayerR_.get(),    
+		modelPlayerBack_.get(),
+	};
+	//プレイヤー初期化
+	player_ = std::make_unique<Player>();
+	player_->Initialize(playerModels);
+
+  #pragma endregion 
+
 	/*modelSkydome_ = Model::CreateFromOBJ("sky", true);
 	modelGround_ = Model::CreateFromOBJ("ground", true);*/
 	worldTransform_.Initialize();
-
 	viewProjection_.Initialize();
 
-	player_ = std::make_unique<Player>();
-	//Vector3 playerPosition(0, 1, 0);
-	// 自キャラの初期化
-	player_->Initialize(modelPlayerBody_.get());
 
 	/*skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_);
 
 	ground_ = std::make_unique<Ground>();
-	ground_->Initialize(modelGround_, {1.0f, -2.0f, 0.0f});
+	ground_->Initialize(modelGround_, {1.0f, -2.0f, 0.0f});*/
 
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize({0.0f, 0.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
 
-	player_->SetParent(&railCamera_->GetWorldTransform());*/
+	player_->SetViewProjection(&railCamera_->GetViewProjection());
 
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 	// 軸方向表示の表示を有効にする
@@ -69,10 +83,10 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 	} else {
-		/*railCamera_->Update();
+		railCamera_->Update();
 		viewProjection_.matView = railCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();*/
+		viewProjection_.TransferMatrix();
 	}
 }
 

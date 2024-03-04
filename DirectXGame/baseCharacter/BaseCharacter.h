@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include <Model.h>
 #include <vector>
 #include "WorldTransform.h"
 
 class BaseCharacter {
 protected:
-	// ƒ‚ƒfƒ‹ƒf[ƒ^”z—ñ
+	// ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿é…åˆ—
 	std::vector<Model*> models_;
-	// ƒ[ƒ‹ƒh•ÏŠ·ƒf[ƒ^
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ãƒ‡ãƒ¼ã‚¿
 	WorldTransform worldTransform_;
 
 public:

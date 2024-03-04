@@ -8,11 +8,11 @@
 #include <cassert>
 #include <list>
 #include <stdio.h>
-//#include "baseCharacter/BaseCharacter.h"
+#include "baseCharacter/BaseCharacter.h"
 #include "VectraCalculation.h"
 #include "ViewProjection.h"
-class Player
-{
+
+class Player : public BaseCharacter {
 
 private:
 	WorldTransform worldTransform_;
@@ -30,15 +30,15 @@ private:
 	Vector3 backPosition = {0.0f, 0.0f, -0.65f};
 
 public:
-	void Initialize(Model *model);
-	void Update() ;
+	void Initialize(const std::vector<Model*>& models);
+	void Update();
 	void Draw(ViewProjection& view);
 
 	Vector3 GetWorldPosition();
 
-	/*void SetViewProjection(const ViewProjection* viewProjection) {
+	void SetViewProjection(const ViewProjection* viewProjection) {
 		viewProjection_ = viewProjection;
-	}*/
+	}
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
@@ -46,7 +46,7 @@ public:
 
 private:
 	Input* input_ = nullptr;
-	Model* model_ = nullptr;
-	//const ViewProjection* viewProjection_ = nullptr;
+
+	const ViewProjection* viewProjection_ = nullptr;
 };
 
