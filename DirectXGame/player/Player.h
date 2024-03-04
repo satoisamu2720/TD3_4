@@ -1,26 +1,27 @@
-﻿#pragma once
+#pragma once
 #define _USE_MATH_DEFINES
 #include "ImGuiManager.h"
+#include "Model.h"
 #include "Input.h"
 #include "math.h"
-#include "Model.h"
 #include "WorldTransform.h"
-#include "baseCharacter/BaseCharacter.h"
-#include "math/VectraCalculation.h"
+#include <cassert>
 #include <list>
 #include <stdio.h>
-#include <cassert>
-class Player : public BaseCharacter {
+//#include "baseCharacter/BaseCharacter.h"
+#include "VectraCalculation.h"
+#include "ViewProjection.h"
+class Player
+{
 
 private:
-
+	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformFront_;
 	WorldTransform worldTransformL_;
 	WorldTransform worldTransformR_;
 	WorldTransform worldTransformBack_;
 
-	Vector3 velocity_ = {0, 0, 10};
 	Vector3 position = {0, 1, 0};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 frontPosition = {0, 0, 1};
@@ -29,9 +30,9 @@ private:
 	Vector3 backPosition = {0.0f, 0.0f, -0.65f};
 
 public:
-	void Initialize(const std::vector<Model*>& models);
-	void Update();
-	void Draw(ViewProjection view);
+	void Initialize(Model *model);
+	void Update() ;
+	void Draw(ViewProjection& view);
 
 	Vector3 GetWorldPosition();
 
@@ -44,7 +45,8 @@ public:
 	~Player();
 
 private:
-	WorldTransform worldTransform_;
 	Input* input_ = nullptr;
-	const ViewProjection* viewProjection_ = nullptr;
+	Model* model_ = nullptr;
+	//const ViewProjection* viewProjection_ = nullptr;
 };
+

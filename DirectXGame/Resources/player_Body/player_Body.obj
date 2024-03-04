@@ -1,6 +1,6 @@
 # Blender 3.5.0
 # www.blender.org
-mtllib player_Actual_machine.mtl
+mtllib player_Body.mtl
 o player_Actual_machine
 v -0.066275 -0.041765 -0.500000
 v -0.066509 0.033023 -0.500000
