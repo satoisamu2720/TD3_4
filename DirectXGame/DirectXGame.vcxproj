@@ -110,6 +110,7 @@
     <ClCompile Include="baseCharacter\BaseCharacter.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player\Player.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="base\StringUtility.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
+    <ClInclude Include="Box.h" />
     <ClInclude Include="camera\railCamera\RailCamera.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Matrix4x4.h" />

@@ -38,13 +38,21 @@ private:
 	std::unique_ptr<Model> modelPlayerR_;
 	std::unique_ptr<Model> modelPlayerBack_;
 
+	Model* BoxModel_=nullptr;
+
+
+
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	WorldTransform boxTransform_;
 
 	uint32_t soundDataHandle_ = 0;
 	uint32_t voiceHandle_ = 0;
 
+	uint32_t texHandle_ = 0;
 	float inputFloat3[3] = {0, 0, 0};
+
+	Vector3 color = {1.0f, 1.0f, 1.0f};
 
 	std::unique_ptr<DebugCamera> debugCamera_;
 	//std::unique_ptr<Skydome> skydome_;

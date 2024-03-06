@@ -14,6 +14,8 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	
+	texHandle_ = TextureManager::Load("Tex.png");
+
   #pragma region プレイヤー初期化
 	// 自キャラモデル
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
@@ -21,6 +23,8 @@ void GameScene::Initialize() {
 	modelPlayerL_.reset(Model::CreateFromOBJ("player_Left", true));
 	modelPlayerR_.reset(Model::CreateFromOBJ("player_Right", true));
 	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
+	BoxModel_->CreateFromOBJ("Box", true);
+
 	//自キャラモデル配列
 	std::vector<Model*> playerModels = {
 	    modelPlayerBody_.get(),
@@ -39,7 +43,7 @@ void GameScene::Initialize() {
 	modelGround_ = Model::CreateFromOBJ("ground", true);*/
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
-
+	boxTransform_.Initialize();
 
 	/*skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_);
@@ -63,6 +67,7 @@ void GameScene::Update() {
 	player_->Update();
 	/*skydome_->Update();
 	ground_->Update();*/
+
 
 	debugCamera_->Update();
 	// デバックカメラのifdef
@@ -88,6 +93,15 @@ void GameScene::Update() {
 		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	}
+
+	boxTransform_.UpdateMatrix();
+
+	//当たり判定
+
+
+
+
+
 }
 
 void GameScene::Draw() {
@@ -116,6 +130,7 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
+
 	/*skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);*/
 	Model::PostDraw();
