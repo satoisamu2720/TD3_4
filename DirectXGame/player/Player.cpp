@@ -47,8 +47,10 @@ void Player::Update() {
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_A)) {
 		move_.x -= kCharacterSpeed;
+		worldTransform_.rotation_.y -= 0.01f;
 	} else if (input_->PushKey(DIK_D)) {
 		move_.x += kCharacterSpeed;
+		worldTransform_.rotation_.y += 0.01f;
 	}
 
 	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
@@ -72,10 +74,10 @@ void Player::Update() {
 void Player::Draw(ViewProjection &view) {
 	
 	models_[0]->Draw(worldTransformBody_, view);
-	models_[1]->Draw(worldTransformFront_, view);
+	/*models_[1]->Draw(worldTransformFront_, view);
 	models_[2]->Draw(worldTransformL_, view);
 	models_[3]->Draw(worldTransformR_, view);
-	models_[4]->Draw(worldTransformBack_, view);
+	models_[4]->Draw(worldTransformBack_, view);*/
 }
 
 Vector3 Player::GetWorldPosition() {

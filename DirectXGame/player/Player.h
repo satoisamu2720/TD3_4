@@ -22,7 +22,7 @@ private:
 	WorldTransform worldTransformR_;
 	WorldTransform worldTransformBack_;
 
-	Vector3 position = {0, 1.0f, 15.0f};
+	Vector3 position = {0, -8.0f, 75.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 frontPosition = {0, 0, 1};
 	Vector3 lPosition = {0.5f, 0, 0};

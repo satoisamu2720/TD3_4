@@ -54,7 +54,7 @@ void GameScene::Initialize() {
   #pragma region カメラ
 	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 5.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
+	railCamera_->Initialize({0.0f, 20.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
 	railCamera_->SetTarget(&player_->GetWorldTransform());
 	//追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());

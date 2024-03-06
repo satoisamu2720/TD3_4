@@ -1,7 +1,7 @@
-# Blender 3.5.0 MTL File: 'TD4_04_player.blend'
+# Blender 3.5.0 MTL File: 'car.blend'
 # www.blender.org
 
-newmtl Actual_machine
+newmtl back_taiya
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -9,4 +9,24 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd player_Body.png
+map_Kd tex.png
+
+newmtl car
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd tex.png
+
+newmtl front_taiya
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd tex.png
