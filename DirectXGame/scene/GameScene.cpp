@@ -98,31 +98,24 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 	}
 
-	
+	// 当たり判定
 
-	//当たり判定
+	PlayerBackZ_ = player_->GetWorldPosition().z - 0.5f;
+	PlayerFlontZ_ = player_->GetWorldPosition().z + 0.5f;
+	PlayerLeftX_ = player_->GetWorldPosition().x - 0.5f;
+	PlayerRightX_ = player_->GetWorldPosition().x + 0.5f;
 
-	for (Player* player : players_) {
+	BoxBackZ_ = boxTransform_.translation_.z - 0.5f;
+	BoxFlontZ_ = boxTransform_.translation_.z + 0.5f;
+	BoxRightX_ = boxTransform_.translation_.x + 0.5f;
+	BoxLeftX_ = boxTransform_.translation_.x - 0.5f;
 
-		PlayerBackZ_ = player->GetWorldTransformBack().z - 2.0f;
-		PlayerFlontZ_ = player->GetWorldTransformfront().z + 2.0f;
-		PlayerLeftX_ = player->GetWorldTransformL().x + 4.5f;
-		PlayerRightX_ = player->GetWorldTransformR().x - 4.5f;
-
-		BoxBackZ_ = boxTransform_.translation_.z - 0.5f;
-		BoxFlontZ_ = boxTransform_.translation_.z + 0.5f;
-		BoxRightX_ = boxTransform_.translation_.x + 0.5f;
-		BoxLeftX_ = boxTransform_.translation_.x - 0.5f;
-
-		if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
-		    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) 
-		{
-			Vector3 tmpTranslate = player->GetWorldPosition();
-			tmpTranslate.z += 10.0f;
-			player_->SetTranslate(tmpTranslate);
-		}
+	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
+	    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
+		Vector3 tmpTranslate = player_->GetWorldPosition();
+		tmpTranslate.z += 10.0f;
+		player_->SetTranslate(tmpTranslate);
 	}
-
 }
 
 void GameScene::Draw() {
