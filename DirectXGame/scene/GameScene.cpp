@@ -35,34 +35,49 @@ void GameScene::Initialize() {
 
   #pragma endregion 
 
-	/*modelSkydome_ = Model::CreateFromOBJ("sky", true);
-	modelGround_ = Model::CreateFromOBJ("ground", true);*/
-	worldTransform_.Initialize();
-	viewProjection_.Initialize();
-
-
-	/*skydome_ = std::make_unique<Skydome>();
+  #pragma region ステージ初期化
+	//ステージ外モデル
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	//外モデル初期化
+	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_);
 
-	ground_ = std::make_unique<Ground>();
+  #pragma endregion 
+
+
+
+	//modelGround_ = Model::CreateFromOBJ("ground", true);
+
+	/*ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {1.0f, -2.0f, 0.0f});*/
 
+   #pragma region カメラ初期化
+	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 0.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
-
+	railCamera_->Initialize({0.0f, 0.0f, -15.0f}, {0.0f, 0.0f, 0.0f});
+	railCamera_->SetTarget(&player_->GetWorldTransform());
+	//追従対象をプレイヤーに
+	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->SetViewProjection(&railCamera_->GetViewProjection());
+	//railCamera_->SetParent(&player_->GetWorldTransform());
 
+	//デバックカメラ初期化
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 	// 軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+
+   #pragma endregion
+
+	worldTransform_.Initialize();
+	viewProjection_.Initialize();
 }
 
 void GameScene::Update() {
 	player_->Update();
-	/*skydome_->Update();
-	ground_->Update();*/
+	skydome_->Update();
+	//ground_->Update();
 
 	debugCamera_->Update();
 	// デバックカメラのifdef
@@ -116,8 +131,8 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
-	/*skydome_->Draw(viewProjection_);
-	ground_->Draw(viewProjection_);*/
+	skydome_->Draw(viewProjection_);
+	//ground_->Draw(viewProjection_);
 	Model::PostDraw();
 
 	// 前景スプライト描画前処理

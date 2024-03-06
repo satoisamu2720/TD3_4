@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #define _USE_MATH_DEFINES
 #include "ImGuiManager.h"
 #include "Model.h"
@@ -22,7 +22,7 @@ private:
 	WorldTransform worldTransformR_;
 	WorldTransform worldTransformBack_;
 
-	Vector3 position = {0, 1, 0};
+	Vector3 position = {0, -2.0f, 15.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 frontPosition = {0, 0, 1};
 	Vector3 lPosition = {0.5f, 0, 0};
@@ -45,6 +45,11 @@ public:
 	~Player();
 
 private:
+	Vector3 move_ = {0, 0, 0};
+
+	// キャラクターの移動速度
+	const float kCharacterSpeed = 0.5f;
+
 	Input* input_ = nullptr;
 
 	const ViewProjection* viewProjection_ = nullptr;

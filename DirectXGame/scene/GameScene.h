@@ -8,7 +8,7 @@
 #include "Model.h"
 #include "player/Player.h"
 #include "camera/railCamera/RailCamera.h"
-//#include "Skydome.h"
+#include "stage/skydome/Skydome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -47,8 +47,8 @@ private:
 	float inputFloat3[3] = {0, 0, 0};
 
 	std::unique_ptr<DebugCamera> debugCamera_;
-	//std::unique_ptr<Skydome> skydome_;
-	//Model* modelSkydome_ = nullptr;
+	std::unique_ptr<Skydome> skydome_;
+	Model* modelSkydome_ = nullptr;
 	//std::unique_ptr<Ground> ground_;
 	//Model* modelGround_ = nullptr;
 	std::unique_ptr<RailCamera> railCamera_;

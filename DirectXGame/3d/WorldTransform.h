@@ -24,8 +24,13 @@ public:
 	Vector3 translation_ = {0, 0, 0};
 	// ローカル → ワールド変換行列
 	Matrix4x4 matWorld_;
+	// カメラローカル → カメラワールド変換行列
+	Matrix4x4 cameraMatWorld_;
+
 	// 親となるワールド変換へのポインタ
 	const WorldTransform* parent_ = nullptr;
+	// 親となるワールド変換へのポインタ
+	const WorldTransform* cameraParent_ = nullptr;
 
 	WorldTransform() = default;
 	~WorldTransform() = default;
