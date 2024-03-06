@@ -25,6 +25,7 @@ public:
 	void Initialize();
 	void Update();
 	void Draw();
+
 private: 
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -38,9 +39,10 @@ private:
 	std::unique_ptr<Model> modelPlayerR_;
 	std::unique_ptr<Model> modelPlayerBack_;
 
-	Model* BoxModel_=nullptr;
+	
+	std::unique_ptr<Model> BoxModel_;
 
-
+	std::list<Player*> players_;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
@@ -63,5 +65,18 @@ private:
 
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
-	
+
+	float PlayerFlontZ_;
+	float PlayerBackZ_;
+	float PlayerRightX_;
+	float PlayerLeftX_;
+
+	float BoxFlontZ_;
+	float BoxBackZ_;
+	float BoxRightX_;
+	float BoxLeftX_;
+
+
+
+
 };

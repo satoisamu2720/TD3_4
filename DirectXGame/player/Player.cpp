@@ -52,6 +52,15 @@ void Player::Update() {
 		move_.x += kCharacterSpeed;
 	}
 
+	if (input_->PushKey(DIK_UP))
+	{
+		move_.y += kCharacterSpeed;
+	}
+	else if (input_->PushKey(DIK_DOWN))
+	{
+		move_.y -= kCharacterSpeed;
+	}
+
 	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
 	// Y軸周り角度
 	worldTransform_.rotation_.y = std::atan2(move_.x, move_.z);
@@ -74,6 +83,8 @@ void Player::Draw(ViewProjection &view) {
 	models_[3]->Draw(worldTransformR_, view);
 	models_[4]->Draw(worldTransformBack_, view);
 }
+
+void Player::SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; };
 
 Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos;

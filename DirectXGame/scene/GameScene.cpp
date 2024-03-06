@@ -6,7 +6,9 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+
+}
 
 void GameScene::Initialize() {
 
@@ -14,7 +16,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	
-	texHandle_ = TextureManager::Load("Tex.png");
+	texHandle_ = TextureManager::Load("Box/Tex.png");
 
   #pragma region プレイヤー初期化
 	// 自キャラモデル
@@ -23,7 +25,7 @@ void GameScene::Initialize() {
 	modelPlayerL_.reset(Model::CreateFromOBJ("player_Left", true));
 	modelPlayerR_.reset(Model::CreateFromOBJ("player_Right", true));
 	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
-	BoxModel_->CreateFromOBJ("Box", true);
+	BoxModel_.reset(Model::CreateFromOBJ("Box", true));
 
 	//自キャラモデル配列
 	std::vector<Model*> playerModels = {
@@ -36,7 +38,6 @@ void GameScene::Initialize() {
 	//プレイヤー初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
-
   #pragma endregion 
 
 	/*modelSkydome_ = Model::CreateFromOBJ("sky", true);
@@ -61,6 +62,8 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+
+	boxTransform_.translation_ = {10.0f, +2.0f, 0.0f};
 }
 
 void GameScene::Update() {
@@ -68,9 +71,10 @@ void GameScene::Update() {
 	/*skydome_->Update();
 	ground_->Update();*/
 
-
 	debugCamera_->Update();
 	// デバックカメラのifdef
+
+	boxTransform_.UpdateMatrix();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == false) {
@@ -94,13 +98,30 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 	}
 
-	boxTransform_.UpdateMatrix();
+	
 
 	//当たり判定
 
+	for (Player* player : players_) {
 
+		PlayerBackZ_ = player->GetWorldTransformBack().z - 2.0f;
+		PlayerFlontZ_ = player->GetWorldTransformfront().z + 2.0f;
+		PlayerLeftX_ = player->GetWorldTransformL().x + 4.5f;
+		PlayerRightX_ = player->GetWorldTransformR().x - 4.5f;
 
+		BoxBackZ_ = boxTransform_.translation_.z - 0.5f;
+		BoxFlontZ_ = boxTransform_.translation_.z + 0.5f;
+		BoxRightX_ = boxTransform_.translation_.x + 0.5f;
+		BoxLeftX_ = boxTransform_.translation_.x - 0.5f;
 
+		if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
+		    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) 
+		{
+			Vector3 tmpTranslate = player->GetWorldPosition();
+			tmpTranslate.z += 10.0f;
+			player_->SetTranslate(tmpTranslate);
+		}
+	}
 
 }
 
@@ -130,7 +151,7 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
-
+	BoxModel_->Draw(boxTransform_, viewProjection_);
 	/*skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);*/
 	Model::PostDraw();
@@ -146,3 +167,4 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 }
+
