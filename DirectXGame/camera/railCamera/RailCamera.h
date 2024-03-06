@@ -20,8 +20,6 @@ public:
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
-	// カメラの角度取得
-	Vector3 GetViewRotate() { return viewProjection_.rotation_; }
 
 private:
 

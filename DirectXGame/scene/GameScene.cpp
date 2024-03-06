@@ -14,8 +14,8 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	
-  #pragma region プレイヤー初期化
-	// 自キャラモデル
+  #pragma region プレイヤー
+	// 自キャラモデル読み込み
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
 	modelPlayerFront_.reset(Model::CreateFromOBJ("player_Front", true));
 	modelPlayerL_.reset(Model::CreateFromOBJ("player_Left", true));
@@ -35,23 +35,23 @@ void GameScene::Initialize() {
 
   #pragma endregion 
 
-  #pragma region ステージ初期化
-	//ステージ外モデル
+  #pragma region ステージ
+	//ステージ外モデル読み込み
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	//外モデル初期化
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_);
 
-  #pragma endregion 
-
-
-
+	//ステージ地面モデル読み込み
 	//modelGround_ = Model::CreateFromOBJ("ground", true);
-
+	//地面モデル初期化
 	/*ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {1.0f, -2.0f, 0.0f});*/
 
-   #pragma region カメラ初期化
+
+  #pragma endregion 
+
+  #pragma region カメラ
 	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize({0.0f, 0.0f, -15.0f}, {0.0f, 0.0f, 0.0f});
@@ -59,8 +59,7 @@ void GameScene::Initialize() {
 	//追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->SetViewProjection(&railCamera_->GetViewProjection());
-	//railCamera_->SetParent(&player_->GetWorldTransform());
-
+	
 	//デバックカメラ初期化
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 	// 軸方向表示の表示を有効にする

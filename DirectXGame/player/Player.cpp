@@ -38,22 +38,20 @@ void Player::Update() {
 	move_ = {0, 0, 0};
 
 	
-	//// const float kRotSpeed = 0.05f;
-	//if (input_->PushKey(DIK_W)) {
-	//	move_.z += kCharacterSpeed;
-	//} else if (input_->PushKey(DIK_S)) {
-	//	move_.z -= kCharacterSpeed;
-	//}
-	//// 押した方向で移動ベクトルを変更（左右）
-	//if (input_->PushKey(DIK_A)) {
-	//	move_.x -= kCharacterSpeed;
-	//} else if (input_->PushKey(DIK_D)) {
-	//	move_.x += kCharacterSpeed;
-	//}
+	// const float kRotSpeed = 0.05f;
+	if (input_->PushKey(DIK_W)) {
+		move_.z += kCharacterSpeed;
+	} else if (input_->PushKey(DIK_S)) {
+		move_.z -= kCharacterSpeed;
+	}
+	// 押した方向で移動ベクトルを変更（左右）
+	if (input_->PushKey(DIK_A)) {
+		move_.x -= kCharacterSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		move_.x += kCharacterSpeed;
+	}
 
-	//move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
-	// Y軸周り角度
-	worldTransform_.rotation_.y = std::atan2(move_.x, move_.z);
+	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move_); 
 
@@ -67,6 +65,7 @@ void Player::Update() {
 	ImGui::Begin("Player");
 	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
 	ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
+	//ImGui::DragFloat3("Player Rotation", &viewProjection_->rotation_.y, 0.01f);
 	ImGui::End();
 }
 
