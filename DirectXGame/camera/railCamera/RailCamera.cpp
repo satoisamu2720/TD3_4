@@ -17,16 +17,16 @@ void RailCamera::Update() {
 	
 	Vector3 move_ = {0, 0, 0};
 
-	move_.z += 1.0f;
+	//move_.z += 1.0f;
 
 	if (input_->PushKey(DIK_R)) {
 		move_ = {0.0f, 0.0f, -15.0f};
 	}
 
 	if (input_->PushKey(DIK_UP)) {
-		worldTransform_.rotation_.x += cameraSpeed;
+		move_.z += kCharacterSpeed;
 	} else if (input_->PushKey(DIK_DOWN)) {
-		worldTransform_.rotation_.x -= cameraSpeed;
+		move_.z -= kCharacterSpeed;
 	}
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_LEFT)) {
@@ -42,15 +42,7 @@ void RailCamera::Update() {
 	// ベクターの加算
 	viewProjection_.translation_ = Add(worldTransform_.translation_, worldTransform_.rotation_); 
 
-	//viewProjection_.rotation_ = Add(worldTransform_.translation_, worldTransform_.rotation_); 
-
-	Matrix4x4 rotationXMatrix = MakeRotateXMatrix(worldTransform_.rotation_.x);
-	Matrix4x4 rotationYMatrix = MakeRotateYMatrix(worldTransform_.rotation_.y);
-	Matrix4x4 rotationZMatrix = MakeRotateZMatrix(worldTransform_.rotation_.z);
-	    Matrix4x4 rotationXYZMatrix =
-	        Multiply(rotationXMatrix, Multiply(rotationYMatrix, rotationZMatrix));
-
-	 move_ = TransformNormal(move_, rotationXYZMatrix);
+	 move_ = TransformNormal(move_, MakeRotateYMatrix(worldTransform_.rotation_.y));
 	 // ベクターの加算
 	 worldTransform_.translation_ = Add(worldTransform_.translation_, move_); 
 

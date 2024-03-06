@@ -58,6 +58,9 @@
     <Filter Include="stage\skydome">
       <UniqueIdentifier>{ff35afc1-da80-42ee-ada4-f51addd13c9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="stage\ground">
+      <UniqueIdentifier>{8c7e7dbd-23be-4a43-b5fc-bb4b2a9d3bec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="stage\skydome\Skydome.cpp">
       <Filter>stage\skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="stage\ground\Ground.cpp">
+      <Filter>stage\ground</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="stage\skydome\Skydome.h">
       <Filter>stage\skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="stage\ground\Ground.h">
+      <Filter>stage\ground</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

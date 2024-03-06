@@ -42,7 +42,7 @@ void Player::Update() {
 	if (input_->PushKey(DIK_W)) {
 		move_.z += kCharacterSpeed;
 	} else if (input_->PushKey(DIK_S)) {
-		move_.z -= kCharacterSpeed;
+		move_.z-= kCharacterSpeed;
 	}
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_A)) {

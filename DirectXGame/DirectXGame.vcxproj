@@ -114,6 +114,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player\Player.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="stage\ground\Ground.cpp" />
     <ClCompile Include="stage\skydome\Skydome.cpp" />
     <ClCompile Include="WorldTransform.EX.cpp" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="stage\ground\Ground.h" />
     <ClInclude Include="stage\skydome\Skydome.h" />
   </ItemGroup>
   <ItemGroup>

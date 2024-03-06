@@ -43,10 +43,10 @@ void GameScene::Initialize() {
 	skydome_->Initialize(modelSkydome_);
 
 	//ステージ地面モデル読み込み
-	//modelGround_ = Model::CreateFromOBJ("ground", true);
+	modelGround_ = Model::CreateFromOBJ("ground", true);
 	//地面モデル初期化
-	/*ground_ = std::make_unique<Ground>();
-	ground_->Initialize(modelGround_, {1.0f, -2.0f, 0.0f});*/
+	ground_ = std::make_unique<Ground>();
+	ground_->Initialize(modelGround_, {0.0f, -10.0f, 0.0f});
 
 
   #pragma endregion 
@@ -54,7 +54,7 @@ void GameScene::Initialize() {
   #pragma region カメラ
 	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 0.0f, -15.0f}, {0.0f, 0.0f, 0.0f});
+	railCamera_->Initialize({0.0f, 5.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
 	railCamera_->SetTarget(&player_->GetWorldTransform());
 	//追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -76,7 +76,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	player_->Update();
 	skydome_->Update();
-	//ground_->Update();
+	ground_->Update();
 
 	debugCamera_->Update();
 	// デバックカメラのifdef
@@ -131,7 +131,7 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
-	//ground_->Draw(viewProjection_);
+	ground_->Draw(viewProjection_);
 	Model::PostDraw();
 
 	// 前景スプライト描画前処理
