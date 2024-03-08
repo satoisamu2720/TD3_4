@@ -14,10 +14,7 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation) {
 
 void RailCamera::Update() {
 	
-	
 	Vector3 move_ = {0, 0, 0};
-
-	//move_.z += 1.0f;
 
 	if (input_->PushKey(DIK_R)) {
 		move_ = {0.0f, 0.0f, -15.0f};
@@ -46,9 +43,12 @@ void RailCamera::Update() {
 	 // ベクターの加算
 	 worldTransform_.translation_ = Add(worldTransform_.translation_, move_); 
 
+#ifdef _DEBUG
 	ImGui::Begin("Rail Camera");
 	ImGui::DragFloat3("Camera Position", &worldTransform_.translation_.x, 0.1f);
 	ImGui::DragFloat3("Camera Rotation", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("Camera Rotation viewProjection_", &viewProjection_.rotation_.y, 0.01f);
 	ImGui::End();
+#endif
+
 }

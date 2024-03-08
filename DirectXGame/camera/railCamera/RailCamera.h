@@ -27,7 +27,7 @@ private:
 	Input* input_ = nullptr;
 
 	// キャラクターの移動速度
-	const float kCharacterSpeed = 1.0f;
+	const float kCharacterSpeed = 3.0f;
 	const float cameraSpeed = 0.05f;
 
 	WorldTransform worldTransform_;

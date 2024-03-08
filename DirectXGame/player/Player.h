@@ -30,11 +30,27 @@ private:
 	Vector3 backRightPosition = {0.0f, 0.0f, 0.0f};
 
 public:
+	//プレイヤー初期化
 	void Initialize(const std::vector<Model*>& models);
-	void Update();
-	void Draw(ViewProjection& view);
+
+	//プレイヤーの角度制限
 	void RightMove();
 	void LeftMove();
+
+	//晴時の更新処理
+	void SunnyUpdate();
+	void NormalHitMotion();
+
+	//雷雨時の更新処理
+	void ThunderstormUpdate();
+	// 雷に当たった時の更新処理
+	void ThunderHitMotion();
+
+	//
+	
+
+	//プレイヤー描画
+	void Draw(ViewProjection& view);
 
 	Vector3 GetWorldPosition();
 
@@ -43,6 +59,15 @@ public:
 	}
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+
+	//ノーマル
+	void SetNormalHit(bool normalHit) { normalHit_ = normalHit; } 
+
+	//雷雨
+	void SetRand(float setRand) { setRand_ = setRand; }
+	void SetThunderHit(bool thunderHit) { thunderHit_ = thunderHit; }
+
 
 	~Player();
 
@@ -55,5 +80,18 @@ private:
 	Input* input_ = nullptr;
 
 	const ViewProjection* viewProjection_ = nullptr;
+
+	//ノーマル当たり判定
+	bool normalHit_ = false;
+	float normalHitRootParameter_ = 0.0f;
+	float normalHitTime = 140;
+
+	//雷雨
+	bool thunderHit_ = false;
+	float wind = 0.0f;
+	float windLeft =  0.2f;
+	float windRight = -0.2f;
+	float setRand_ = 1;
+	float thunderHitRootParameter_ = 0.0f;
 };
 

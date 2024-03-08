@@ -61,6 +61,18 @@
     <Filter Include="stage\ground">
       <UniqueIdentifier>{8c7e7dbd-23be-4a43-b5fc-bb4b2a9d3bec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="player">
+      <UniqueIdentifier>{86e6e822-ab7d-4937-9dd1-e36f5634b45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="baseCharacter">
+      <UniqueIdentifier>{2a6d796a-09ee-43fb-8cc0-e638b7d13971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{c180e97f-8d42-4f93-9b2f-3f90d59f10eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera\railCamera">
+      <UniqueIdentifier>{654b2140-09b6-432c-985e-48689e30dc5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,15 +90,6 @@
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
-    <ClCompile Include="baseCharacter\BaseCharacter.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="camera\railCamera\RailCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="player\Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="WorldTransform.EX.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -95,6 +98,15 @@
     </ClCompile>
     <ClCompile Include="stage\ground\Ground.cpp">
       <Filter>stage\ground</Filter>
+    </ClCompile>
+    <ClCompile Include="player\Player.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="baseCharacter\BaseCharacter.cpp">
+      <Filter>baseCharacter</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\railCamera\RailCamera.cpp">
+      <Filter>camera\railCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,23 +197,20 @@
     <ClInclude Include="3d\ObjectColor.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
-    <ClInclude Include="baseCharacter\BaseCharacter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="camera\railCamera\RailCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="player\Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="stage\skydome\Skydome.h">
       <Filter>stage\skydome</Filter>
     </ClInclude>
     <ClInclude Include="stage\ground\Ground.h">
       <Filter>stage\ground</Filter>
+    </ClInclude>
+    <ClInclude Include="player\Player.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="baseCharacter\BaseCharacter.h">
+      <Filter>baseCharacter</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\railCamera\RailCamera.h">
+      <Filter>camera\railCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

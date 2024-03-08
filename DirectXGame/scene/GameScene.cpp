@@ -74,13 +74,20 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	player_->Update();
+
+#pragma region 更新処理
+
+	player_->SunnyUpdate();
+	//player_->ThunderstormUpdate();
 	skydome_->Update();
 	ground_->Update();
-
 	debugCamera_->Update();
-	// デバックカメラのifdef
 
+#pragma endregion 
+
+#pragma region カメラセット
+
+	// デバックカメラのifdef
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == false) {
 		isDebugcameraActive_ = true;
@@ -102,6 +109,8 @@ void GameScene::Update() {
 		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	}
+#pragma endregion
+
 }
 
 void GameScene::Draw() {

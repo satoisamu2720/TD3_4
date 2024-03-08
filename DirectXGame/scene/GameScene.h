@@ -25,11 +25,11 @@ public:
 	void Initialize();
 	void Update();
 	void Draw();
+
 private: 
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-
 
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Model> modelPlayerBody_;
@@ -57,4 +57,6 @@ private:
 	
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
+
+
 };
