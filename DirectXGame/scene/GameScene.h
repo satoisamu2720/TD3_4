@@ -33,10 +33,10 @@ private:
 
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Model> modelPlayerBody_;
-	std::unique_ptr<Model> modelPlayerFront_;
-	std::unique_ptr<Model> modelPlayerL_;
-	std::unique_ptr<Model> modelPlayerR_;
-	std::unique_ptr<Model> modelPlayerBack_;
+	std::unique_ptr<Model> modelPlayerFrontLeft_;
+	std::unique_ptr<Model> modelPlayerFrontRight_;
+	std::unique_ptr<Model> modelPlayerBackLeft_;
+	std::unique_ptr<Model> modelPlayerBackRight_;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;

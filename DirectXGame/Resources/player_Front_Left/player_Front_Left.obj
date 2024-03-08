@@ -1,6 +1,6 @@
 # Blender 3.5.0
 # www.blender.org
-mtllib player_Front.mtl
+mtllib player_Front_Left.mtl
 o player_Front
 v 0.500000 -0.001607 -0.000162
 v 0.500000 -0.001853 0.000457

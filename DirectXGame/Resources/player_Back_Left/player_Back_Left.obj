@@ -1,6 +1,6 @@
 # Blender 3.5.0
 # www.blender.org
-mtllib player_Back.mtl
+mtllib player_Back_Left.mtl
 o player_Back
 v -0.000706 0.159543 -0.052145
 v -0.000576 0.159543 -0.052145

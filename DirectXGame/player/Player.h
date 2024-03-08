@@ -17,17 +17,17 @@ class Player : public BaseCharacter {
 private:
 	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
-	WorldTransform worldTransformFront_;
-	WorldTransform worldTransformL_;
-	WorldTransform worldTransformR_;
-	WorldTransform worldTransformBack_;
+	WorldTransform worldTransformFrontLeft_;
+	WorldTransform worldTransformFrontRight_;
+	WorldTransform worldTransformBackLeft_;
+	WorldTransform worldTransformBackRight_;
 
 	Vector3 position = {0, -8.0f, 75.0f};
 	Vector3 bodyPosition = {0, 0, 0};
-	Vector3 frontPosition = {0, 0, 1};
-	Vector3 lPosition = {0.5f, 0, 0};
-	Vector3 rPosition = {-0.5f, 0, 0};
-	Vector3 backPosition = {0.0f, 0.0f, -0.65f};
+	Vector3 frontLeftPosition = {0, 0, 0};
+	Vector3 frontRightPosition = {0, 0, 0};
+	Vector3 backLeftPosition = {0, 0, 0};
+	Vector3 backRightPosition = {0.0f, 0.0f, 0.0f};
 
 public:
 	void Initialize(const std::vector<Model*>& models);

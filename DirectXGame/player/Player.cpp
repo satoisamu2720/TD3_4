@@ -9,25 +9,25 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	// 初期化
 	worldTransform_.Initialize();
 	worldTransformBody_.Initialize();
-	worldTransformFront_.Initialize();
-	worldTransformL_.Initialize();
-	worldTransformR_.Initialize();
-	worldTransformBack_.Initialize();
+	worldTransformFrontLeft_.Initialize();
+	worldTransformFrontRight_.Initialize();
+	worldTransformBackLeft_.Initialize();
+	worldTransformBackRight_.Initialize();
 
 	// 初期ポジティブ
 	worldTransform_.translation_ = position;
 	worldTransformBody_.translation_ = bodyPosition;
-	worldTransformFront_.translation_ = frontPosition;
-	worldTransformL_.translation_ = lPosition;
-	worldTransformR_.translation_ = rPosition;
-	worldTransformBack_.translation_ = backPosition;
+	worldTransformFrontLeft_.translation_ = frontLeftPosition;
+	worldTransformFrontRight_.translation_ = frontRightPosition;
+	worldTransformBackLeft_.translation_ = backLeftPosition;
+	worldTransformBackRight_.translation_ = backRightPosition;
 
 	// 親子関係
 	worldTransformBody_.parent_ = &worldTransform_;
-	worldTransformFront_.parent_ = &worldTransformBody_;
-	worldTransformL_.parent_ =	&worldTransformBody_;
-	worldTransformR_.parent_ = &worldTransformBody_;
-	worldTransformBack_.parent_ = &worldTransformBody_;
+	worldTransformFrontLeft_.parent_ = &worldTransformBody_;
+	worldTransformFrontRight_.parent_ = &worldTransformBody_;
+	worldTransformBackLeft_.parent_ = &worldTransformBody_;
+	worldTransformBackRight_.parent_ = &worldTransformBody_;
 
 	worldTransform_.scale_ = {10.0f, 10.0f, 10.0f};
 
@@ -44,6 +44,7 @@ void Player::Update() {
 	} else if (input_->PushKey(DIK_S)) {
 		move_.z-= kCharacterSpeed;
 	}
+
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_A)) {
 		move_.x -= kCharacterSpeed;
@@ -51,8 +52,12 @@ void Player::Update() {
 	} else if (input_->PushKey(DIK_D)) {
 		move_.x += kCharacterSpeed;
 		RightMove();
-	} else {
-		worldTransform_.rotation_.y = 0.0f;
+	} 
+	else if (worldTransform_.rotation_.y <= -0.01f) {
+		worldTransform_.rotation_.y += 0.05f;
+	} 
+	else if (worldTransform_.rotation_.y >= 0.01f) {
+		worldTransform_.rotation_.y -= 0.05f;
 	}
 
 	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
@@ -61,10 +66,10 @@ void Player::Update() {
 
 	worldTransform_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
-	worldTransformFront_.UpdateMatrix();
-	worldTransformL_.UpdateMatrix();
-	worldTransformR_.UpdateMatrix();
-	worldTransformBack_.UpdateMatrix();
+	worldTransformFrontLeft_.UpdateMatrix();
+	worldTransformFrontRight_.UpdateMatrix();
+	worldTransformBackLeft_.UpdateMatrix();
+	worldTransformBackRight_.UpdateMatrix();
 
 	ImGui::Begin("Player");
 	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
@@ -76,10 +81,10 @@ void Player::Update() {
 void Player::Draw(ViewProjection &view) {
 	
 	models_[0]->Draw(worldTransformBody_, view);
-	/*models_[1]->Draw(worldTransformFront_, view);
-	models_[2]->Draw(worldTransformL_, view);
-	models_[3]->Draw(worldTransformR_, view);
-	models_[4]->Draw(worldTransformBack_, view);*/
+	/*models_[1]->Draw(worldTransformFrontLeft_, view);
+	models_[2]->Draw(worldTransformFrontRight_, view);
+	models_[3]->Draw(worldTransformBackLeft_, view);
+	models_[4]->Draw(worldTransformBackRight_, view);*/
 }
 
 
@@ -95,12 +100,12 @@ Vector3 Player::GetWorldPosition() {
 
 void Player::RightMove() { 
 	if (worldTransform_.rotation_.y <= 0.5f) {
-	worldTransform_.rotation_.y += 0.1f; 
+	worldTransform_.rotation_.y += 0.05f; 
 	}
 }
 
 void Player::LeftMove() {
-	if (worldTransform_.rotation_.y >= -0.5f) {
-	worldTransform_.rotation_.y -= 0.1f; 
+	if (worldTransform_.rotation_.y >=- 0.5f) {
+	worldTransform_.rotation_.y -= 0.05f; 
 	}
 }
