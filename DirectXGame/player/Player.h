@@ -33,6 +33,8 @@ public:
 	void Initialize(const std::vector<Model*>& models);
 	void Update();
 	void Draw(ViewProjection& view);
+	void RightMove();
+	void LeftMove();
 
 	Vector3 GetWorldPosition();
 
