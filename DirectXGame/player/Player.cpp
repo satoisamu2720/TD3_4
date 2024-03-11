@@ -116,8 +116,10 @@ void Player::SunnyUpdate() {
 		}
 	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
 		worldTransform_.rotation_.y += 0.05f;
+		worldTransformFront_.rotation_.y += 0.025f;
 	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
 		worldTransform_.rotation_.y -= 0.05f;
+		worldTransformFront_.rotation_.y -= 0.025f;
 	}
 
 #ifdef _DEBUG
@@ -275,11 +277,13 @@ Vector3 Player::GetWorldPosition() {
 void Player::LeftMove() {
 	if (worldTransform_.rotation_.y >= -0.5f) {
 		worldTransform_.rotation_.y -= 0.05f;
+		worldTransformFront_.rotation_.y -= 0.025f;
 	}
 }
 
 void Player::RightMove() {
 	if (worldTransform_.rotation_.y <= 0.5f) {
 		worldTransform_.rotation_.y += 0.05f;
+		worldTransformFront_.rotation_.y  += 0.025f;
 	}
 }
