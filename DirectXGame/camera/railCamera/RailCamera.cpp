@@ -17,10 +17,21 @@ void RailCamera::Update() {
 	
 	Vector3 move_ = {0, 0, 0};
 
-	//move_.z += 1.0f;
+	if (isSpeedDown == true) {
+		move_.z += 0.5f;
+	} else {
+		move_.z += 2.0f;
+	}
 
 	if (input_->PushKey(DIK_R)) {
 		move_ = {0.0f, 0.0f, -15.0f};
+	}
+	//スピードダウン
+	if (input_->PushKey(DIK_J)) {
+		isSpeedDown = true;
+	}else
+	if (input_->PushKey(DIK_K)) {
+		isSpeedDown = false;
 	}
 
 	if (input_->PushKey(DIK_UP)) {
@@ -34,6 +45,24 @@ void RailCamera::Update() {
 	} else if (input_->PushKey(DIK_RIGHT)) {
 		worldTransform_.rotation_.y += cameraSpeed;
 	}
+
+	/// 加速関係
+	if (isSpeedUp == true) {
+	
+		move_.z += 0.1f * isSpeedTime;
+
+	}
+	if (input_->PushKey(DIK_H)&& (isSpeedUp == false && isSpeedDown == false)) {
+		isSpeedUp = true;
+		isSpeedTime = 70.0f;
+	}
+
+	if (isSpeedTime >  0.0f) {
+		isSpeedTime--;
+	} else if(isSpeedTime <= 0.0f) {
+		isSpeedUp = false;
+	}
+	///
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    {1.0f, 1.0f, 1.0f}, worldTransform_.rotation_, worldTransform_.translation_);

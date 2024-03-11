@@ -32,5 +32,13 @@ private:
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+
+
+	bool isSpeedUp = false;
+	bool isSpeedDown = false;
+
+
+	float isSpeedTime = 0.0f;
+
 };
 
