@@ -1,7 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "Input.h"
 
 enum SceneType {
+	NONE,
 	TITLE,
 	SELECT,
 	GAME,
@@ -12,7 +13,7 @@ enum SceneType {
 
 class IScene {
 protected:
-	// ƒV[ƒ“”Ô†‚ğŠÇ—‚·‚é•Ï”
+	// ã‚·ãƒ¼ãƒ³ç•ªå·ã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°
 	static int sceneNo;
 
 	Input* input_ = nullptr;
@@ -28,6 +29,6 @@ public:
 	virtual ~IScene();
 
 	// getter
-	int GetSceneNo() { return sceneNo; }
+	int GetSceneNo();
 
 };

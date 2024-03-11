@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "IScene.h"
@@ -25,7 +25,7 @@ private:
 
 	WorldTransform worldTransform_;
 
-	//// ƒTƒEƒ“ƒh
+	//// ã‚µã‚¦ãƒ³ãƒ‰
 	// uint32_t bgmHandle_;
 	// uint32_t playBGM_;
 	// bool isBGM_;

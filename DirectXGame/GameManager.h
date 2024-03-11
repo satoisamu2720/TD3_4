@@ -1,25 +1,28 @@
-#pragma once
-#include "IScene.h"
-#include "TitleScene.h"
-#include "SelectScene.h"
-#include "GameScene.h"
+﻿#pragma once
 #include "ClearScene.h"
 #include "GameOverScene.h"
+#include "GameScene.h"
+#include "IScene.h"
+#include "SelectScene.h"
+#include "TitleScene.h"
 #include <memory>
 
 class GameManager {
 private:
-	std::unique_ptr<IScene> sceneArr_[5];
+	std::unique_ptr<IScene> sceneArr_[6];
 
 	int cureentSceneNo_;
-	int preSceneNo_;
+	int preSceneNo_ = NONE;
 
 public:
-
 	GameManager();
 	~GameManager();
 
-	void Run();
+	// int Run();
 
+	void Check();
 
+	void Update();
+
+	void Draw();
 };

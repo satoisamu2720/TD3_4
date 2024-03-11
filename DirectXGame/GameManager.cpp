@@ -1,8 +1,8 @@
-#include "GameManager.h"
+ï»¿#include "GameManager.h"
 
 GameManager::GameManager() {
 
-	// ŠeƒV[ƒ“‚Ì”z—ñ
+	// å„ã‚·ãƒ¼ãƒ³ã®é…åˆ—
 
 	sceneArr_[TITLE] = std::make_unique<TitleScene>();
 	sceneArr_[SELECT] = std::make_unique<SelectScene>();
@@ -15,26 +15,40 @@ GameManager::GameManager() {
 
 GameManager::~GameManager() {}
 
-void GameManager::Run() {
-
-	//// ƒQ[ƒ€ƒ‹[ƒv
-	// while (true) {
-	//
-	// }
-
-	// ƒV[ƒ“‚Ìƒ`ƒFƒbƒN
-	preSceneNo_ = cureentSceneNo_;
+void GameManager::Check() {
 	cureentSceneNo_ = sceneArr_[cureentSceneNo_]->GetSceneNo();
 
-	// ƒV[ƒ“‚Ì•ÏXƒ`ƒFƒbƒN
+	// ã‚·ãƒ¼ãƒ³ã®å¤‰æ›´ãƒã‚§ãƒƒã‚¯
 	if (preSceneNo_ != cureentSceneNo_) {
 		sceneArr_[cureentSceneNo_]->Initialize();
 	}
 
-	// ƒV[ƒ“‚ÌXVˆ—
-	sceneArr_[cureentSceneNo_]->Update();
-
-	// ƒV[ƒ“‚Ì•`‰æˆ—
-	sceneArr_[cureentSceneNo_]->Draw();
+	preSceneNo_ = cureentSceneNo_;
 
 }
+
+void GameManager::Update() {
+	// ã‚·ãƒ¼ãƒ³ã®æ›´æ–°å‡¦ç†
+	sceneArr_[cureentSceneNo_]->Update();
+}
+
+void GameManager::Draw() { 
+	// ã‚·ãƒ¼ãƒ³ã®æç”»å‡¦ç†
+	sceneArr_[cureentSceneNo_]->Draw();
+}
+
+// int GameManager::Run() {// ã‚·ãƒ¼ãƒ³ã®ãƒã‚§ãƒƒã‚¯
+//	preSceneNo_ = cureentSceneNo_;
+//	cureentSceneNo_ = sceneArr_[cureentSceneNo_]->GetSceneNo();
+//
+//	// ã‚·ãƒ¼ãƒ³ã®å¤‰æ›´ãƒã‚§ãƒƒã‚¯
+//	if (preSceneNo_ != cureentSceneNo_) {
+//		sceneArr_[cureentSceneNo_]->Initialize();
+//	}
+//
+//	// ã‚·ãƒ¼ãƒ³ã®æ›´æ–°å‡¦ç†
+//	sceneArr_[cureentSceneNo_]->Update();
+//
+//	// ã‚·ãƒ¼ãƒ³ã®æç”»å‡¦ç†
+//	sceneArr_[cureentSceneNo_]->Draw();
+// }
