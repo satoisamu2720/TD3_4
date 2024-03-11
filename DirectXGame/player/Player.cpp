@@ -9,25 +9,19 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	// 初期化
 	worldTransform_.Initialize();
 	worldTransformBody_.Initialize();
-	worldTransformFrontLeft_.Initialize();
-	worldTransformFrontRight_.Initialize();
-	worldTransformBackLeft_.Initialize();
-	worldTransformBackRight_.Initialize();
+	worldTransformFront_.Initialize();
+	worldTransformBack_.Initialize();
 
 	// 初期ポジティブ
 	worldTransform_.translation_ = position;
 	worldTransformBody_.translation_ = bodyPosition;
-	worldTransformFrontLeft_.translation_ = frontLeftPosition;
-	worldTransformFrontRight_.translation_ = frontRightPosition;
-	worldTransformBackLeft_.translation_ = backLeftPosition;
-	worldTransformBackRight_.translation_ = backRightPosition;
+	worldTransformFront_.translation_ = frontPosition;
+	worldTransformBack_.translation_ = backPosition;
 
 	// 親子関係
 	worldTransformBody_.parent_ = &worldTransform_;
-	worldTransformFrontLeft_.parent_ = &worldTransformBody_;
-	worldTransformFrontRight_.parent_ = &worldTransformBody_;
-	worldTransformBackLeft_.parent_ = &worldTransformBody_;
-	worldTransformBackRight_.parent_ = &worldTransformBody_;
+	worldTransformFront_.parent_ = &worldTransformBody_;
+	worldTransformBack_.parent_ = &worldTransformBody_;
 
 	worldTransform_.scale_ = {10.0f, 10.0f, 10.0f};
 
@@ -71,10 +65,8 @@ void Player::Update() {
 
 	worldTransform_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
-	worldTransformFrontLeft_.UpdateMatrix();
-	worldTransformFrontRight_.UpdateMatrix();
-	worldTransformBackLeft_.UpdateMatrix();
-	worldTransformBackRight_.UpdateMatrix();
+	worldTransformFront_.UpdateMatrix();
+	worldTransformBack_.UpdateMatrix();
 
 #ifdef _DEBUG
 	ImGui::Begin("Player SunnyUpdate");
@@ -266,10 +258,8 @@ void Player::ThunderHitMotion() {
 void Player::Draw(ViewProjection& view) {
 
 	models_[0]->Draw(worldTransformBody_, view);
-	/*models_[1]->Draw(worldTransformFrontLeft_, view);
-	models_[2]->Draw(worldTransformFrontRight_, view);
-	models_[3]->Draw(worldTransformBackLeft_, view);
-	models_[4]->Draw(worldTransformBackRight_, view);*/
+	models_[1]->Draw(worldTransformFront_, view);
+	models_[2]->Draw(worldTransformBack_, view);
 }
 
 Vector3 Player::GetWorldPosition() {

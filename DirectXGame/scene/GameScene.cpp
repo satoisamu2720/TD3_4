@@ -17,17 +17,13 @@ void GameScene::Initialize() {
   #pragma region プレイヤー
 	// 自キャラモデル読み込み
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
-	modelPlayerFrontLeft_.reset(Model::CreateFromOBJ("player_Front_Left", true));
-	modelPlayerFrontRight_.reset(Model::CreateFromOBJ("player_Front_Right", true));
-	modelPlayerBackLeft_.reset(Model::CreateFromOBJ("player_Front_Left", true));
-	modelPlayerBackRight_.reset(Model::CreateFromOBJ("player_Front_Right", true));
+	modelPlayerFront_.reset(Model::CreateFromOBJ("player_Front", true));
+	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
 	//自キャラモデル配列
 	std::vector<Model*> playerModels = {
 	    modelPlayerBody_.get(),
-		modelPlayerFrontLeft_.get(), 
-		modelPlayerFrontRight_.get(),
-		modelPlayerBackLeft_.get(),
-	    modelPlayerBackRight_.get(),    
+		modelPlayerFront_.get(), 
+	    modelPlayerBack_.get(),    
 	};
 	//プレイヤー初期化
 	player_ = std::make_unique<Player>();
