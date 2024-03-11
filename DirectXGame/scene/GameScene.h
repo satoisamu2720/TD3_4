@@ -3,6 +3,7 @@
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
+#include "Iscene.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
@@ -11,7 +12,7 @@
 /// <summary>
 /// ゲームシーン
 /// </summary>
-class GameScene {
+class GameScene : public IScene {
 
 public: // メンバ関数
 	/// <summary>
@@ -27,17 +28,17 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize() override;
 
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
+	void Update() override;
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw() override;
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;

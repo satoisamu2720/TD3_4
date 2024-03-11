@@ -1,15 +1,14 @@
 #pragma once
 #include "Audio.h"
 #include "DirectXCommon.h"
+#include "IScene.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "IScene.h"
-
-class TitleScene : public IScene {
+class SelectScene : public IScene {
 
 public:
 	void Initialize() override;
@@ -17,8 +16,6 @@ public:
 	void Update() override;
 
 	void Draw() override;
-
-	void Reset();
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;
@@ -36,6 +33,4 @@ private:
 
 	uint32_t titleTexHandle_ = 0;
 	Sprite* titleSprite_ = nullptr;
-
-	Vector2 position_;
 };
