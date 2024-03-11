@@ -77,8 +77,14 @@ void GameScene::Update() {
 
 #pragma region 更新処理
 
+	if (weather == 0) {
+	player_->Update();
 	player_->SunnyUpdate();
-	//player_->ThunderstormUpdate();
+	}
+	if (weather == 1) {
+	player_->Update();
+	player_->ThunderstormUpdate();
+	}
 	skydome_->Update();
 	ground_->Update();
 	debugCamera_->Update();
@@ -111,6 +117,12 @@ void GameScene::Update() {
 	}
 #pragma endregion
 
+#ifdef _DEBUG
+	ImGui::Begin("weather");
+	ImGui::InputFloat("weather", &weather, 1.0f);
+	//ImGui::Checkbox("", &);
+	ImGui::End();
+#endif
 }
 
 void GameScene::Draw() {
@@ -139,7 +151,8 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
-	skydome_->Draw(viewProjection_);
+
+	//skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
 	Model::PostDraw();
 

@@ -33,11 +33,80 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, position);
 }
+
+void Player::Update() {
+
+	if (weatherHitRequest_) {
+		// 振るまいを変更する
+		weatherHit_ = weatherHitRequest_.value();
+		// 各振るまいごとの初期化を実行
+		switch (weatherHit_) {
+		case Player::WeatherHit::NotHit:
+			NotHitInitialize();
+		default:
+			break;
+		case Player::WeatherHit::Normal:
+			NormalHitMotionInitialize();
+			break;
+		case Player::WeatherHit::Thunder:
+			ThunderHitMotionInitialize();
+			break;
+		}
+		// 振るまいリクエストをリセット
+		weatherHitRequest_ = std::nullopt;
+	}
+
+	switch (weatherHit_) {
+	case Player::WeatherHit::NotHit:
+	default:
+
+		break;
+	case Player::WeatherHit::Normal:
+		NormalHitMotion();
+		break;
+	case Player::WeatherHit::Thunder:
+		ThunderHitMotion();
+		break;
+	}
+
+	worldTransform_.UpdateMatrix();
+	worldTransformBody_.UpdateMatrix();
+	worldTransformFrontLeft_.UpdateMatrix();
+	worldTransformFrontRight_.UpdateMatrix();
+	worldTransformBackLeft_.UpdateMatrix();
+	worldTransformBackRight_.UpdateMatrix();
+
+#ifdef _DEBUG
+	ImGui::Begin("Player SunnyUpdate");
+	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
+	ImGui::Checkbox("normalHit_", &normalHit_);
+	ImGui::End();
+
+	ImGui::Begin("Player ThunderstormUpdate");
+	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
+	ImGui::InputFloat("bestRotation", &bestRotation,1.0f);
+	ImGui::Checkbox("thunderHit_", &thunderHit_);
+	ImGui::InputFloat("weather", &setRand_, 1.0f);
+	ImGui::End();
+#endif
+}
+
+void Player::NotHitInitialize() {
+
+	// worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.rotation_.x = 0.0f;
+	// worldTransform_.rotation_.y = 0.0f;
+	worldTransform_.rotation_.z = 0.0f;
+	worldTransformBody_.rotation_ = {0.0f, 0.0f, 0.0f};
+}
 void Player::SunnyUpdate() {
 
 	// 当たった判定
 	if (normalHit_ == true) {
-		NormalHitMotion();
+		weatherHitRequest_ = WeatherHit::Normal;
+		normalHit_ = false;
 	}
 
 	move_ = {0, 0, 0};
@@ -45,13 +114,17 @@ void Player::SunnyUpdate() {
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_A)) {
 		move_.x -= kCharacterSpeed;
-		LeftMove();
+		if (notRotate == false) {
+			LeftMove();
+		}
 	} else if (input_->PushKey(DIK_D)) {
 		move_.x += kCharacterSpeed;
-		RightMove();
-	} else if (worldTransform_.rotation_.y <= -0.01f ) {
+		if (notRotate == false) {
+			RightMove();
+		}
+	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
 		worldTransform_.rotation_.y += 0.05f;
-	} else if (worldTransform_.rotation_.y >= 0.01f ) {
+	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
 		worldTransform_.rotation_.y -= 0.05f;
 	}
 
@@ -63,36 +136,21 @@ void Player::SunnyUpdate() {
 	}
 	if (input_->PushKey(DIK_SPACE)) {
 		normalHit_ = true;
+		notRotate = true;
 	}
 #endif
 
 	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
-
-
-	worldTransform_.UpdateMatrix();
-	worldTransformBody_.UpdateMatrix();
-	worldTransformFrontLeft_.UpdateMatrix();
-	worldTransformFrontRight_.UpdateMatrix();
-	worldTransformBackLeft_.UpdateMatrix();
-	worldTransformBackRight_.UpdateMatrix();
-
-#ifdef _DEBUG
-	ImGui::Begin("Player");
-	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
-	ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
-	ImGui::Checkbox("normalHit_", &normalHit_);
-	ImGui::End();
-#endif
 }
 
-
 void Player::ThunderstormUpdate() {
-	
-	//雷に当たった判定
+
+	// 雷に当たった判定
 	if (thunderHit_ == true) {
-		ThunderHitMotion();
+		weatherHitRequest_ = WeatherHit::Thunder;
+		thunderHit_ = false;
 	}
 
 	move_ = {0, 0, 0};
@@ -102,7 +160,7 @@ void Player::ThunderstormUpdate() {
 		// 左風力0.2
 		wind = windLeft;
 	}
-	//1だったら右の風
+	// 1だったら右の風
 	if (setRand_ == 1) {
 		// 右風力-0.2
 		wind = windRight;
@@ -111,16 +169,22 @@ void Player::ThunderstormUpdate() {
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_A)) {
 		move_.x -= kCharacterSpeed - wind;
-		LeftMove();
+		if (notRotate == false) {
+			LeftMove();
+		}
 	} else if (input_->PushKey(DIK_D)) {
 		move_.x += kCharacterSpeed + wind;
-		RightMove();
-	} else if (worldTransform_.rotation_.y <= -0.01f) {
+		if (notRotate == false) {
+			RightMove();
+		}
+	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
 		worldTransform_.rotation_.y += 0.05f;
-	} else if (worldTransform_.rotation_.y >= 0.01f) {
+	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
 		worldTransform_.rotation_.y -= 0.05f;
 	}
-	
+	if (worldTransform_.rotation_.y >= bestRotation) {
+		worldTransform_.rotation_.y = 0.0f;
+	}
 #ifdef _DEBUG
 	if (input_->PushKey(DIK_W)) {
 		move_.z += kCharacterSpeed;
@@ -129,88 +193,84 @@ void Player::ThunderstormUpdate() {
 	}
 	if (input_->PushKey(DIK_SPACE)) {
 		thunderHit_ = true;
+		notRotate = true;
 	}
 #endif
 
 	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
-
-
-
-	worldTransform_.UpdateMatrix();
-	worldTransformBody_.UpdateMatrix();
-	worldTransformFrontLeft_.UpdateMatrix();
-	worldTransformFrontRight_.UpdateMatrix();
-	worldTransformBackLeft_.UpdateMatrix();
-	worldTransformBackRight_.UpdateMatrix();
-
-#ifdef _DEBUG
-	ImGui::Begin("Player");
-	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
-	ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
-	ImGui::Checkbox("thunderHit_", &thunderHit_);
-	ImGui::InputFloat("weather", &setRand_);
-	ImGui::End();
-#endif
 }
 
+#pragma region 当たった時のモーション
+
+// 障害物に当たった時の初期化
+void Player::NormalHitMotionInitialize() {
+	worldTransform_.rotation_.y = 0.0f;
+	normalHitRootParameter_ = 0.0f;
+	normalHitTime = 120;
+}
+// 障害物に当たった時の更新処理
 void Player::NormalHitMotion() {
 	const uint16_t period = 120;
-	const float step = 2.0f * (float)M_PI / period;
-	
-
+	const float step = 2.0f * (float)M_PI /*3.14f*/ / period;
 
 	normalHitRootParameter_ += step;
-	normalHitRootParameter_ = std::fmod(normalHitRootParameter_, 2.0f * (float)M_PI);
+	normalHitRootParameter_ =
+	    std::fmod(normalHitRootParameter_, /*6.28 = */ 2.0f * /*3.14f*/ (float)M_PI);
 
-	const float amplitude = 0.1f;
+	const float amplitude = 0.2f;
 
-	worldTransform_.rotation_.y += std::sin(normalHitRootParameter_) * amplitude;
+	worldTransform_.rotation_.y += std::cos(normalHitRootParameter_) * amplitude;
 
 	--normalHitTime;
 
 	if (normalHitTime <= 0) {
-		worldTransform_.rotation_.y = 0.0f;
-		normalHitRootParameter_ = 0.0f;
-		normalHitTime = 140;
-		normalHit_ = false;
+		weatherHitRequest_ = WeatherHit::NotHit;
+		notRotate = false;
 	}
 }
 
-void Player::ThunderHitMotion() { 
-	
+// 雷に当たった時の初期化
+void Player::ThunderHitMotionInitialize() {
+	worldTransform_.rotation_.y = 0.0f;
+	worldTransformBody_.rotation_.z = 0.0f;
+	worldTransformBody_.rotation_.y = 0.0f;
+	thunderHitRootParameter_ = 0.0f;
+}
+// 雷に当たった時の更新処理
+void Player::ThunderHitMotion() {
 
-	const uint16_t period = 120;
-	const float step = 2.0f * (float)M_PI / period;
+	const uint16_t period = 30;
+	const float step = 2.0f * (float)M_PI /*3.14f*/ / period;
 
 	thunderHitRootParameter_ += step;
-	thunderHitRootParameter_ = std::fmod(thunderHitRootParameter_, 2.0f * (float)M_PI);
+	thunderHitRootParameter_ =
+	    std::fmod(thunderHitRootParameter_, /*6.28 = */ 2.0f * /*3.14f*/ (float)M_PI);
 
-	const float amplitude = 0.1f;
+	const float amplitude = 0.2f;
 
-	worldTransformBody_.rotation_.z += std::sin(thunderHitRootParameter_) * amplitude;
-	worldTransformBody_.rotation_.z += std::sin(thunderHitRootParameter_) * amplitude;
+	//worldTransformBody_.rotation_.x += std::cos(thunderHitRootParameter_) * amplitude;
+	worldTransformBody_.rotation_.z += std::cos(thunderHitRootParameter_) * amplitude;
 
 	worldTransform_.rotation_.y += 0.2f;
 
-	if (worldTransform_.rotation_.y >= 6.0f) {
-		worldTransform_.rotation_.y = 0.0f;
-		worldTransformBody_.rotation_.z = 0.0f;
-		thunderHitRootParameter_ = 0.0f;
-		thunderHit_ = false;
+	if (worldTransform_.rotation_.y >= bestRotation) {
+		weatherHitRequest_ = WeatherHit::NotHit;
+		notRotate = false;
 	}
 }
 
-void Player::Draw(ViewProjection &view) {
-	
+#pragma endregion
+
+void Player::Draw(ViewProjection& view) {
+
 	models_[0]->Draw(worldTransformBody_, view);
 	/*models_[1]->Draw(worldTransformFrontLeft_, view);
 	models_[2]->Draw(worldTransformFrontRight_, view);
 	models_[3]->Draw(worldTransformBackLeft_, view);
 	models_[4]->Draw(worldTransformBackRight_, view);*/
 }
-
 
 Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos;
@@ -222,14 +282,14 @@ Vector3 Player::GetWorldPosition() {
 	return worldPos;
 };
 
-void Player::RightMove() { 
-	if (worldTransform_.rotation_.y <= 0.5f) {
-	worldTransform_.rotation_.y += 0.05f; 
+void Player::LeftMove() {
+	if (worldTransform_.rotation_.y >= -0.5f) {
+		worldTransform_.rotation_.y -= 0.05f;
 	}
 }
 
-void Player::LeftMove() {
-	if (worldTransform_.rotation_.y >=- 0.5f) {
-	worldTransform_.rotation_.y -= 0.05f; 
+void Player::RightMove() {
+	if (worldTransform_.rotation_.y <= 0.5f) {
+		worldTransform_.rotation_.y += 0.05f;
 	}
 }
