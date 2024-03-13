@@ -1,13 +1,14 @@
 ﻿#pragma once
 #include "Audio.h"
 #include "DirectXCommon.h"
-#include "IScene.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "IScene.h"
+
 class ClearScene : public IScene {
 
 public:

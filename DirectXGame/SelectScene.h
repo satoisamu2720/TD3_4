@@ -8,6 +8,8 @@
 #include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "IScene.h"
+
 class SelectScene : public IScene {
 
 public:
@@ -33,4 +35,9 @@ private:
 
 	uint32_t titleTexHandle_ = 0;
 	Sprite* titleSprite_ = nullptr;
+
+	int stageCount_ = 0;
+
+	int stageNo_[3] = {CLEAR, END, TITLE};
+
 };

@@ -9,7 +9,7 @@
 
 class GameManager {
 private:
-	std::unique_ptr<IScene> sceneArr_[6];
+	std::unique_ptr<IScene> sceneArr_[KSCENEMAX];
 
 	int cureentSceneNo_;
 	int preSceneNo_ = NONE;

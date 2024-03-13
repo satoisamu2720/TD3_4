@@ -18,8 +18,6 @@ public:
 
 	void Draw() override;
 
-	void Reset();
-
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;

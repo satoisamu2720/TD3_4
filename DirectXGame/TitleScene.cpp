@@ -1,10 +1,11 @@
 ﻿#include "TitleScene.h"
 
 void TitleScene::Initialize() {
-	worldTransform_.Initialize();
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	worldTransform_.Initialize();
 
 	// 背景スプライト
 	titleTexHandle_ = TextureManager::Load("title.png");
@@ -23,8 +24,8 @@ void TitleScene::Update() {
 		}
 	}
 
-	if (input_->PushKey(DIK_SPACE)) {
-		sceneNo = GAME;
+	if (input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = SELECT;
 	}
 
 }
@@ -75,4 +76,3 @@ void TitleScene::Draw() {
 #pragma endregion
 }
 
-void TitleScene::Reset() {}
