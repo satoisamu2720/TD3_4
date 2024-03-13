@@ -17,22 +17,12 @@ void RailCamera::Update() {
 	
 	Vector3 move_ = {0, 0, 0};
 
-	if (isSpeedDown == true) {
-		move_.z += 0.5f;
-	} else {
-		move_.z += 2.0f;
-	}
+	
 
 	if (input_->PushKey(DIK_R)) {
 		move_ = {0.0f, 0.0f, -15.0f};
 	}
-	//スピードダウン
-	if (input_->PushKey(DIK_J)) {
-		isSpeedDown = true;
-	}else
-	if (input_->PushKey(DIK_K)) {
-		isSpeedDown = false;
-	}
+	
 
 	if (input_->PushKey(DIK_UP)) {
 		move_.z += kCharacterSpeed;
@@ -47,6 +37,19 @@ void RailCamera::Update() {
 	}
 
 	/// 加速関係
+
+	if (isSpeedDown == true) {
+		move_.z += 0.5f;
+	} else {
+		move_.z += 2.0f;
+	}
+	// スピードダウン
+	if (input_->PushKey(DIK_J)) {
+		isSpeedDown = true;
+	} else if (input_->PushKey(DIK_K)) {
+		isSpeedDown = false;
+	}
+
 	if (isSpeedUp == true) {
 	
 		move_.z += 0.1f * isSpeedTime;
