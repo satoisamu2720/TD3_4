@@ -148,7 +148,7 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 
-	//skydome_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
 	Model::PostDraw();
 

@@ -89,7 +89,7 @@ void Player::NotHitInitialize() {
 
 	// worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 	worldTransform_.rotation_.x = 0.0f;
-	// worldTransform_.rotation_.y = 0.0f;
+	worldTransformFront_.rotation_.y = 0.0f;
 	worldTransform_.rotation_.z = 0.0f;
 	worldTransformBody_.rotation_ = {0.0f, 0.0f, 0.0f};
 }
@@ -173,8 +173,10 @@ void Player::ThunderstormUpdate() {
 		}
 	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
 		worldTransform_.rotation_.y += 0.05f;
+		worldTransformFront_.rotation_.y += 0.025f;
 	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
 		worldTransform_.rotation_.y -= 0.05f;
+		worldTransformFront_.rotation_.y -= 0.025f;
 	}
 	if (worldTransform_.rotation_.y >= bestRotation) {
 		worldTransform_.rotation_.y = 0.0f;
@@ -187,7 +189,7 @@ void Player::ThunderstormUpdate() {
 	}
 	if (input_->PushKey(DIK_SPACE)) {
 		thunderHit_ = true;
-		notRotate = true;
+		notRotate = true;//チェックボックスだと反応しないよ
 	}
 #endif
 
