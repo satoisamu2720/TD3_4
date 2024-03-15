@@ -35,8 +35,11 @@ private:
 
 	uint32_t titleTexHandle_ = 0;
 	Sprite* titleSprite_ = nullptr;
+	Sprite* SelectSprite_ = nullptr;
 
 	int stageCount_ = 0;
+
+	float stageMove_ = 0;
 
 	int stageNo_[3] = {CLEAR, END, TITLE};
 

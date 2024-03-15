@@ -5,17 +5,29 @@ void SelectScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	// 背景スプライト
+	titleTexHandle_ = TextureManager::Load("Select.png");
+	
+
+	titleSprite_ = Sprite::Create(titleTexHandle_, {640,360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+	/*SelectSprite_ =
+	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});*/
 }
 
 void SelectScene::Update() {
 
+	Vector2 position_ = titleSprite_->GetPosition();
+
 	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
 		if (stageCount_ >= 1) {
 			stageCount_ -= 1;
+			stageMove_ = 420;
 		}
 	} else if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
 		if (stageCount_ < 2) {
 			stageCount_ += 1;
+			stageMove_ = -420;
 		}
 	}
 
@@ -24,14 +36,25 @@ void SelectScene::Update() {
 	}
 
 	if (input_->TriggerKey(DIK_TAB)) {
-		
 	}
+
+	position_.x = stageMove_;
+
+	titleSprite_->SetPosition(position_);
 
 	ImGui::Begin("stageNum");
 
-	ImGui::Text("SlectScene");
+	float position[2]{position_.x, position_.y};
+
+	ImGui::Text("SelectScene");
 
 	ImGui::Text("Count%d", stageCount_);
+
+	ImGui::SliderFloat2("TexturePosition", position, 10.0f, 1280.0f);
+
+	position_ = {position[0], position[1]};
+
+	titleSprite_->SetPosition(position_);
 
 	ImGui::End();
 }
@@ -43,6 +66,9 @@ void SelectScene::Draw() {
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
+
+	titleSprite_->Draw();
+	//SelectSprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
