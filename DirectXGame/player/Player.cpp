@@ -97,6 +97,7 @@ void Player::SunnyUpdate() {
 
 	// 当たった判定
 	if (normalHit_ == true) {
+		notRotate = true;
 		weatherHitRequest_ = WeatherHit::Normal;
 		normalHit_ = false;
 	}
@@ -130,7 +131,7 @@ void Player::SunnyUpdate() {
 	}
 	if (input_->PushKey(DIK_SPACE)) {
 		normalHit_ = true;
-		notRotate = true;
+		
 	}
 #endif
 
@@ -143,6 +144,7 @@ void Player::ThunderstormUpdate() {
 
 	// 雷に当たった判定
 	if (thunderHit_ == true) {
+		notRotate = true; 
 		weatherHitRequest_ = WeatherHit::Thunder;
 		thunderHit_ = false;
 	}
@@ -189,7 +191,7 @@ void Player::ThunderstormUpdate() {
 	}
 	if (input_->PushKey(DIK_SPACE)) {
 		thunderHit_ = true;
-		notRotate = true;//チェックボックスだと反応しないよ
+		
 	}
 #endif
 

@@ -5,13 +5,13 @@
 #include "Input.h"
 #include "math.h"
 #include "WorldTransform.h"
+#include "ViewProjection.h"
 #include <cassert>
 #include <list>
 #include <stdio.h>
 #include <optional>
 #include "baseCharacter/BaseCharacter.h"
 #include "VectraCalculation.h"
-#include "ViewProjection.h"
 
 class Player : public BaseCharacter {
 
@@ -26,7 +26,7 @@ private:
 	WorldTransform worldTransformBackLeft_;
 	WorldTransform worldTransformBackRight_;*/
 
-	Vector3 position = {0, -15.0f, 75.0f};
+	Vector3 position = {0, -15.0f, 60.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 frontPosition = {0, 0, 0.5f};
 	Vector3 backPosition = {0, 0, -0.5f};
@@ -79,15 +79,13 @@ public:
 	}
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 	
-	Vector3 GetWorldTransformBack() { return worldTransformBack_.translation_; };
-	Vector3 GetWorldTransformFront() { return worldTransformFront_.translation_; };
-
 
 	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; };
 
 
 	//ノーマル
 	void SetNormalHit(bool normalHit) { normalHit_ = normalHit; } 
+	//bool GetNormalHit() { return normalHit_; } 
 
 	//雷雨
 	void SetRand(float setRand) { setRand_ = setRand; }

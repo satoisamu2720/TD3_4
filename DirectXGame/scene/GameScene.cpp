@@ -24,7 +24,6 @@ void GameScene::Initialize() {
 	modelPlayerFront_.reset(Model::CreateFromOBJ("player_Front", true));
 	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
 
-	BoxModel_.reset(Model::CreateFromOBJ("Box", true));
 
 	//自キャラモデル配列
 	std::vector<Model*> playerModels = {
@@ -35,6 +34,17 @@ void GameScene::Initialize() {
 	//プレイヤー初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
+  #pragma endregion 
+	
+  #pragma region 障害物
+
+	//箱モデル読み込み
+	BoxModel_ = (Model::CreateFromOBJ("Box", true));
+
+	//箱初期化
+	box_ = std::make_unique<Box>();
+	box_->Initialize(BoxModel_);
+
   #pragma endregion 
 
   #pragma region ステージ
@@ -56,7 +66,7 @@ void GameScene::Initialize() {
   #pragma region カメラ
 	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 20.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
+	railCamera_->Initialize({0.0f, 20.0f, -200.0f}, {0.0f, 0.0f, 0.0f});
 	railCamera_->SetTarget(&player_->GetWorldTransform());
 	//追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -71,7 +81,7 @@ void GameScene::Initialize() {
 
    #pragma endregion
 
-	boxTransform_.translation_ = {10.0f, 2.0f, 0.0f};
+	
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -90,6 +100,7 @@ void GameScene::Update() {
 	player_->Update();
 	player_->ThunderstormUpdate();
 	}
+	box_->Update();
 	skydome_->Update();
 	ground_->Update();
 	debugCamera_->Update();
@@ -133,23 +144,30 @@ void GameScene::Update() {
 
 	// 当たり判定
 
-	PlayerBackZ_ = player_->GetWorldPosition().z - 0.5f;
-	PlayerFlontZ_ = player_->GetWorldPosition().z + 0.5f;
-	PlayerLeftX_ = player_->GetWorldPosition().x - 0.5f;
-	PlayerRightX_ = player_->GetWorldPosition().x + 0.5f;
+	PlayerBackZ_ = player_->GetWorldPosition().z -26.0f;
+	PlayerFlontZ_ = player_->GetWorldPosition().z + 20.0f;
+	PlayerLeftX_ = player_->GetWorldPosition().x - 15.0f;
+	PlayerRightX_ = player_->GetWorldPosition().x + 15.0f;
 
-	BoxBackZ_ = boxTransform_.translation_.z - 0.5f;
-	BoxFlontZ_ = boxTransform_.translation_.z + 0.5f;
-	BoxRightX_ = boxTransform_.translation_.x + 0.5f;
-	BoxLeftX_ = boxTransform_.translation_.x - 0.5f;
+	BoxBackZ_ = box_->GetWorldPosition().z - 5.0f;
+	BoxFlontZ_ = box_->GetWorldPosition().z + 5.0f;
+	BoxRightX_ = box_->GetWorldPosition().x + 5.0f;
+	BoxLeftX_ = box_->GetWorldPosition().x - 5.0f;
 
 	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
 	    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
-		Vector3 tmpTranslate = player_->GetWorldPosition();
-		tmpTranslate.z += 10.0f;
-		player_->SetTranslate(tmpTranslate);
+		//Vector3 tmpTranslate = player_->GetWorldPosition();
+		//tmpTranslate.z += 10.0f;
+		//player_->SetTranslate(tmpTranslate);
+		if (timerFlag == false) {
+		player_->SetNormalHit(true);
+			player_->SetThunderHit(true);
+			timerFlag = true;
+		}
 	}
-	boxTransform_.UpdateMatrix();
+
+	Time();
+	
 }
 
 void GameScene::Draw() {
@@ -181,7 +199,7 @@ void GameScene::Draw() {
 
 	skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
-	BoxModel_->Draw(boxTransform_, viewProjection_);
+	box_->Draw(viewProjection_);
 
 	Model::PostDraw();
 
@@ -195,5 +213,15 @@ void GameScene::Draw() {
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
+}
+
+void GameScene::Time() {
+	if (timerFlag == true) {
+		timer++;
+	}
+	if (timer >= 120) {
+		timer = 0;
+		timerFlag = false;
+	}
 }
 

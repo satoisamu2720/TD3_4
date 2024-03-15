@@ -73,6 +73,12 @@
     <Filter Include="camera\railCamera">
       <UniqueIdentifier>{654b2140-09b6-432c-985e-48689e30dc5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Obstacle">
+      <UniqueIdentifier>{6b405b22-fce0-4457-9c33-a2e57fd6eb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Obstacle\box">
+      <UniqueIdentifier>{c83eedcd-11ed-45e3-bfa4-1655addd2d75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,6 +95,27 @@
     </ClCompile>
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="baseCharacter\BaseCharacter.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\railCamera\RailCamera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="player\Player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="stage\ground\Ground.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="stage\skydome\Skydome.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldTransform.EX.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Obstacle\box\Box.cpp">
+      <Filter>Obstacle\box</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +205,24 @@
     </ClInclude>
     <ClInclude Include="3d\ObjectColor.h">
       <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="baseCharacter\BaseCharacter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\railCamera\RailCamera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="player\Player.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="stage\ground\Ground.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="stage\skydome\Skydome.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Obstacle\box\Box.h">
+      <Filter>Obstacle\box</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

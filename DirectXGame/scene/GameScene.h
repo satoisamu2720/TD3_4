@@ -9,6 +9,7 @@
 #include "camera/railCamera/RailCamera.h"
 #include "stage/skydome/Skydome.h"
 #include "stage/ground/Ground.h"
+#include "Obstacle/box/Box.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -26,6 +27,8 @@ public:
 	void Update();
 	void Draw();
 
+	void Time();
+
 private: 
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -36,14 +39,14 @@ private:
 	std::unique_ptr<Model> modelPlayerFront_;
 	std::unique_ptr<Model> modelPlayerBack_;
 
-	
-	std::unique_ptr<Model> BoxModel_;
+	std::unique_ptr<Box> box_;
+	Model* BoxModel_ = nullptr;
 
 	std::list<Player*> players_;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
-	WorldTransform boxTransform_;
+	
 
 	uint32_t soundDataHandle_ = 0;
 	uint32_t voiceHandle_ = 0;
@@ -75,5 +78,8 @@ private:
 	float BoxRightX_;
 	float BoxLeftX_;
 
-float weather = 0;
+	float weather = 0;
+
+	bool timerFlag = false;
+	float timer = 0;
 };
