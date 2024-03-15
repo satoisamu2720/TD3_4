@@ -6,7 +6,9 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+
+}
 
 void GameScene::Initialize() {
 
@@ -14,21 +16,25 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	
-  #pragma region プレイヤー
+	texHandle_ = TextureManager::Load("Box/Tex.png");
+
+  #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
 	modelPlayerFront_.reset(Model::CreateFromOBJ("player_Front", true));
 	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
+
+	BoxModel_.reset(Model::CreateFromOBJ("Box", true));
+
 	//自キャラモデル配列
 	std::vector<Model*> playerModels = {
 	    modelPlayerBody_.get(),
 		modelPlayerFront_.get(), 
-	    modelPlayerBack_.get(),    
+	 modelPlayerBack_.get(),    
 	};
 	//プレイヤー初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
-
   #pragma endregion 
 
   #pragma region ステージ
@@ -67,6 +73,8 @@ void GameScene::Initialize() {
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+
+	boxTransform_.translation_ = {10.0f, +2.0f, 0.0f};
 }
 
 void GameScene::Update() {
@@ -90,6 +98,9 @@ void GameScene::Update() {
 #pragma region カメラセット
 
 	// デバックカメラのifdef
+
+	boxTransform_.UpdateMatrix();
+
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == false) {
 		isDebugcameraActive_ = true;
@@ -119,6 +130,25 @@ void GameScene::Update() {
 	//ImGui::Checkbox("", &);
 	ImGui::End();
 #endif
+
+	// 当たり判定
+
+	PlayerBackZ_ = player_->GetWorldPosition().z - 0.5f;
+	PlayerFlontZ_ = player_->GetWorldPosition().z + 0.5f;
+	PlayerLeftX_ = player_->GetWorldPosition().x - 0.5f;
+	PlayerRightX_ = player_->GetWorldPosition().x + 0.5f;
+
+	BoxBackZ_ = boxTransform_.translation_.z - 0.5f;
+	BoxFlontZ_ = boxTransform_.translation_.z + 0.5f;
+	BoxRightX_ = boxTransform_.translation_.x + 0.5f;
+	BoxLeftX_ = boxTransform_.translation_.x - 0.5f;
+
+	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
+	    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
+		Vector3 tmpTranslate = player_->GetWorldPosition();
+		tmpTranslate.z += 10.0f;
+		player_->SetTranslate(tmpTranslate);
+	}
 }
 
 void GameScene::Draw() {
@@ -150,6 +180,8 @@ void GameScene::Draw() {
 
 	skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
+	BoxModel_->Draw(boxTransform_, viewProjection_);
+
 	Model::PostDraw();
 
 	// 前景スプライト描画前処理
@@ -163,3 +195,4 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 }
+

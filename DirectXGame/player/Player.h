@@ -69,14 +69,23 @@ public:
 
 	//プレイヤー描画
 	void Draw(ViewProjection& view);
+	void SetTranslate(Vector3 translate);
 
 	Vector3 GetWorldPosition();
+
+	//Vector3 GetWorldTransform(){return worldTransform_.translation_;};
 
 	void SetViewProjection(const ViewProjection* viewProjection) {
 		viewProjection_ = viewProjection;
 	}
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
-	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	
+	Vector3 GetWorldTransformBack() { return worldTransformBack_.translation_; };
+	Vector3 GetWorldTransformfront() { return worldTransformFront_.translation_; };
+	Vector3 GetWorldTransformR() { return worldTransformR_.translation_; };
+	Vector3 GetWorldTransformL() { return worldTransformL_.translation_; };
+
+
 
 
 	//ノーマル

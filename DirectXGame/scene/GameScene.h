@@ -36,18 +36,22 @@ private:
 	std::unique_ptr<Model> modelPlayerFront_;
 	std::unique_ptr<Model> modelPlayerBack_;
 
-	/*std::unique_ptr<Model> modelPlayerFrontLeft_;
-	std::unique_ptr<Model> modelPlayerFrontRight_;
-	std::unique_ptr<Model> modelPlayerBackLeft_;
-	std::unique_ptr<Model> modelPlayerBackRight_;*/
+	
+	std::unique_ptr<Model> BoxModel_;
+
+	std::list<Player*> players_;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	WorldTransform boxTransform_;
 
 	uint32_t soundDataHandle_ = 0;
 	uint32_t voiceHandle_ = 0;
 
+	uint32_t texHandle_ = 0;
 	float inputFloat3[3] = {0, 0, 0};
+
+	Vector3 color = {1.0f, 1.0f, 1.0f};
 
 	std::unique_ptr<DebugCamera> debugCamera_;
 	std::unique_ptr<RailCamera> railCamera_;
@@ -61,5 +65,14 @@ private:
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
 
-	float weather = 0;
+	float PlayerFlontZ_;
+	float PlayerBackZ_;
+	float PlayerRightX_;
+	float PlayerLeftX_;
+
+	float BoxFlontZ_;
+	float BoxBackZ_;
+	float BoxRightX_;
+	float BoxLeftX_;
+float weather = 0;
 };
