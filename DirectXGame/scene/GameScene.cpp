@@ -71,10 +71,11 @@ void GameScene::Initialize() {
 
    #pragma endregion
 
+	boxTransform_.translation_ = {10.0f, 2.0f, 0.0f};
+
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
-	boxTransform_.translation_ = {10.0f, +2.0f, 0.0f};
 }
 
 void GameScene::Update() {
@@ -99,7 +100,6 @@ void GameScene::Update() {
 
 	// デバックカメラのifdef
 
-	boxTransform_.UpdateMatrix();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == false) {
@@ -149,6 +149,7 @@ void GameScene::Update() {
 		tmpTranslate.z += 10.0f;
 		player_->SetTranslate(tmpTranslate);
 	}
+	boxTransform_.UpdateMatrix();
 }
 
 void GameScene::Draw() {

@@ -74,5 +74,6 @@ private:
 	float BoxBackZ_;
 	float BoxRightX_;
 	float BoxLeftX_;
+
 float weather = 0;
 };

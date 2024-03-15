@@ -69,8 +69,7 @@ public:
 
 	//プレイヤー描画
 	void Draw(ViewProjection& view);
-	void SetTranslate(Vector3 translate);
-
+	
 	Vector3 GetWorldPosition();
 
 	//Vector3 GetWorldTransform(){return worldTransform_.translation_;};
@@ -81,11 +80,10 @@ public:
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 	
 	Vector3 GetWorldTransformBack() { return worldTransformBack_.translation_; };
-	Vector3 GetWorldTransformfront() { return worldTransformFront_.translation_; };
-	Vector3 GetWorldTransformR() { return worldTransformR_.translation_; };
-	Vector3 GetWorldTransformL() { return worldTransformL_.translation_; };
+	Vector3 GetWorldTransformFront() { return worldTransformFront_.translation_; };
 
 
+	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; };
 
 
 	//ノーマル

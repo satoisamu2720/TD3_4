@@ -134,15 +134,6 @@ void Player::SunnyUpdate() {
 	}
 #endif
 
-	if (input_->PushKey(DIK_UP))
-	{
-		move_.y += kCharacterSpeed;
-	}
-	else if (input_->PushKey(DIK_DOWN))
-	{
-		move_.y -= kCharacterSpeed;
-	}
-
 	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
@@ -275,7 +266,7 @@ void Player::Draw(ViewProjection& view) {
 	models_[2]->Draw(worldTransformBack_, view);
 }
 
-void Player::SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; };
+
 
 Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos;
