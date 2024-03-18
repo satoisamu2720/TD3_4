@@ -162,6 +162,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 
+	timer_->Draw();
+
 	/// </summary>
 
 	// スプライト描画後処理
