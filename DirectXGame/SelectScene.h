@@ -8,6 +8,7 @@
 #include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include <memory>
 
 class SelectScene : public IScene {
 
@@ -24,11 +25,9 @@ private:
 	Audio* audio_ = nullptr;
 
 	WorldTransform worldTransform_;
+	ViewProjection viewProjection_;
 
-	//// サウンド
-	// uint32_t bgmHandle_;
-	// uint32_t playBGM_;
-	// bool isBGM_;
+	std::unique_ptr<Model> selectModel_;
 
 	uint32_t buttonSound_;
 

@@ -6,9 +6,15 @@ void SelectScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	worldTransform_.Initialize();
+	viewProjection_.Initialize();
+
+
+
 	// 背景スプライト
 	titleTexHandle_ = TextureManager::Load("Select.png");
 	
+	selectModel_.reset(Model::CreateFromOBJ("Select", true));
 
 	titleSprite_ = Sprite::Create(titleTexHandle_, {640,360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 	/*SelectSprite_ =
@@ -17,6 +23,7 @@ void SelectScene::Initialize() {
 
 void SelectScene::Update() {
 
+	stageMove_ = 0;
 	Vector2 position_ = titleSprite_->GetPosition();
 
 	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
@@ -38,9 +45,11 @@ void SelectScene::Update() {
 	if (input_->TriggerKey(DIK_TAB)) {
 	}
 
-	position_.x = stageMove_;
+	/*position_.x += stageMove_;
 
-	titleSprite_->SetPosition(position_);
+	titleSprite_->SetPosition(position_);*/
+
+
 
 	ImGui::Begin("stageNum");
 
@@ -67,7 +76,7 @@ void SelectScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	titleSprite_->Draw();
+	//titleSprite_->Draw();
 	//SelectSprite_->Draw();
 
 	/// <summary>
@@ -87,6 +96,8 @@ void SelectScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	selectModel_->Draw(worldTransform_, viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
