@@ -79,6 +79,9 @@
     <Filter Include="Obstacle\box">
       <UniqueIdentifier>{c83eedcd-11ed-45e3-bfa4-1655addd2d75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Obstacle\Accelerator">
+      <UniqueIdentifier>{7b6383ee-5abf-4cab-860e-f4d8cce5dbed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -96,26 +99,29 @@
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
-    <ClCompile Include="baseCharacter\BaseCharacter.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="camera\railCamera\RailCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="player\Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="stage\ground\Ground.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="stage\skydome\Skydome.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="WorldTransform.EX.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Obstacle\box\Box.cpp">
       <Filter>Obstacle\box</Filter>
+    </ClCompile>
+    <ClCompile Include="Obstacle\accelerator\Accelerator.cpp">
+      <Filter>Obstacle\Accelerator</Filter>
+    </ClCompile>
+    <ClCompile Include="baseCharacter\BaseCharacter.cpp">
+      <Filter>baseCharacter</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\railCamera\RailCamera.cpp">
+      <Filter>camera\railCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="player\Player.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="stage\ground\Ground.cpp">
+      <Filter>stage\ground</Filter>
+    </ClCompile>
+    <ClCompile Include="stage\skydome\Skydome.cpp">
+      <Filter>stage\skydome</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,23 +212,26 @@
     <ClInclude Include="3d\ObjectColor.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
-    <ClInclude Include="baseCharacter\BaseCharacter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="camera\railCamera\RailCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="player\Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="stage\ground\Ground.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="stage\skydome\Skydome.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Obstacle\box\Box.h">
       <Filter>Obstacle\box</Filter>
+    </ClInclude>
+    <ClInclude Include="Obstacle\accelerator\Accelerator.h">
+      <Filter>Obstacle\Accelerator</Filter>
+    </ClInclude>
+    <ClInclude Include="baseCharacter\BaseCharacter.h">
+      <Filter>baseCharacter</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\railCamera\RailCamera.h">
+      <Filter>camera\railCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="player\Player.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="stage\ground\Ground.h">
+      <Filter>stage\ground</Filter>
+    </ClInclude>
+    <ClInclude Include="stage\skydome\Skydome.h">
+      <Filter>stage\skydome</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

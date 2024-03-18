@@ -82,7 +82,6 @@ void GameScene::Initialize() {
    #pragma endregion
 
 	
-
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 

@@ -112,6 +112,7 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />
     <ClCompile Include="Obstacle\box\Box.cpp" />
     <ClCompile Include="player\Player.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="Obstacle\accelerator\Accelerator.h" />
     <ClInclude Include="Obstacle\box\Box.h" />
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="scene\GameScene.h" />
