@@ -20,6 +20,12 @@ public:
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
+	//加速装置
+	bool GetIsSpeedUp() { return isSpeedUp; }
+	bool GetIsSpeedDown() { return isSpeedDown; }
+
+	void SetIsSpeedUp(bool isSpeedUp_) { isSpeedUp =  isSpeedUp_; }
+	void SetIsSpeedDown(bool isSpeedDown_) { isSpeedDown = isSpeedDown_; }
 
 private:
 
@@ -32,5 +38,12 @@ private:
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+
+
+	bool isSpeedUp = false;
+	bool isSpeedDown = false;
+
+	float isSpeedTime = 0.0f;
+
 };
 

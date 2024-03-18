@@ -1,11 +1,12 @@
 ﻿#include "Box.h"
 
-void Box::Initialize(Model* model) {
+void Box::Initialize(Model* model, Vector3 position) {
 	assert(model);
 	model_ = model;
 
 	worldTransform_.Initialize();
 	worldTransform_.scale_ = {5.0f, 5.0f, 5.0f};
+	worldTransform_.translation_ = position;
 }
 
 void Box::Update() { worldTransform_.UpdateMatrix(); }

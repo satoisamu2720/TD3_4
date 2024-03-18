@@ -10,6 +10,7 @@
 #include "stage/skydome/Skydome.h"
 #include "stage/ground/Ground.h"
 #include "Obstacle/box/Box.h"
+#include "Obstacle/accelerator/Accelerator.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -34,15 +35,19 @@ private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
+	//プレイヤー
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Model> modelPlayerBody_;
 	std::unique_ptr<Model> modelPlayerFront_;
 	std::unique_ptr<Model> modelPlayerBack_;
+	std::list<Player*> players_;
 
+	//障害物
 	std::unique_ptr<Box> box_;
 	Model* BoxModel_ = nullptr;
 
-	std::list<Player*> players_;
+	std::unique_ptr<Accelerator> accelerator_;
+	Model* acceleratorModel_ = nullptr;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
@@ -56,9 +61,11 @@ private:
 
 	Vector3 color = {1.0f, 1.0f, 1.0f};
 
+	//カメラ
 	std::unique_ptr<DebugCamera> debugCamera_;
 	std::unique_ptr<RailCamera> railCamera_;
 
+	//ステージ
 	std::unique_ptr<Skydome> skydome_;
 	Model* modelSkydome_ = nullptr;
 
@@ -68,15 +75,25 @@ private:
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
 
+	//プレイヤーの当たり判定
 	float PlayerFlontZ_;
 	float PlayerBackZ_;
 	float PlayerRightX_;
 	float PlayerLeftX_;
 
+	// ボックスの当たり判定
 	float BoxFlontZ_;
 	float BoxBackZ_;
 	float BoxRightX_;
 	float BoxLeftX_;
+
+	//加速装置の当たり判定
+	float SpeedFlontZ_;
+	float SpeedBackZ_;
+	float SpeedRightX_;
+	float SpeedLeftX_;
+
+	
 
 	float weather = 0;
 

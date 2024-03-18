@@ -221,6 +221,7 @@ void Player::NormalHitMotion() {
 
 	worldTransform_.rotation_.y += std::cos(normalHitRootParameter_) * amplitude;
 
+
 	--normalHitTime;
 
 	if (normalHitTime <= 0) {

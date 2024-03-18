@@ -43,7 +43,14 @@ void GameScene::Initialize() {
 
 	//箱初期化
 	box_ = std::make_unique<Box>();
-	box_->Initialize(BoxModel_);
+	box_->Initialize(BoxModel_, {0, 0.0f, 20.0f});
+
+	//加速装置モデル読み込み
+	acceleratorModel_ = (Model::CreateFromOBJ("Box", true));
+
+	//加速装置初期化
+	accelerator_ = std::make_unique<Accelerator>();
+	accelerator_->Initialize(acceleratorModel_);
 
   #pragma endregion 
 
@@ -99,9 +106,13 @@ void GameScene::Update() {
 	player_->Update();
 	player_->ThunderstormUpdate();
 	}
+
 	box_->Update();
+	accelerator_->Update();
+
 	skydome_->Update();
 	ground_->Update();
+
 	debugCamera_->Update();
 
 #pragma endregion 
@@ -139,14 +150,23 @@ void GameScene::Update() {
 	ImGui::InputFloat("weather", &weather, 1.0f);
 	//ImGui::Checkbox("", &);
 	ImGui::End();
+
+	
 #endif
 
 	// 当たり判定
 
-	PlayerBackZ_ = player_->GetWorldPosition().z -26.0f;
+#pragma region プレイヤーの当たり判定
+
+	PlayerBackZ_ = player_->GetWorldPosition().z - 26.0f;
 	PlayerFlontZ_ = player_->GetWorldPosition().z + 20.0f;
 	PlayerLeftX_ = player_->GetWorldPosition().x - 15.0f;
 	PlayerRightX_ = player_->GetWorldPosition().x + 15.0f;
+
+#pragma endregion
+
+#pragma region プレイヤーとボックスの当たり判定
+
 
 	BoxBackZ_ = box_->GetWorldPosition().z - 5.0f;
 	BoxFlontZ_ = box_->GetWorldPosition().z + 5.0f;
@@ -155,15 +175,29 @@ void GameScene::Update() {
 
 	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
 	    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
-		//Vector3 tmpTranslate = player_->GetWorldPosition();
-		//tmpTranslate.z += 10.0f;
-		//player_->SetTranslate(tmpTranslate);
 		if (timerFlag == false) {
 		player_->SetNormalHit(true);
 			player_->SetThunderHit(true);
 			timerFlag = true;
 		}
 	}
+
+#pragma endregion
+
+#pragma region プレイヤーと加速装置の当たり判定
+
+	SpeedFlontZ_ = accelerator_->GetWorldPosition().z - 5.0f;
+	SpeedBackZ_ = accelerator_->GetWorldPosition().z + 5.0f;
+	SpeedRightX_ = accelerator_->GetWorldPosition().x - 5.0f;
+	SpeedLeftX_ = accelerator_->GetWorldPosition().x + 5.0f;
+	
+	if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
+	    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
+
+		railCamera_->SetIsSpeedUp(true);
+	}
+
+#pragma endregion
 
 	Time();
 	
@@ -196,9 +230,10 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 
-	skydome_->Draw(viewProjection_);
+	//skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
 	box_->Draw(viewProjection_);
+	accelerator_->Draw(viewProjection_);
 
 	Model::PostDraw();
 

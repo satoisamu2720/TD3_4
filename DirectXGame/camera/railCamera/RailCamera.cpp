@@ -16,9 +16,12 @@ void RailCamera::Update() {
 	
 	Vector3 move_ = {0, 0, 0};
 
+	
+
 	if (input_->PushKey(DIK_R)) {
 		move_ = {0.0f, 0.0f, -15.0f};
 	}
+	
 
 	if (input_->PushKey(DIK_UP)) {
 		move_.z += kCharacterSpeed;
@@ -31,6 +34,28 @@ void RailCamera::Update() {
 	} else if (input_->PushKey(DIK_RIGHT)) {
 		worldTransform_.rotation_.y += cameraSpeed;
 	}
+
+	/// 加速関係
+
+	if (isSpeedDown == true) {
+		move_.z += 0.5f;
+	} else {
+		//move_.z += 2.0f;
+	}
+
+	if (isSpeedUp == true) {
+	
+		move_.z += 0.1f * isSpeedTime;
+
+	}
+
+	if (isSpeedTime >  0.0f) {
+		isSpeedTime--;
+	} else if(isSpeedTime <= 0.0f) {
+		isSpeedUp = false;
+		isSpeedTime = 60.0f;
+	}
+	///
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    {1.0f, 1.0f, 1.0f}, worldTransform_.rotation_, worldTransform_.translation_);
@@ -48,6 +73,10 @@ void RailCamera::Update() {
 	ImGui::DragFloat3("Camera Position", &worldTransform_.translation_.x, 0.1f);
 	ImGui::DragFloat3("Camera Rotation", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("Camera Rotation viewProjection_", &viewProjection_.rotation_.y, 0.01f);
+	ImGui::End();
+
+	ImGui::Begin("Speed");
+	ImGui::Checkbox("SpeedUp", &isSpeedUp);
 	ImGui::End();
 #endif
 
