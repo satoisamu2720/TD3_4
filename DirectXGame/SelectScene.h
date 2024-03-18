@@ -32,12 +32,20 @@ private:
 	uint32_t buttonSound_;
 
 	uint32_t titleTexHandle_ = 0;
-	Sprite* titleSprite_ = nullptr;
-	Sprite* SelectSprite_ = nullptr;
+	Sprite* sunnySprite_ = nullptr;
+	Sprite* rainSprite_ = nullptr;
 
 	int stageCount_ = 0;
 
-	float stageMove_ = 0;
+	bool moveLeftFlag_ = 0;
+
+	bool moveRightFlag_ = 0;
+
+	float moveStart[3];
+
+	float moveEnd[3];
+
+	const float SelectSpace = 420;
 
 	int stageNo_[3] = {TITLE, TEST,SUNNYSTAGE};
 };
