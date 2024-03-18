@@ -13,6 +13,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <memory>
+#include "timer.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -76,7 +77,9 @@ private:
 	float BoxRightX_;
 	float BoxLeftX_;
 
+	timer Timer_;
 
-
+	int time_ = 600;
+	bool *flag;
 
 };

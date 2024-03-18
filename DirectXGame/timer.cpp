@@ -1,9 +1,5 @@
 ﻿#include "timer.h"
-#include <stdbool.h>
-#include <stdio.h>
-#include <time.h>
-#include "ViewProjection.h"
-#include "WorldTransform.h"
+
 
 
 // 指定された時間が経過するまで待機し、その後フラグをtrueに設定し、一定時間後にフラグをfalseに戻す関数

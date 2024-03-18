@@ -53,6 +53,8 @@ void GameScene::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {1.0f, -2.0f, 0.0f});*/
 
+
+
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize({0.0f, 0.0f, -30.0f}, {0.0f, 0.0f, 0.0f});
 
@@ -76,6 +78,11 @@ void GameScene::Update() {
 	// デバックカメラのifdef
 
 	boxTransform_.UpdateMatrix();
+
+
+	Timer_.Timer(time_, flag);
+
+
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == false) {
