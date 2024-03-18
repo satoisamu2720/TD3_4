@@ -8,9 +8,9 @@ void Timer::Initialize() {
 
 }
 
-void Timer::Update(bool flag) {
+void Timer::Update() {
 	
-	isFlag = flag;
+	
 
 	if (isFlag == true) {
 		wTime -= 18;
@@ -43,7 +43,7 @@ void Timer::Update(bool flag) {
 	}
 	
 
-	ImGui::Text("%f:%f", MathTime, SecondTime);
+	ImGui::Text("%1.0fm : %1.0fs", MathTime, SecondTime);
 
 	ImGui::End();
 
@@ -66,5 +66,17 @@ void Timer::SetTime(float math, float second) {
 		SecondTime = second;
 	}
 
+
+}
+
+void Timer::TimerOn() {
+
+	isFlag = true;
+
+}
+
+void Timer::TimerOff() {
+
+	isFlag = false;
 
 }

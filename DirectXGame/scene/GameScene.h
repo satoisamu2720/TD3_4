@@ -13,6 +13,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <memory>
+#include "timer/Timer.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -49,6 +50,8 @@ private:
 	std::unique_ptr<DebugCamera> debugCamera_;
 	std::unique_ptr<RailCamera> railCamera_;
 
+	std::unique_ptr<Timer> timer_;
+
 	std::unique_ptr<Skydome> skydome_;
 	Model* modelSkydome_ = nullptr;
 
@@ -57,4 +60,6 @@ private:
 	
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
+
+	bool non = false;
 };

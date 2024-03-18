@@ -69,14 +69,36 @@ void GameScene::Initialize() {
 
    #pragma endregion
 
+
+	timer_ = std::make_unique<Timer>();
+	timer_->Initialize();
+	timer_->SetTime(1, 0);
+
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+
+	
 }
 
 void GameScene::Update() {
 	player_->Update();
 	skydome_->Update();
 	ground_->Update();
+
+	if (input_->TriggerKey(DIK_Z)) {
+		timer_->TimerOn();
+	}
+	if (input_->TriggerKey(DIK_X)) {
+		timer_->TimerOff();
+	}
+
+	if (input_->TriggerKey(DIK_C)) {
+		timer_->SetTime(1, 0);
+	}
+
+	timer_->Update();
+
+	
 
 	debugCamera_->Update();
 	// デバックカメラのifdef

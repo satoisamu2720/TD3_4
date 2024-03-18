@@ -13,11 +13,15 @@ class Timer {
 
 	public:
 		void Initialize();
-	    void Update(bool flag);
+	    void Update();
 
 		void Draw();
 
 		void SetTime(float math, float second);
+
+		void TimerOn();
+
+		void TimerOff();
 
 	private:
 		const WorldTransform* target_ = nullptr;
