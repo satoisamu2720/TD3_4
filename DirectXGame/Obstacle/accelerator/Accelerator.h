@@ -16,11 +16,12 @@ private:
 
 	Model* model_ = nullptr;
 
-	Vector3 position = {0, 0.0f, 60.0f};
+	//Vector3 position = {20.0f, -8.0f, 200.0f};
+	
 
 public:
 	// プレイヤー初期化
-	void Initialize(Model* model);
+	void Initialize(Model* model, Vector3 position);
 
 	// 更新処理
 	void Update();

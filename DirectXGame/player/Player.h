@@ -91,6 +91,7 @@ public:
 	void SetRand(float setRand) { setRand_ = setRand; }
 	void SetThunderHit(bool thunderHit) { thunderHit_ = thunderHit; }
 
+	void SetPosition(float position_) { position.z = position_; }
 
 	~Player();
 

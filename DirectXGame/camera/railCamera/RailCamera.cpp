@@ -44,16 +44,15 @@ void RailCamera::Update() {
 	}
 
 	if (isSpeedUp == true) {
-	
-		move_.z += 0.1f * isSpeedTime;
-
+		move_.z += 0.5f * isSpeedTime;
+		
 	}
 
 	if (isSpeedTime >  0.0f) {
 		isSpeedTime--;
 	} else if(isSpeedTime <= 0.0f) {
 		isSpeedUp = false;
-		isSpeedTime = 60.0f;
+		isSpeedTime = 90.0f;
 	}
 	///
 
@@ -69,6 +68,7 @@ void RailCamera::Update() {
 	 worldTransform_.translation_ = Add(worldTransform_.translation_, move_); 
 
 #ifdef _DEBUG
+
 	ImGui::Begin("Rail Camera");
 	ImGui::DragFloat3("Camera Position", &worldTransform_.translation_.x, 0.1f);
 	ImGui::DragFloat3("Camera Rotation", &worldTransform_.rotation_.x, 0.01f);

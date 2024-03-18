@@ -43,14 +43,18 @@ void GameScene::Initialize() {
 
 	//箱初期化
 	box_ = std::make_unique<Box>();
-	box_->Initialize(BoxModel_, {0, 0.0f, 20.0f});
+	box_->Initialize(BoxModel_, {-20.0f, 0.0f, 100.0f});
+
 
 	//加速装置モデル読み込み
-	acceleratorModel_ = (Model::CreateFromOBJ("Box", true));
+	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));
 
 	//加速装置初期化
-	accelerator_ = std::make_unique<Accelerator>();
-	accelerator_->Initialize(acceleratorModel_);
+	for (int i = 0; i < 2; i++) {
+	accelerator_[i] = std::make_unique<Accelerator>();
+	}
+	accelerator_[0]->Initialize(acceleratorModel_, {20.0f, -8.0f, 200.0f});
+	accelerator_[1]->Initialize(acceleratorModel_, {20.0f, -8.0f, 1600.0f});
 
   #pragma endregion 
 
@@ -108,7 +112,10 @@ void GameScene::Update() {
 	}
 
 	box_->Update();
-	accelerator_->Update();
+	// 加速装置
+	for (int i = 0; i < 2; i++) {
+	accelerator_[i]->Update();
+	}
 
 	skydome_->Update();
 	ground_->Update();
@@ -170,8 +177,8 @@ void GameScene::Update() {
 
 	BoxBackZ_ = box_->GetWorldPosition().z - 5.0f;
 	BoxFlontZ_ = box_->GetWorldPosition().z + 5.0f;
-	BoxRightX_ = box_->GetWorldPosition().x + 5.0f;
 	BoxLeftX_ = box_->GetWorldPosition().x - 5.0f;
+	BoxRightX_ = box_->GetWorldPosition().x + 5.0f;
 
 	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
 	    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
@@ -185,16 +192,19 @@ void GameScene::Update() {
 #pragma endregion
 
 #pragma region プレイヤーと加速装置の当たり判定
+	// 加速装置
+	for (int i = 0; i < 2; i++) {
+		SpeedBackZ_ = accelerator_[i]->GetWorldPosition().z - 10.0f;
+		SpeedFlontZ_ = accelerator_[i]->GetWorldPosition().z + 10.0f;
+		SpeedLeftX_ = accelerator_[i]->GetWorldPosition().x - 30.0f;
+		SpeedRightX_ = accelerator_[i]->GetWorldPosition().x + 30.0f;
 
-	SpeedFlontZ_ = accelerator_->GetWorldPosition().z - 5.0f;
-	SpeedBackZ_ = accelerator_->GetWorldPosition().z + 5.0f;
-	SpeedRightX_ = accelerator_->GetWorldPosition().x - 5.0f;
-	SpeedLeftX_ = accelerator_->GetWorldPosition().x + 5.0f;
-	
-	if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
-	    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
+		if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
+		    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
 
-		railCamera_->SetIsSpeedUp(true);
+			railCamera_->SetIsSpeedUp(true);
+			// player_->SetPosition({0.0f, 0.0f, -50.0f});
+		}
 	}
 
 #pragma endregion
@@ -233,7 +243,10 @@ void GameScene::Draw() {
 	//skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
 	box_->Draw(viewProjection_);
-	accelerator_->Draw(viewProjection_);
+	// 加速装置
+	for (int i = 0; i < 2; i++) {
+		accelerator_[i]->Draw(viewProjection_);
+	}
 
 	Model::PostDraw();
 

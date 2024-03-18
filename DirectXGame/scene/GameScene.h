@@ -46,7 +46,8 @@ private:
 	std::unique_ptr<Box> box_;
 	Model* BoxModel_ = nullptr;
 
-	std::unique_ptr<Accelerator> accelerator_;
+	//加速装置
+	std::unique_ptr<Accelerator> accelerator_[2];
 	Model* acceleratorModel_ = nullptr;
 
 	WorldTransform worldTransform_;
