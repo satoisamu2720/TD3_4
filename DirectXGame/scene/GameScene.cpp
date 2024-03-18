@@ -4,6 +4,7 @@
 #include "VectraCalculation.h"
 #include <cassert>
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
