@@ -5,6 +5,7 @@
 #include "IScene.h"
 #include "SelectScene.h"
 #include "TitleScene.h"
+#include "SunnyStage.h"
 #include <memory>
 
 class GameManager {

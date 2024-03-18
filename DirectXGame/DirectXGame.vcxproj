@@ -116,6 +116,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="SelectScene.cpp" />
+    <ClCompile Include="SunnyStage.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="SelectScene.h" />
+    <ClInclude Include="SunnyStage.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>

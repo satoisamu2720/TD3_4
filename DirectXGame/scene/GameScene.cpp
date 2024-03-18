@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "TextureManager.h"
+#include "ImGuiManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -13,7 +14,19 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+	ImGui::Begin("stage");
+
+	ImGui::Text("TestScene");
+
+	ImGui::End();
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = SELECT;
+	}
+
+}
+
 
 void GameScene::Draw() {
 
