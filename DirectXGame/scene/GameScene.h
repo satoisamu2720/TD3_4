@@ -4,6 +4,7 @@
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
+#include "Iscene.h"
 #include "Model.h"
 #include "player/Player.h"
 #include "camera/railCamera/RailCamera.h"
@@ -18,16 +19,25 @@
 /// <summary>
 /// ゲームシーン
 /// </summary>
-class GameScene {
+class GameScene : public IScene {
 
 public: 
 	GameScene();
 	~GameScene();
 
-	void Initialize();
-	void Update();
-	void Draw();
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize() override;
 
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
+	void Update() override;
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Draw() override;
 	void Time();
 
 private: 

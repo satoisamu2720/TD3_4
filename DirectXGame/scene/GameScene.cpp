@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "AxisIndicator.h"
 #include "TextureManager.h"
+#include "ImGuiManager.h"
 #include "VectraCalculation.h"
 #include <cassert>
 
@@ -206,6 +207,19 @@ void GameScene::Update() {
 			// player_->SetPosition({0.0f, 0.0f, -50.0f});
 		}
 	}
+
+
+	ImGui::Begin("stage");
+
+	ImGui::Text("TestScene");
+
+	ImGui::End();
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = SELECT;
+	}
+
+
 
 #pragma endregion
 

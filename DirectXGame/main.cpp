@@ -7,6 +7,8 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
+#include "gameManager.h"
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	WinApp* win = nullptr;
@@ -17,7 +19,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
 	GameScene* gameScene = nullptr;
-
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
 	win->CreateGameWindow();
@@ -61,6 +62,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
+	GameManager* gameManager = new GameManager();
+
 	// メインループ
 	while (true) {
 		// メッセージ処理
@@ -68,12 +71,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		}
 
+		gameManager->Check();
+
 		// ImGui受付開始
 		imguiManager->Begin();
 		// 入力関連の毎フレーム処理
 		input->Update();
-		// ゲームシーンの毎フレーム処理
-		gameScene->Update();
+
+		//// ゲームシーンの毎フレーム処理
+		//gameScene->Update();
+		
+		gameManager->Update();
+
 		// 軸表示の更新
 		axisIndicator->Update();
 		// ImGui受付終了
@@ -82,7 +91,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 描画開始
 		dxCommon->PreDraw();
 		// ゲームシーンの描画
-		gameScene->Draw();
+		//gameScene->Draw();
+		
+		gameManager->Draw();
+		 
 		// 軸表示の描画
 		axisIndicator->Draw();
 		// プリミティブ描画のリセット
