@@ -6,6 +6,8 @@
 #include "Input.h"
 #include "Iscene.h"
 #include "Model.h"
+#include "AxisIndicator.h"
+#include "TextureManager.h"
 #include "player/Player.h"
 #include "camera/railCamera/RailCamera.h"
 #include "stage/skydome/Skydome.h"
@@ -15,6 +17,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "VectraCalculation.h"
 #include <memory>
 /// <summary>
 /// ゲームシーン

@@ -82,6 +82,8 @@ public:
 
 	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; };
 
+	 float GetWeather() { return weather_; }
+	 void  SetWeather(float weather) { weather_ = weather; }
 
 	//ノーマル
 	void SetNormalHit(bool normalHit) { normalHit_ = normalHit; } 
@@ -113,6 +115,7 @@ private:
 
 	const ViewProjection* viewProjection_ = nullptr;
 
+	 float weather_ = 0;
 	//ノーマル当たり判定
 
 	bool normalHit_ = false;
@@ -127,6 +130,7 @@ private:
 	float windRight = -0.2f;
 	float setRand_ = 1;
 	float thunderHitRootParameter_ = 0.0f;
+
 
 		WeatherHit weatherHit_ = WeatherHit::NotHit;
 	std::optional<WeatherHit> weatherHitRequest_ = std::nullopt;

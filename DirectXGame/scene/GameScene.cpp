@@ -1,8 +1,5 @@
 #include "GameScene.h"
-#include "AxisIndicator.h"
-#include "TextureManager.h"
 #include "ImGuiManager.h"
-#include "VectraCalculation.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -103,15 +100,16 @@ void GameScene::Update() {
 
 #pragma region 更新処理
 
-	if (weather == 0) {
+	if (player_->GetWeather() == 0) {
 	player_->Update();
 	player_->SunnyUpdate();
 	}
-	if (weather == 1) {
+	if (player_->GetWeather() == 1) {
 	player_->Update();
 	player_->ThunderstormUpdate();
 	}
 
+	player_->SetWeather(weather);
 	box_->Update();
 	// 加速装置
 	for (int i = 0; i < 2; i++) {
@@ -123,6 +121,9 @@ void GameScene::Update() {
 
 	debugCamera_->Update();
 
+	if (input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = SELECT;
+	}
 #pragma endregion 
 
 #pragma region カメラセット
@@ -156,11 +157,14 @@ void GameScene::Update() {
 #ifdef _DEBUG
 	ImGui::Begin("weather");
 	ImGui::InputFloat("weather", &weather, 1.0f);
-	//ImGui::Checkbox("", &);
+	//ImGui::Checkbox("timerFlag", &timerFlag);
 	ImGui::End();
 
-	
+	ImGui::Begin("stage");
+	ImGui::Text("TestScene");
+	ImGui::End();
 #endif
+
 
 	// 当たり判定
 
@@ -207,18 +211,6 @@ void GameScene::Update() {
 			// player_->SetPosition({0.0f, 0.0f, -50.0f});
 		}
 	}
-
-
-	ImGui::Begin("stage");
-
-	ImGui::Text("TestScene");
-
-	ImGui::End();
-
-	if (input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = SELECT;
-	}
-
 
 
 #pragma endregion

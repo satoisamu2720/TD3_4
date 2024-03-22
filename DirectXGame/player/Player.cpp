@@ -69,19 +69,23 @@ void Player::Update() {
 	worldTransformBack_.UpdateMatrix();
 
 #ifdef _DEBUG
+	if (weather_ == 0) {
 	ImGui::Begin("Player SunnyUpdate");
 	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
 	ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::Checkbox("normalHit_", &normalHit_);
 	ImGui::End();
+	}
 
+	if (weather_ == 1) {
 	ImGui::Begin("Player ThunderstormUpdate");
 	ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
 	ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
-	ImGui::InputFloat("bestRotation", &bestRotation,1.0f);
+	ImGui::InputFloat("bestRotation", &bestRotation, 1.0f);
 	ImGui::Checkbox("thunderHit_", &thunderHit_);
 	ImGui::InputFloat("weather", &setRand_, 1.0f);
 	ImGui::End();
+	}
 #endif
 }
 
@@ -129,7 +133,7 @@ void Player::SunnyUpdate() {
 	} else if (input_->PushKey(DIK_S)) {
 		move_.z -= kCharacterSpeed;
 	}
-	if (input_->PushKey(DIK_SPACE)) {
+	if (input_->PushKey(DIK_F)) {
 		normalHit_ = true;
 		
 	}
@@ -189,7 +193,7 @@ void Player::ThunderstormUpdate() {
 	} else if (input_->PushKey(DIK_S)) {
 		move_.z -= kCharacterSpeed;
 	}
-	if (input_->PushKey(DIK_SPACE)) {
+	if (input_->PushKey(DIK_F)) {
 		thunderHit_ = true;
 		
 	}
