@@ -26,7 +26,7 @@ private:
 	WorldTransform worldTransformBackLeft_;
 	WorldTransform worldTransformBackRight_;*/
 
-	Vector3 position = {0, -15.0f, 60.0f};
+	Vector3 position = {0, -2.5f, 8.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 frontPosition = {0, 0, 0.5f};
 	Vector3 backPosition = {0, 0, -0.5f};
@@ -64,15 +64,12 @@ public:
 	// 雷に当たった時の更新処理
 	void ThunderHitMotion();
 
-	//
-	
 
 	//プレイヤー描画
 	void Draw(ViewProjection& view);
 	
 	Vector3 GetWorldPosition();
 
-	//Vector3 GetWorldTransform(){return worldTransform_.translation_;};
 
 	void SetViewProjection(const ViewProjection* viewProjection) {
 		viewProjection_ = viewProjection;
@@ -109,7 +106,7 @@ private:
 
 	bool notRotate = false;
 	// キャラクターの移動速度
-	const float kCharacterSpeed = 1.0f;
+	const float kCharacterSpeed = 0.2f;
 
 	Input* input_ = nullptr;
 

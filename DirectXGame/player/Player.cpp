@@ -23,7 +23,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformFront_.parent_ = &worldTransformBody_;
 	worldTransformBack_.parent_ = &worldTransformBody_;
 
-	worldTransform_.scale_ = {10.0f, 10.0f, 10.0f};
+	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, position);
 }
@@ -130,9 +130,9 @@ void Player::SunnyUpdate() {
 #ifdef _DEBUG
 	if (input_->PushKey(DIK_W)) {
 		move_.z += kCharacterSpeed;
-	} else if (input_->PushKey(DIK_S)) {
+	}/* else if (input_->PushKey(DIK_S)) {
 		move_.z -= kCharacterSpeed;
-	}
+	}*/
 	if (input_->PushKey(DIK_F)) {
 		normalHit_ = true;
 		

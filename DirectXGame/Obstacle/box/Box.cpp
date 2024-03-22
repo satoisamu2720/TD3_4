@@ -5,7 +5,7 @@ void Box::Initialize(Model* model, Vector3 position) {
 	model_ = model;
 
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = {5.0f, 5.0f, 5.0f};
+	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.translation_ = position;
 }
 

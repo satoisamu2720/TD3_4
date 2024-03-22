@@ -27,18 +27,23 @@ public:
 	void SetIsSpeedUp(bool isSpeedUp_) { isSpeedUp =  isSpeedUp_; }
 	void SetIsSpeedDown(bool isSpeedDown_) { isSpeedDown = isSpeedDown_; }
 
+	//ゲームスタート
+	void SetStart(bool Start) { start = Start; }
+	bool GetStart() { return start; }
+
 private:
 
 	const WorldTransform* target_ = nullptr;
 	Input* input_ = nullptr;
 
 	// キャラクターの移動速度
-	const float kCharacterSpeed = 3.0f;
+	const float kCharacterSpeed = 2.0f;
 	const float cameraSpeed = 0.05f;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 
+	bool start = false;
 
 	bool isSpeedUp = false;
 	bool isSpeedDown = false;

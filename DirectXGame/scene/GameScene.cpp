@@ -41,7 +41,7 @@ void GameScene::Initialize() {
 
 	//箱初期化
 	box_ = std::make_unique<Box>();
-	box_->Initialize(BoxModel_, {-20.0f, 0.0f, 100.0f});
+	box_->Initialize(BoxModel_, {-10.0f, -4.0f, -300.0f});
 
 
 	//加速装置モデル読み込み
@@ -51,8 +51,8 @@ void GameScene::Initialize() {
 	for (int i = 0; i < 2; i++) {
 	accelerator_[i] = std::make_unique<Accelerator>();
 	}
-	accelerator_[0]->Initialize(acceleratorModel_, {20.0f, -8.0f, 200.0f});
-	accelerator_[1]->Initialize(acceleratorModel_, {20.0f, -8.0f, 1600.0f});
+	accelerator_[0]->Initialize(acceleratorModel_, {10.0f, -4.9f, -300.0f});
+	accelerator_[1]->Initialize(acceleratorModel_, {10.0f, -4.9f, -200.0f});
 
   #pragma endregion 
 
@@ -61,13 +61,14 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	//外モデル初期化
 	skydome_ = std::make_unique<Skydome>();
-	skydome_->Initialize(modelSkydome_);
+	skydome_->Initialize(modelSkydome_, {0.0f, -5.0f, 0.0f});
+	
 
 	//ステージ地面モデル読み込み
 	modelGround_ = Model::CreateFromOBJ("ground", true);
 	//地面モデル初期化
 	ground_ = std::make_unique<Ground>();
-	ground_->Initialize(modelGround_, {0.0f, -10.0f, 0.0f});
+	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
 
   #pragma endregion 
@@ -75,7 +76,7 @@ void GameScene::Initialize() {
   #pragma region カメラ
 	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 20.0f, -200.0f}, {0.0f, 0.0f, 0.0f});
+	railCamera_->Initialize({0.0f, 0.0f, -400.0f}, {0.0f, 0.0f, 0.0f});
 	railCamera_->SetTarget(&player_->GetWorldTransform());
 	//追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -90,7 +91,7 @@ void GameScene::Initialize() {
 
    #pragma endregion
 
-	
+	viewProjection_.farZ = 200.0f;
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
@@ -170,25 +171,24 @@ void GameScene::Update() {
 
 #pragma region プレイヤーの当たり判定
 
-	PlayerBackZ_ = player_->GetWorldPosition().z - 26.0f;
-	PlayerFlontZ_ = player_->GetWorldPosition().z + 20.0f;
-	PlayerLeftX_ = player_->GetWorldPosition().x - 15.0f;
-	PlayerRightX_ = player_->GetWorldPosition().x + 15.0f;
+	PlayerBackZ_ = player_->GetWorldPosition().z - 1.0f;
+	PlayerFlontZ_ = player_->GetWorldPosition().z + 1.0f;
+	PlayerLeftX_ = player_->GetWorldPosition().x - 1.0f;
+	PlayerRightX_ = player_->GetWorldPosition().x + 1.0f;
 
 #pragma endregion
 
 #pragma region プレイヤーとボックスの当たり判定
 
-
-	BoxBackZ_ = box_->GetWorldPosition().z - 5.0f;
-	BoxFlontZ_ = box_->GetWorldPosition().z + 5.0f;
-	BoxLeftX_ = box_->GetWorldPosition().x - 5.0f;
-	BoxRightX_ = box_->GetWorldPosition().x + 5.0f;
+	BoxBackZ_ = box_->GetWorldPosition().z - 1.0f;
+	BoxFlontZ_ = box_->GetWorldPosition().z + 1.0f;
+	BoxLeftX_ = box_->GetWorldPosition().x - 1.0f;
+	BoxRightX_ = box_->GetWorldPosition().x + 1.0f;
 
 	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
 	    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
 		if (timerFlag == false) {
-		player_->SetNormalHit(true);
+			player_->SetNormalHit(true);
 			player_->SetThunderHit(true);
 			timerFlag = true;
 		}
@@ -199,10 +199,10 @@ void GameScene::Update() {
 #pragma region プレイヤーと加速装置の当たり判定
 	// 加速装置
 	for (int i = 0; i < 2; i++) {
-		SpeedBackZ_ = accelerator_[i]->GetWorldPosition().z - 10.0f;
-		SpeedFlontZ_ = accelerator_[i]->GetWorldPosition().z + 10.0f;
-		SpeedLeftX_ = accelerator_[i]->GetWorldPosition().x - 30.0f;
-		SpeedRightX_ = accelerator_[i]->GetWorldPosition().x + 30.0f;
+		SpeedBackZ_ = accelerator_[i]->GetWorldPosition().z - 1.0f;
+		SpeedFlontZ_ = accelerator_[i]->GetWorldPosition().z + 1.0f;
+		SpeedLeftX_ = accelerator_[i]->GetWorldPosition().x - 5.0f;
+		SpeedRightX_ = accelerator_[i]->GetWorldPosition().x + 5.0f;
 
 		if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
 		    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
@@ -211,7 +211,6 @@ void GameScene::Update() {
 			// player_->SetPosition({0.0f, 0.0f, -50.0f});
 		}
 	}
-
 
 #pragma endregion
 
@@ -246,7 +245,7 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 
-	//skydome_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
 	box_->Draw(viewProjection_);
 	// 加速装置

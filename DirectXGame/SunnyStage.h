@@ -69,7 +69,7 @@ private:
 	std::unique_ptr<RailCamera> railCamera_;
 
 	// ステージ
-	std::unique_ptr<Skydome> skydome_;
+	std::unique_ptr<Skydome> skydome_[2];
 	Model* modelSkydome_ = nullptr;
 
 	std::unique_ptr<Ground> ground_;
@@ -96,7 +96,11 @@ private:
 	float SpeedRightX_;
 	float SpeedLeftX_;
 
+	//天候
 	float weather = 0;
+
+	//ゲームスタート
+	bool start = false;
 
 	bool timerFlag = false;
 	float timer = 0;

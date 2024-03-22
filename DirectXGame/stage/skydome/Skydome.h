@@ -4,7 +4,7 @@
 #include "WorldTransform.h"
 class Skydome {
 public:
-	void Initialize(Model* model);
+	void Initialize(Model* model, Vector3 position);
 
 	void Update();
 

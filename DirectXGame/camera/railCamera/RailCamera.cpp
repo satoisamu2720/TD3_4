@@ -19,7 +19,7 @@ void RailCamera::Update() {
 	
 
 	if (input_->PushKey(DIK_R)) {
-		move_ = {0.0f, 0.0f, -15.0f};
+		worldTransform_.translation_ = {0.0f, 0.0f, -400.0f};
 	}
 	
 
@@ -35,16 +35,23 @@ void RailCamera::Update() {
 		worldTransform_.rotation_.y += cameraSpeed;
 	}
 
+	if (input_->TriggerKey(DIK_S) && start == false) {
+		start = true;
+	} else if (input_->TriggerKey(DIK_S) && start == true) {
+		start = false;
+	}
+
 	/// 加速関係
 
 	if (isSpeedDown == true) {
 		move_.z += 0.5f;
-	} else {
-		//move_.z += 2.0f;
+	} 
+	if (start == true && isSpeedDown == false) {
+		move_.z += 1.0f;
 	}
 
 	if (isSpeedUp == true) {
-		move_.z += 0.5f * isSpeedTime;
+		move_.z += 0.05f * isSpeedTime;
 		
 	}
 
@@ -52,6 +59,7 @@ void RailCamera::Update() {
 		isSpeedTime--;
 	} else if(isSpeedTime <= 0.0f) {
 		isSpeedUp = false;
+		isSpeedDown = false;
 		isSpeedTime = 90.0f;
 	}
 	///

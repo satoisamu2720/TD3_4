@@ -1,10 +1,11 @@
 #include "Skydome.h"
 
-void Skydome::Initialize(Model* model) {
+void Skydome::Initialize(Model* model, Vector3 position) {
 	assert(model);
 	model_ = model;
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = {0.5f, 0.5f, 0.5f};
+	worldTransform_.translation_ = position;
+	worldTransform_.scale_ = {1.0f, 1.0f, 5.0f};
 	worldTransform_.UpdateMatrix();
 }
 
