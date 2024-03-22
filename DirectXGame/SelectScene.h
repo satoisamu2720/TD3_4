@@ -10,6 +10,13 @@
 #include "WorldTransform.h"
 #include <memory>
 
+enum Weather {
+	SUNNY,
+	RAIN,
+	SNOW,
+	FOG,
+};
+
 class SelectScene : public IScene {
 
 public:
@@ -29,6 +36,8 @@ private:
 
 	std::unique_ptr<Model> selectModel_;
 
+	std::unique_ptr<Model> selectModel2_;
+
 	uint32_t buttonSound_;
 
 	uint32_t titleTexHandle_ = 0;
@@ -43,17 +52,17 @@ private:
 
 	bool rightFlag_ = false;
 
-	bool moveRightFlag_ = 0;
+	/*float moveStart[3];
 
-	float moveStart[3];
+	float moveEnd[3];*/
 
-	float moveEnd[3];
-
-	int frame = 0;
-
-	int endFrame = 60;
+	const float timer = 60;
 
 	const float SelectSpace = 420;
+
+	int weatherNo_[4] = {SUNNY, RAIN, SNOW, FOG};
+
+	Vector3 position_[4];
 
 	int stageNo_[3] = {TITLE, TEST,SUNNYSTAGE};
 };

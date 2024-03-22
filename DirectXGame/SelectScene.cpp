@@ -11,7 +11,9 @@ void SelectScene::Initialize() {
 
 	worldTransform_.Initialize();
 
-	
+	selectModel_.reset(Model::CreateFromOBJ("cube" ,true));
+
+	selectModel2_.reset(Model::CreateFromOBJ("cube", true));
 
 	// 背景スプライト
 	titleTexHandle_ = TextureManager::Load("Select.png");
@@ -27,13 +29,11 @@ void SelectScene::Initialize() {
 
 void SelectScene::Update() {
 
-	Vector2 position_ = {sunnySprite_->GetPosition()};
+	//Vector2 position_ = {sunnySprite_->GetPosition()};
 
 	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
 		if (stageCount_ >= 1) {
 			stageCount_ -= 1;
-			moveStart[0] = position_.x;
-			moveEnd[0] = position_.x + SelectSpace;
 			leftFlag_ = true;
 		}
 	} else if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
@@ -48,27 +48,15 @@ void SelectScene::Update() {
 	}
 
 	if (leftFlag_) {
-		frame++;
+		GetBezierCurve(
+		    static_cast<Vector3>(position_[].x), static_cast<Vector3>(position_[1].x] + SelectSpace),
+		    TrianglePositionXZ(position_.x,position_.x+SelectSpace,position_.z,position_.z));
 	}
 
 	if (rightFlag_) {
 	}
 
-	if (frame>=endFrame) {
-		moveLeftFlag_ = false;
-	/*	moveStart[0] = 0;
-		moveEnd[0] = 0;*/
-	}
-
-	float x = (static_cast<float>(frame) / static_cast<float>(endFrame));
-
-	position_.x = moveStart[0] + (moveEnd[0] - moveStart[0]) * easeInSine(x);
-
-	if (moveRightFlag_) {
-		// position_.x = moveStart[0] - (moveStart[0] - moveEnd[0]);
-	}
-
-	sunnySprite_->SetPosition(position_);
+	//sunnySprite_->SetPosition(position_);
 
 	ImGui::Begin("stageNum");
 
@@ -82,7 +70,7 @@ void SelectScene::Update() {
 
 	position_ = {position[0], position[1]};
 
-	sunnySprite_->SetPosition(position_);
+	//sunnySprite_->SetPosition(position_);
 
 	ImGui::End();
 }

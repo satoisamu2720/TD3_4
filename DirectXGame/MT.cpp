@@ -396,3 +396,11 @@ const Vector3 GetBezierCurve(const Vector3 p1, const Vector3 p2, const Vector3 p
 	Bezier.z = (1 - t.z) * (1 - t.z) * p1.z + 2 * (1 - t.z) * t.z * p2.z + t.z * t.z * p3.z;*/
 	return Bezier;
 }
+
+float TrianglePositionXZ(float px1, float px2, float pz1, float pz2) {
+	float result;
+
+	result = (px1 - px2) * (px1 - px2) + (pz1 - pz2) * (pz1 - pz2);
+
+	return result;
+}
