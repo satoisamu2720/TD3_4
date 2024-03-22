@@ -119,3 +119,6 @@ Matrix4x4 MakeViewPortMatrix(
 
 // 座標返還
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+
+
+const Vector3 GetBezierCurve(const Vector3 p1, const Vector3 p2, const Vector3 p3, float t);

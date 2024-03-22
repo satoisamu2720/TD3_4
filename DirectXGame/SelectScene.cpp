@@ -1,6 +1,7 @@
 ﻿#include "SelectScene.h"
 #include "ImGuiManager.h"
 #include "MT.h"
+#include "Easings.h"
 #include <vector>
 
 void SelectScene::Initialize() {
@@ -10,31 +11,35 @@ void SelectScene::Initialize() {
 
 	worldTransform_.Initialize();
 
+	
+
 	// 背景スプライト
 	titleTexHandle_ = TextureManager::Load("Select.png");
-	
+
 	sunnySprite_ =
 	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 
+	rainSprite_ =
+	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 
-
-	std::vector<Sprite*> selectSprite = {}
-
+	// std::vector<Sprite*> selectSprite = {sunnySprite_};
 }
 
 void SelectScene::Update() {
 
-	Vector2 position_[3] = {sunnySprite_->GetPosition()};
+	Vector2 position_ = {sunnySprite_->GetPosition()};
 
 	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
 		if (stageCount_ >= 1) {
 			stageCount_ -= 1;
-			moveLeftFlag_ = true;
+			moveStart[0] = position_.x;
+			moveEnd[0] = position_.x + SelectSpace;
+			leftFlag_ = true;
 		}
 	} else if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
 		if (stageCount_ < 2) {
 			stageCount_ += 1;
-			moveRightFlag_ = true;
+			rightFlag_ = true;
 		}
 	}
 
@@ -42,10 +47,25 @@ void SelectScene::Update() {
 		sceneNo = stageNo_[stageCount_];
 	}
 
-	if (moveLeftFlag_) {
-		for (int i = 0; i < stageCount_; i++) {
-			
-		}
+	if (leftFlag_) {
+		frame++;
+	}
+
+	if (rightFlag_) {
+	}
+
+	if (frame>=endFrame) {
+		moveLeftFlag_ = false;
+	/*	moveStart[0] = 0;
+		moveEnd[0] = 0;*/
+	}
+
+	float x = (static_cast<float>(frame) / static_cast<float>(endFrame));
+
+	position_.x = moveStart[0] + (moveEnd[0] - moveStart[0]) * easeInSine(x);
+
+	if (moveRightFlag_) {
+		// position_.x = moveStart[0] - (moveStart[0] - moveEnd[0]);
 	}
 
 	sunnySprite_->SetPosition(position_);
@@ -76,7 +96,7 @@ void SelectScene::Draw() {
 	Sprite::PreDraw(commandList);
 
 	sunnySprite_->Draw();
-	//SelectSprite_->Draw();
+	// SelectSprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる

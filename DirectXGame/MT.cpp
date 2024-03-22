@@ -383,3 +383,16 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	result.z /= w;
 	return result;
 }
+
+const Vector3 GetBezierCurve(const Vector3 p1, const Vector3 p2, const Vector3 p3, float t) {
+	Vector3 Bezier;
+
+	Bezier.x = (1 - t) * (1 - t) * p1.x + 2 * (1 - t) * t * p2.x + t * t * p3.x;
+	Bezier.y = (1 - t) * (1 - t) * p1.y + 2 * (1 - t) * t * p2.y + t * t * p3.y;
+	Bezier.z = (1 - t) * (1 - t) * p1.z + 2 * (1 - t) * t * p2.z + t * t * p3.z;
+
+	/*Bezier.x = (1 - t.x) * (1 - t.x) * p1.x + 2 * (1 - t.x) * t.x * p2.x + t.x * t.x * p3.x;
+	Bezier.y = (1 - t.y) * (1 - t.y) * p1.y + 2 * (1 - t.y) * t.y * p2.y + t.y * t.y * p3.y;
+	Bezier.z = (1 - t.z) * (1 - t.z) * p1.z + 2 * (1 - t.z) * t.z * p2.z + t.z * t.z * p3.z;*/
+	return Bezier;
+}

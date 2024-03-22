@@ -35,15 +35,23 @@ private:
 	Sprite* sunnySprite_ = nullptr;
 	Sprite* rainSprite_ = nullptr;
 
-	int stageCount_ = 0;
+	int stageCount_ = false;
 
-	bool moveLeftFlag_ = 0;
+	bool leftFlag_ = false;
+
+	bool moveLeftFlag_ = false;
+
+	bool rightFlag_ = false;
 
 	bool moveRightFlag_ = 0;
 
 	float moveStart[3];
 
 	float moveEnd[3];
+
+	int frame = 0;
+
+	int endFrame = 60;
 
 	const float SelectSpace = 420;
 
