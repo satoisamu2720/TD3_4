@@ -49,8 +49,11 @@ void SelectScene::Update() {
 
 	if (leftFlag_) {
 		GetBezierCurve(
-		    static_cast<Vector3>(position_[].x), static_cast<Vector3>(position_[1].x] + SelectSpace),
-		    TrianglePositionXZ(position_.x,position_.x+SelectSpace,position_.z,position_.z));
+		    static_cast<Vector3>(position_[1].x), static_cast<Vector3>(position_[2].x),
+		    TrianglePositionXZ(
+		        static_cast<float>(position_[1].x), static_cast<float>(position_[1].x + SelectSpace), static_cast<float>(position_[1].z),
+		        static_cast<float>(position_[1].z)),
+		    timer);
 	}
 
 	if (rightFlag_) {
@@ -60,7 +63,7 @@ void SelectScene::Update() {
 
 	ImGui::Begin("stageNum");
 
-	float position[2]{position_.x, position_.y};
+	/*float position[2]{position_.x, position_.y};
 
 	ImGui::Text("SelectScene");
 
@@ -68,7 +71,7 @@ void SelectScene::Update() {
 
 	ImGui::SliderFloat2("TexturePosition", position, 10.0f, 1280.0f);
 
-	position_ = {position[0], position[1]};
+	position_ = {position[0], position[1]};*/
 
 	//sunnySprite_->SetPosition(position_);
 
