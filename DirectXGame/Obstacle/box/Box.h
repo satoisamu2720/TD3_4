@@ -10,11 +10,15 @@
 #include <stdio.h>
 #include <optional>
 #include "VectraCalculation.h"
+class GameScene;
+
 class Box  {
 private:
 	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
+	
+	GameScene* gameScene_ = nullptr;
 
 public:
 	// プレイヤー初期化
@@ -25,6 +29,8 @@ public:
 
 	//描画
 	void Draw(ViewProjection& view);
+
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 	Vector3 GetWorldPosition();
 };

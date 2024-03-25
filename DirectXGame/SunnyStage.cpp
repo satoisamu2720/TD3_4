@@ -33,6 +33,8 @@ void SunnyStage::Initialize() {
 	// 箱初期化
 	box_ = std::make_unique<Box>();
 	box_->Initialize(BoxModel_, {-10.0f, -4.0f, -300.0f});
+	//ボックスにゲームシーンを渡す
+	box_->SetGameScene(this);
 
 	// 加速装置モデル読み込み
 	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));

@@ -123,8 +123,8 @@ private:
 	//雷雨
 	bool thunderHit_ = false;
 	float wind = 0.0f;
-	float windLeft =  0.2f;
-	float windRight = -0.2f;
+	float windLeft =  0.05f;
+	float windRight = -0.05f;
 	float setRand_ = 1;
 	float thunderHitRootParameter_ = 0.0f;
 
