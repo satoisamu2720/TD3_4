@@ -27,15 +27,15 @@ void SunnyStage::Initialize() {
 
 #pragma region 障害物
 
-	//// 箱モデル読み込み
-	// BoxModel_ = (Model::CreateFromOBJ("Box", true));
+	// 箱モデル読み込み
+	 BoxModel_ = (Model::CreateFromOBJ("Box", true));
 
-	//// 箱初期化
-	// box_ = std::make_unique<Box>();
-	// box_->Initialize(BoxModel_, {-10.0f, -4.0f, -300.0f});
+	// 箱初期化
+	 box_ = std::make_unique<Box>();
+	 box_->Initialize(BoxModel_, {-10.0f, -4.0f, -300.0f});
 
 	// ボックスのCSVファイル読み込み
-	LoadBoxPopData();
+	//LoadBoxPopData();
 
 	// 加速装置モデル読み込み
 	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));
@@ -296,7 +296,7 @@ void SunnyStage::Time() {
 void SunnyStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/ItemPop.csv");
+	file.open("Resources/BoxPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -343,7 +343,8 @@ void SunnyStage::UpdataBoxPopCommands() {
 	}
 }
 
-void SunnyStage::BoxGenerate(Vector3 position) { // 箱モデル読み込み
+void SunnyStage::BoxGenerate(Vector3 position) { 
+	// 箱モデル読み込み
 	BoxModel_ = (Model::CreateFromOBJ("Box", true));
 
 	// 箱初期化

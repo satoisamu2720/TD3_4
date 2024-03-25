@@ -10,16 +10,11 @@
 #include <stdio.h>
 #include <optional>
 #include "VectraCalculation.h"
-class GameScene;
-
 class Box  {
 private:
 	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
-	
-	GameScene* gameScene_ = nullptr;
-
 	// デスフラグ
 	bool isDead_ = false;
 
@@ -34,8 +29,6 @@ public:
 	void Draw(ViewProjection& view);
 
 	bool IsDead() const { return isDead_; }
-
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 	Vector3 GetWorldPosition();
 };
