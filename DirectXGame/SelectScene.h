@@ -32,11 +32,12 @@ private:
 	Audio* audio_ = nullptr;
 
 	WorldTransform worldTransform_;
+	WorldTransform worldTransform_2;
 	ViewProjection viewProjection_;
 
 	std::unique_ptr<Model> selectModel_;
 
-	std::unique_ptr<Model> selectModel2_;
+	std::unique_ptr<Model> selectModel_2;
 
 	uint32_t buttonSound_;
 
@@ -52,6 +53,10 @@ private:
 
 	bool rightFlag_ = false;
 
+	Vector3 g;
+
+	float rotf;
+
 	/*float moveStart[3];
 
 	float moveEnd[3];*/
@@ -64,5 +69,7 @@ private:
 
 	Vector3 position_[4];
 
-	int stageNo_[3] = {TITLE, TEST,SUNNYSTAGE};
+	// Vector3 position_2 = {}
+
+	int stageNo_[3] = {TITLE, TEST, SUNNYSTAGE};
 };

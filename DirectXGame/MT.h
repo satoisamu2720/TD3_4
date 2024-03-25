@@ -122,4 +122,4 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
 const Vector3 GetBezierCurve(const Vector3 p1, const Vector3 p2, const Vector3 p3, float t);
 
-Vector3 TrianglePositionXZ(float px1, float px2,float pz1,float pz2);
+Vector3 TrianglePositionXZ(Vector3 p1, Vector3 p2);
