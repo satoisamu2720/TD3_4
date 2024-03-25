@@ -20,6 +20,9 @@ private:
 	
 	GameScene* gameScene_ = nullptr;
 
+	// デスフラグ
+	bool isDead_ = false;
+
 public:
 	// プレイヤー初期化
 	void Initialize(Model* model,Vector3 position);
@@ -29,6 +32,8 @@ public:
 
 	//描画
 	void Draw(ViewProjection& view);
+
+	bool IsDead() const { return isDead_; }
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 

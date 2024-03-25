@@ -18,6 +18,8 @@
 #include "WorldTransform.h"
 #include "VectraCalculation.h"
 #include <memory>
+#include <fstream>
+
 
 class SunnyStage : public IScene {
 
@@ -30,7 +32,21 @@ public:
 
 	void Time();
 
-	
+	/// <summary>
+	/// ボックス発生データを読み込み
+	/// </summary>
+	void LoadBoxPopData();
+
+	/// <summary>
+	/// ボックスの発生コマンドの更新
+	/// </summary>
+	void UpdataBoxPopCommands();
+
+	/// <summary>
+	/// ボックスの生成
+	/// </summary>
+	/// <param name="positioin"></param>
+	void BoxGenerate(Vector3 position);
 
 private:
 
@@ -109,6 +125,11 @@ private:
 
 	uint32_t titleTexHandle_ = 0;
 	Sprite* titleSprite_ = nullptr;
+
+	// ボックス
+	std::list<std::unique_ptr<Box>> boxs_;
+	// ボックスの発生コマンド
+	std::stringstream boxPopCommands;
 
 
 };

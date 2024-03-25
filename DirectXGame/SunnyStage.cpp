@@ -27,14 +27,15 @@ void SunnyStage::Initialize() {
 
 #pragma region 障害物
 
-	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("Box", true));
+	//// 箱モデル読み込み
+	// BoxModel_ = (Model::CreateFromOBJ("Box", true));
 
-	// 箱初期化
-	box_ = std::make_unique<Box>();
-	box_->Initialize(BoxModel_, {-10.0f, -4.0f, -300.0f});
-	//ボックスにゲームシーンを渡す
-	box_->SetGameScene(this);
+	//// 箱初期化
+	// box_ = std::make_unique<Box>();
+	// box_->Initialize(BoxModel_, {-10.0f, -4.0f, -300.0f});
+
+	// ボックスのCSVファイル読み込み
+	LoadBoxPopData();
 
 	// 加速装置モデル読み込み
 	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));
@@ -60,8 +61,8 @@ void SunnyStage::Initialize() {
 	skydome_[1]->Initialize(modelSkydome_, {0.0f, -5.0f, 1000.0f});
 
 	//// 外モデル初期化
-	//skydome_ = std::make_unique<Skydome>();
-	//skydome_->Initialize(modelSkydome_, {0.0f,-12.0f,0.0f});
+	// skydome_ = std::make_unique<Skydome>();
+	// skydome_->Initialize(modelSkydome_, {0.0f,-12.0f,0.0f});
 
 	// ステージ地面モデル読み込み
 	modelGround_ = Model::CreateFromOBJ("ground", true);
@@ -81,11 +82,11 @@ void SunnyStage::Initialize() {
 	player_->SetViewProjection(&railCamera_->GetViewProjection());
 
 	//// デバックカメラ初期化
-	//debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
+	// debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 	//// 軸方向表示の表示を有効にする
-	//AxisIndicator::GetInstance()->SetVisible(true);
+	// AxisIndicator::GetInstance()->SetVisible(true);
 	//// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
-	//AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+	// AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 
 #pragma endregion
 	viewProjection_.farZ = 200.0f;
@@ -101,14 +102,14 @@ void SunnyStage::Update() {
 		player_->Update();
 		player_->SunnyUpdate();
 		if (railCamera_->GetStart() == false) {
-		railCamera_->SetStart(start);
+			railCamera_->SetStart(start);
 		}
 	}
 	if (player_->GetWeather() == 1) {
 		player_->Update();
 		player_->ThunderstormUpdate();
 		if (railCamera_->GetStart() == false) {
-		railCamera_->SetStart(start);
+			railCamera_->SetStart(start);
 		}
 	}
 	player_->SetWeather(weather);
@@ -121,10 +122,10 @@ void SunnyStage::Update() {
 	for (int i = 0; i < 2; i++) {
 		skydome_[i]->Update();
 	}
-	
+
 	ground_->Update();
 
-	//debugCamera_->Update();
+	// debugCamera_->Update();
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = SELECT;
@@ -166,7 +167,7 @@ void SunnyStage::Update() {
 
 	ImGui::Begin("stage");
 	ImGui::Text("SunnyStage");
-    ImGui::Checkbox("Game Start", &start);
+	ImGui::Checkbox("Game Start", &start);
 	ImGui::End();
 #endif
 
@@ -185,7 +186,7 @@ void SunnyStage::Update() {
 
 	BoxBackZ_ = box_->GetWorldPosition().z - 1.0f;
 	BoxFlontZ_ = box_->GetWorldPosition().z + 1.0f;
-	BoxLeftX_ = box_->GetWorldPosition().x -1.0f;
+	BoxLeftX_ = box_->GetWorldPosition().x - 1.0f;
 	BoxRightX_ = box_->GetWorldPosition().x + 1.0f;
 
 	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
@@ -212,18 +213,29 @@ void SunnyStage::Update() {
 		    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
 
 			railCamera_->SetIsSpeedUp(true);
-			
+
 			// player_->SetPosition({0.0f, 0.0f, -50.0f});
 		}
 	}
 
 #pragma endregion
 
-	Time();
+	// デスフラグの立った敵を削除
+	boxs_.remove_if([](std::unique_ptr<Box>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
 
+	// アイテムのCSVファイルの更新処理
+	UpdataBoxPopCommands();
+
+	Time();
 }
 
-void SunnyStage::Draw() {// コマンドリストの取得
+void SunnyStage::Draw() { // コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	// 背景スプライト描画前処理
@@ -248,7 +260,7 @@ void SunnyStage::Draw() {// コマンドリストの取得
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 	for (int i = 0; i < 2; i++) {
-		skydome_[i] -> Draw(viewProjection_);
+		skydome_[i]->Draw(viewProjection_);
 	}
 	ground_->Draw(viewProjection_);
 	box_->Draw(viewProjection_);
@@ -281,3 +293,61 @@ void SunnyStage::Time() {
 	}
 }
 
+void SunnyStage::LoadBoxPopData() {
+	boxPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/ItemPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	boxPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdataBoxPopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(boxPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			BoxGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::BoxGenerate(Vector3 position) { // 箱モデル読み込み
+	BoxModel_ = (Model::CreateFromOBJ("Box", true));
+
+	// 箱初期化
+	box_ = std::make_unique<Box>();
+	box_->Initialize(BoxModel_, position);
+	// ボックスにゲームシーンを渡す
+}
