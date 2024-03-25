@@ -51,8 +51,8 @@ void SelectScene::Update() {
 		GetBezierCurve(
 		    static_cast<Vector3>(position_[1].x), static_cast<Vector3>(position_[2].x),
 		    TrianglePositionXZ(
-		        static_cast<float>(position_[1].x), static_cast<float>(position_[1].x + SelectSpace), static_cast<float>(position_[1].z),
-		        static_cast<float>(position_[1].z)),
+		        static_cast<float>(position_[1].x), static_cast<float>(position_[2].x), static_cast<float>(position_[1].z),
+		        static_cast<float>(position_[2].z)),
 		    timer);
 	}
 
