@@ -2,6 +2,7 @@
 #include "ImGuiManager.h"
 #include <cassert>
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -130,6 +131,11 @@ void GameScene::Update() {
 #pragma region カメラセット
 
 	// デバックカメラのifdef
+
+
+
+	Timer_.Timer(time_, flag);
+
 
 
 #ifdef _DEBUG

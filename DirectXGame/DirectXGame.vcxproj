@@ -125,6 +125,7 @@
     <ClCompile Include="scene\TitleScene.cpp" />
     <ClCompile Include="stage\ground\Ground.cpp" />
     <ClCompile Include="stage\skydome\Skydome.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="WorldTransform.EX.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +172,7 @@
     <ClInclude Include="scene\TitleScene.h" />
     <ClInclude Include="stage\ground\Ground.h" />
     <ClInclude Include="stage\skydome\Skydome.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\TerrainPS.hlsl">

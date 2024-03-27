@@ -19,6 +19,7 @@
 #include "WorldTransform.h"
 #include "VectraCalculation.h"
 #include <memory>
+#include "timer.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -116,6 +117,8 @@ private:
 	
 
 	float weather = 0;
+	int time_ = 600;
+	bool *flag;
 
 	bool timerFlag = false;
 	float timer = 0;
