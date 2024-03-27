@@ -26,7 +26,7 @@ private:
 	WorldTransform worldTransformBackLeft_;
 	WorldTransform worldTransformBackRight_;*/
 
-	Vector3 position = {0, -2.5f, 8.0f};
+	Vector3 position = {0, -2.0f, 8.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 frontPosition = {0, 0, 0.5f};
 	Vector3 backPosition = {0, 0, -0.5f};

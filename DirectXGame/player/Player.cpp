@@ -130,9 +130,9 @@ void Player::SunnyUpdate() {
 #ifdef _DEBUG
 	if (input_->PushKey(DIK_W)) {
 		move_.z += kCharacterSpeed;
-	}/* else if (input_->PushKey(DIK_S)) {
+	} else if (input_->PushKey(DIK_S)) {
 		move_.z -= kCharacterSpeed;
-	}*/
+	}
 	if (input_->PushKey(DIK_F)) {
 		normalHit_ = true;
 		

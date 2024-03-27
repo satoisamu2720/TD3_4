@@ -95,6 +95,12 @@ private:
 	float PlayerRightX_;
 	float PlayerLeftX_;
 
+	// プレイヤーの当たり判定範囲
+	float PlayerFlontZHit_ = 2.4f;
+	float PlayerBackZHit_ = 2.3f;
+	float PlayerRightXHit_ =1.3f;
+	float PlayerLeftXHit_ = 1.3f;
+
 	// ボックスの当たり判定
 	float BoxFlontZ_;
 	float BoxBackZ_;

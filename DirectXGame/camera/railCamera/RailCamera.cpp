@@ -19,7 +19,7 @@ void RailCamera::Update() {
 	
 
 	if (input_->PushKey(DIK_R)) {
-		worldTransform_.translation_ = {0.0f, 0.0f, -400.0f};
+		worldTransform_.translation_ = {0.0f, 4.0f, 10.0f};
 	}
 	
 
@@ -35,11 +35,11 @@ void RailCamera::Update() {
 		worldTransform_.rotation_.y += cameraSpeed;
 	}
 
-	if (input_->TriggerKey(DIK_S) && start == false) {
+	/*if (input_->TriggerKey(DIK_S) && start == false) {
 		start = true;
 	} else if (input_->TriggerKey(DIK_S) && start == true) {
 		start = false;
-	}
+	}*/
 
 	/// 加速関係
 

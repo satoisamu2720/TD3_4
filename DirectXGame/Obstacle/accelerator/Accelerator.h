@@ -16,7 +16,8 @@ private:
 
 	Model* model_ = nullptr;
 
-	//Vector3 position = {20.0f, -8.0f, 200.0f};
+	// デスフラグ
+	bool isDead_ = false;
 	
 
 public:
@@ -29,5 +30,8 @@ public:
 	// 描画
 	void Draw(ViewProjection& view);
 
+	bool IsDead() const { return isDead_; }
+
 	Vector3 GetWorldPosition();
+
 };

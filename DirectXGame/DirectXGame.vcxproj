@@ -110,22 +110,22 @@
     <ClCompile Include="baseCharacter\BaseCharacter.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
-    <ClCompile Include="ClearScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="GameOverScene.cpp" />
-    <ClCompile Include="IScene.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />
     <ClCompile Include="Obstacle\box\Box.cpp" />
     <ClCompile Include="player\Player.cpp" />
+    <ClCompile Include="scene\ClearScene.cpp" />
+    <ClCompile Include="scene\GameOverScene.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="scene\IScene.cpp" />
+    <ClCompile Include="scene\SelectScene.cpp" />
+    <ClCompile Include="scene\SunnyStage.cpp" />
+    <ClCompile Include="scene\TitleScene.cpp" />
     <ClCompile Include="stage\ground\Ground.cpp" />
     <ClCompile Include="stage\skydome\Skydome.cpp" />
     <ClCompile Include="WorldTransform.EX.cpp" />
-    <ClCompile Include="SelectScene.cpp" />
-    <ClCompile Include="SunnyStage.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\ImGuiManager.h" />
@@ -152,12 +152,9 @@
     <ClInclude Include="base\StringUtility.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
-    <ClInclude Include="ClearScene.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="camera\railCamera\RailCamera.h" />
     <ClInclude Include="input\Input.h" />
-    <ClInclude Include="IScene.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
@@ -165,10 +162,13 @@
     <ClInclude Include="Obstacle\accelerator\Accelerator.h" />
     <ClInclude Include="Obstacle\box\Box.h" />
     <ClInclude Include="player\Player.h" />
+    <ClInclude Include="scene\ClearScene.h" />
+    <ClInclude Include="scene\GameOverScene.h" />
     <ClInclude Include="scene\GameScene.h" />
-    <ClInclude Include="SelectScene.h" />
-    <ClInclude Include="SunnyStage.h" />
-    <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="scene\IScene.h" />
+    <ClInclude Include="scene\SelectScene.h" />
+    <ClInclude Include="scene\SunnyStage.h" />
+    <ClInclude Include="scene\TitleScene.h" />
     <ClInclude Include="stage\ground\Ground.h" />
     <ClInclude Include="stage\skydome\Skydome.h" />
   </ItemGroup>

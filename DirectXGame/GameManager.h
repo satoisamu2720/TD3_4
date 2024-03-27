@@ -1,11 +1,11 @@
 ﻿#pragma once
-#include "ClearScene.h"
-#include "GameOverScene.h"
-#include "GameScene.h"
-#include "IScene.h"
-#include "SelectScene.h"
-#include "TitleScene.h"
-#include "SunnyStage.h"
+#include "scene/ClearScene.h"
+#include "scene/GameOverScene.h"
+#include "scene/GameScene.h"
+#include "scene/IScene.h"
+#include "scene/SelectScene.h"
+#include "scene/TitleScene.h"
+#include "scene/SunnyStage.h"
 #include <memory>
 
 class GameManager {

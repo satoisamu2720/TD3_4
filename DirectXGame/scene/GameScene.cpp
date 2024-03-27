@@ -37,11 +37,11 @@ void GameScene::Initialize() {
   #pragma region 障害物
 
 	//箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("Box", true));
+	BoxModel_ = (Model::CreateFromOBJ("woodenBox", true));
 
 	//箱初期化
 	box_ = std::make_unique<Box>();
-	box_->Initialize(BoxModel_, {-10.0f, -4.0f, -300.0f});
+	box_->Initialize(BoxModel_, {0.0f, 0.0f, 0.0f});
 
 
 	//加速装置モデル読み込み
@@ -51,8 +51,8 @@ void GameScene::Initialize() {
 	for (int i = 0; i < 2; i++) {
 	accelerator_[i] = std::make_unique<Accelerator>();
 	}
-	accelerator_[0]->Initialize(acceleratorModel_, {10.0f, -4.9f, -300.0f});
-	accelerator_[1]->Initialize(acceleratorModel_, {10.0f, -4.9f, -200.0f});
+	accelerator_[0]->Initialize(acceleratorModel_, {10.0f, 0.1f, -100.0f});
+	accelerator_[1]->Initialize(acceleratorModel_, {10.0f, 0.1f, 0.0f});
 
   #pragma endregion 
 
@@ -61,7 +61,7 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	//外モデル初期化
 	skydome_ = std::make_unique<Skydome>();
-	skydome_->Initialize(modelSkydome_, {0.0f, -5.0f, 0.0f});
+	skydome_->Initialize(modelSkydome_, {0.0f, 0.0f, 0.0f});
 	
 
 	//ステージ地面モデル読み込み
@@ -76,7 +76,7 @@ void GameScene::Initialize() {
   #pragma region カメラ
 	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 0.0f, -400.0f}, {0.0f, 0.0f, 0.0f});
+	railCamera_->Initialize({0.0f, 4.0f, -100.0f}, {0.0f, 0.0f, 0.0f});
 	railCamera_->SetTarget(&player_->GetWorldTransform());
 	//追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -164,6 +164,13 @@ void GameScene::Update() {
 	ImGui::Begin("stage");
 	ImGui::Text("TestScene");
 	ImGui::End();
+
+	ImGui::Begin("Collision ");
+	ImGui::InputFloat("PlayerFlontZSize_", &PlayerFlontZHit_, 0.1f);
+	ImGui::InputFloat("PlayerBackZSize_", &PlayerBackZHit_, 0.1f);
+	ImGui::InputFloat("PlayerRightXSize_", &PlayerRightXHit_, 0.1f);
+	ImGui::InputFloat("PlayerLeftXSize_", &PlayerLeftXHit_, 0.1f);
+	ImGui::End();
 #endif
 
 
@@ -171,10 +178,10 @@ void GameScene::Update() {
 
 #pragma region プレイヤーの当たり判定
 
-	PlayerBackZ_ = player_->GetWorldPosition().z - 1.0f;
-	PlayerFlontZ_ = player_->GetWorldPosition().z + 1.0f;
-	PlayerLeftX_ = player_->GetWorldPosition().x - 1.0f;
-	PlayerRightX_ = player_->GetWorldPosition().x + 1.0f;
+	PlayerBackZ_ = player_->GetWorldPosition().z - PlayerBackZHit_;
+	PlayerFlontZ_ = player_->GetWorldPosition().z + PlayerFlontZHit_;
+	PlayerLeftX_ = player_->GetWorldPosition().x - PlayerLeftXHit_;
+	PlayerRightX_ = player_->GetWorldPosition().x + PlayerRightXHit_;
 
 #pragma endregion
 
@@ -246,7 +253,7 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	skydome_->Draw(viewProjection_);
-	ground_->Draw(viewProjection_);
+	//ground_->Draw(viewProjection_);
 	box_->Draw(viewProjection_);
 	// 加速装置
 	for (int i = 0; i < 2; i++) {
