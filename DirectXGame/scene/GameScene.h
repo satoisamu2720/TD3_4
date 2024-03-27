@@ -117,7 +117,9 @@ private:
 	
 
 	float weather = 0;
-	int time_ = 600;
+
+	timer Timer_;
+	int time_ = 120;
 	bool *flag;
 
 	bool timerFlag = false;

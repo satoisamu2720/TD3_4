@@ -126,17 +126,12 @@ void GameScene::Update() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = SELECT;
 	}
+	
 #pragma endregion 
 
 #pragma region カメラセット
 
 	// デバックカメラのifdef
-
-
-
-	Timer_.Timer(time_, flag);
-
-
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == false) {
@@ -203,6 +198,7 @@ void GameScene::Update() {
 		if (timerFlag == false) {
 			player_->SetNormalHit(true);
 			player_->SetThunderHit(true);
+			//Timer_.Timer(time_, flag);
 			timerFlag = true;
 		}
 	}
