@@ -151,7 +151,15 @@ void GameScene::Draw() {
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
-	player_->Draw(viewProjection_);
+	if (*flag=true)
+	{
+		player_->Draw(viewProjection_);
+	}
+	else
+	{
+		*flag = false;
+	}
+	
 	BoxModel_->Draw(boxTransform_, viewProjection_);
 	/*skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);*/
