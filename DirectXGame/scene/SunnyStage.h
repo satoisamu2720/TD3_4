@@ -170,7 +170,7 @@ private:
 	uint32_t titleTexHandle_ = 0;
 	Sprite* titleSprite_ = nullptr;
 
-	
+	Vector3 csv = {0, 0, 0};
 
 
 };

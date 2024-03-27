@@ -109,30 +109,10 @@ void SunnyStage::Update() {
 #pragma endregion
 
 #pragma region カメラセット
-
-	// デバックカメラのifdef
-
-#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == false) {
-		isDebugcameraActive_ = true;
-	} else if (input_->TriggerKey(DIK_LSHIFT) && isDebugcameraActive_ == true) {
-		isDebugcameraActive_ = false;
-	}
-#endif
-
-	// カメラ処理
-	if (isDebugcameraActive_ == true) {
-		/*debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;*/
-		// ビュープロジェクション行列の転送
-		viewProjection_.TransferMatrix();
-	} else {
 		railCamera_->Update();
 		viewProjection_.matView = railCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
-	}
 #pragma endregion
 
 #ifdef _DEBUG

@@ -35,11 +35,11 @@ void RailCamera::Update() {
 		worldTransform_.rotation_.y += cameraSpeed;
 	}
 
-	/*if (input_->TriggerKey(DIK_S) && start == false) {
+	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
 		start = true;
-	} else if (input_->TriggerKey(DIK_S) && start == true) {
+	} else if (input_->TriggerKey(DIK_LSHIFT) && start == true) {
 		start = false;
-	}*/
+	}
 
 	/// 加速関係
 
@@ -51,7 +51,7 @@ void RailCamera::Update() {
 	}
 
 	if (isSpeedUp == true) {
-		move_.z += 0.05f * isSpeedTime;
+		move_.z += 0.03f * isSpeedTime;
 		
 	}
 
