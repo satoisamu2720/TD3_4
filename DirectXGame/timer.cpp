@@ -16,6 +16,6 @@ void timer::Timer(int seconds, bool* flag) {
 	*flag = true;
 
 	// 一定時間後にフラグをfalseに戻す
-	Sleep(1*500); // 例えば、ここでは5秒後にフラグをfalseに戻す
+	Sleep(3); // 例えば、ここでは5秒後にフラグをfalseに戻す
 	*flag = false;
 }

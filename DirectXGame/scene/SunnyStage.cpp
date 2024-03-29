@@ -65,6 +65,7 @@ void SunnyStage::Initialize() {
 	player_->SetViewProjection(&railCamera_->GetViewProjection());
 
 #pragma endregion
+
 	viewProjection_.farZ = 200.0f;
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
