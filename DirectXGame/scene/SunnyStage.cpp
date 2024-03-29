@@ -8,6 +8,16 @@ void SunnyStage::Initialize() {
 
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
+	timer_ = std::make_unique<Timer>();
+	// スコア
+	textureHandleNumber_ = TextureManager::Load("number.png");
+	
+	for (int i = 0; i < 2; i++) {
+		spriteMathTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
+		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
+	}
+	timer_->SetTime(2, 0);
+
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
@@ -75,19 +85,15 @@ void SunnyStage::Update() {
 
 #pragma region 更新処理
 
+	timer_->Update();
+
 	if (player_->GetWeather() == 0) {
 		player_->Update();
 		player_->SunnyUpdate();
-		if (railCamera_->GetStart() == false) {
-			railCamera_->SetStart(start);
-		}
 	}
 	if (player_->GetWeather() == 1) {
 		player_->Update();
 		player_->ThunderstormUpdate();
-		if (railCamera_->GetStart() == false) {
-			railCamera_->SetStart(start);
-		}
 	}
 	player_->SetWeather(weather);
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
@@ -107,6 +113,20 @@ void SunnyStage::Update() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = SELECT;
 	}
+
+	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
+		start = true;
+		railCamera_->SetStart(start);
+		timer_->SetTimerFlag(true);
+	} else if (input_->TriggerKey(DIK_LSHIFT) && start == true) {
+		start = false;
+		railCamera_->SetStart(start);
+	}
+
+	if (input_->TriggerKey(DIK_R)) {
+		Reset();
+	}
+
 #pragma endregion
 
 #pragma region カメラセット
@@ -226,7 +246,45 @@ void SunnyStage::Update() {
 #pragma endregion 
 
 	Time();
+
 }
+
+#pragma region タイム
+
+void SunnyStage::DrawTime() {
+
+	//分数
+	int eachMathNumber[2] = {};
+	int mathNumber = timer_->GetTimeMath();
+	int mathKeta = 10;
+	for (int i = 0; i < 2; i++) {
+		eachMathNumber[i] = mathNumber / mathKeta;
+		mathNumber = mathNumber % mathKeta;
+		mathKeta = mathKeta / 10;
+	}
+	//秒数
+	int eachSecondNumber[2] = {};
+	int secondNumber = timer_->GetTimeSecond();
+	int secondKeta = 10;
+	for (int i = 0; i < 2; i++) {
+		eachSecondNumber[i] = secondNumber / secondKeta;
+		secondNumber = secondNumber % secondKeta;
+		secondKeta = secondKeta / 10;
+	}
+
+	for (int i = 0; i < 2; i++) {
+		spriteSecondTime_[i]->SetSize({32, 64});
+		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
+		spriteSecondTime_[i]->Draw();
+
+		spriteMathTime_[i]->SetSize({32, 64});
+		spriteMathTime_[i]->SetTextureRect({32.0f * eachMathNumber[i], 0}, {32, 64});
+		spriteMathTime_[i]->Draw();
+		
+	}
+}
+
+#pragma endregion
 
 void SunnyStage::Draw() { // コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
@@ -273,7 +331,7 @@ void SunnyStage::Draw() { // コマンドリストの取得
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
-
+	DrawTime();
 	/// </summary>
 
 	// スプライト描画後処理
@@ -472,3 +530,10 @@ void SunnyStage::SkydomeGenerate(Vector3 position) {
 }
 
 #pragma endregion
+
+void SunnyStage::Reset() { 
+	timer_->SetTimerFlag(false);
+	railCamera_->SetStart(false);
+	timer_->SetTime(2, 0);
+	railCamera_->SetPos({0, 4, 0});
+}

@@ -13,6 +13,7 @@
 #include "stage/ground/Ground.h"
 #include "Obstacle/box/Box.h"
 #include "Obstacle/accelerator/Accelerator.h"
+#include "timer.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -32,6 +33,11 @@ public:
 	void Draw() override;
 
 	void Time();
+
+	//タイム
+	void DrawTime();
+
+	void Reset();
 
 #pragma region ボックスCSV関数
 
@@ -77,6 +83,8 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+
+	std::unique_ptr<Timer> timer_;
 
 	// プレイヤー
 	std::unique_ptr<Player> player_;
@@ -160,7 +168,7 @@ private:
 	float weather = 0;
 
 	//ゲームスタート
-	bool start = false;
+	bool start;
 
 	bool timerFlag = false;
 	float timer = 0;
@@ -172,5 +180,10 @@ private:
 
 	Vector3 csv = {0, 0, 0};
 
+	// ナンバー
+	uint32_t textureHandleNumber_ = 0;
+	Sprite* spriteMathTime_[2] = {};
+	Sprite* spriteSecondTime_[2] = {};
+	int gameScore_ = 10;
 
 };

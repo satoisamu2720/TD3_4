@@ -31,6 +31,8 @@ public:
 	void SetStart(bool Start) { start = Start; }
 	bool GetStart() { return start; }
 
+	void SetPos(const Vector3 pos) {  worldTransform_.translation_ = pos; }
+
 private:
 
 	const WorldTransform* target_ = nullptr;
@@ -50,5 +52,6 @@ private:
 
 	float isSpeedTime = 0.0f;
 
+	
 };
 

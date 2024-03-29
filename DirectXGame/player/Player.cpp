@@ -159,21 +159,23 @@ void Player::ThunderstormUpdate() {
 	if (setRand_ == 0) {
 		// 左風力0.2
 		wind = windLeft;
+		move_.x -= wind;
 	}
 	// 1だったら右の風
 	if (setRand_ == 1) {
 		// 右風力-0.2
 		wind = windRight;
+		move_.x -= wind;
 	}
 
 	// 押した方向で移動ベクトルを変更（左右）
 	if (input_->PushKey(DIK_A)) {
-		move_.x -= kCharacterSpeed - wind;
+		move_.x -= kCharacterSpeed ;
 		if (notRotate == false) {
 			LeftMove();
 		}
 	} else if (input_->PushKey(DIK_D)) {
-		move_.x += kCharacterSpeed + wind;
+		move_.x += kCharacterSpeed;
 		if (notRotate == false) {
 			RightMove();
 		}

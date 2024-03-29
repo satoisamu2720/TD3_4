@@ -14,13 +14,13 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation) {
 
 void RailCamera::Update() {
 	
-	Vector3 move_ = {0, 0, 0};
+	 Vector3 move_ = {0, 0, 0};
 
 	
 
-	if (input_->PushKey(DIK_R)) {
+	/*if (input_->PushKey(DIK_R)) {
 		worldTransform_.translation_ = {0.0f, 4.0f, 10.0f};
-	}
+	}*/
 	
 
 	if (input_->PushKey(DIK_UP)) {
@@ -33,12 +33,6 @@ void RailCamera::Update() {
 		worldTransform_.rotation_.y -= cameraSpeed;
 	} else if (input_->PushKey(DIK_RIGHT)) {
 		worldTransform_.rotation_.y += cameraSpeed;
-	}
-
-	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
-		start = true;
-	} else if (input_->TriggerKey(DIK_LSHIFT) && start == true) {
-		start = false;
 	}
 
 	/// 加速関係
