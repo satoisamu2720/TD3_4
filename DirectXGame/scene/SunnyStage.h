@@ -39,6 +39,8 @@ public:
 
 	void Reset();
 
+	void Clear();
+
 #pragma region ボックスCSV関数
 
 	// ボックス発生データを読み込み
@@ -67,15 +69,36 @@ public:
 
 #pragma region 背景CSV関数
 
-	// 背景の発生データを読み込み
-	void LoadSkydomePopData();
+	// 開始背景の発生データを読み込み
+	void LoadStartSkydomePopData();
 
-	// 背景の発生コマンドの更新
-	void UpdateSkydomePopCommands();
+	// 開始背景の発生コマンドの更新
+	void UpdateStartSkydomePopCommands();
 
-	/// 背景の生成
-	void SkydomeGenerate(Vector3 position);
+	/// 開始背景の生成
+	void StartSkydomeGenerate(Vector3 position);
 
+
+
+	// 直線背景の発生データを読み込み
+	void LoadMiddleSkydomePopData();
+
+	// 直線背景の発生コマンドの更新
+	void UpdateMiddleSkydomePopCommands();
+
+	/// 直線背景の生成
+	void MiddleSkydomeGenerate(Vector3 position);
+
+
+
+	// ゴール背景の発生データを読み込み
+	void LoadGoalSkydomePopData();
+
+	// ゴール背景の発生コマンドの更新
+	void UpdateGoalSkydomePopCommands();
+
+	/// ゴール背景の生成
+	void GoalSkydomeGenerate(Vector3 position);
 #pragma endregion
 
 private:
@@ -125,14 +148,25 @@ private:
 	std::unique_ptr<DebugCamera> debugCamera_;
 	std::unique_ptr<RailCamera> railCamera_;
 
-	// ステージ
-	std::list<std::unique_ptr<Skydome>> MiddleSkydomes_;
+	// スタートステージ
+	std::list<std::unique_ptr<Skydome>> startSkydomes_;
 	// ステージの発生コマンド
-	std::stringstream MiddlekydomePopCommands;
+	std::stringstream startSkydomePopCommands;
+
+	// 直線ステージ
+	std::list<std::unique_ptr<Skydome>> middleSkydomes_;
+	// ステージの発生コマンド
+	std::stringstream middleSkydomePopCommands;
+
+	// ゴールステージ
+	std::list<std::unique_ptr<Skydome>> goalSkydomes_;
+	// ステージの発生コマンド
+	std::stringstream goalSkydomePopCommands;
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
 	Model* modelMiddleSkydome_ = nullptr;
+	Model* modelGoalSkydome_ = nullptr;
 
 	std::unique_ptr<Ground> ground_;
 	Model* modelGround_ = nullptr;
@@ -164,6 +198,12 @@ private:
 	float SpeedRightX_;
 	float SpeedLeftX_;
 
+	//ゴールの当たり判定
+	float goalFlontZ_;
+	float goalBackZ_;
+	float goalRightX_;
+	float goalLeftX_;
+
 	//天候
 	float weather = 0;
 
@@ -186,4 +226,7 @@ private:
 	Sprite* spriteSecondTime_[2] = {};
 	int gameScore_ = 10;
 
+	//クリアフラグ
+	bool clearTimerFlag = false;
+	float clearTimer = 0;
 };

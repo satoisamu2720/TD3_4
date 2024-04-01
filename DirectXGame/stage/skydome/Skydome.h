@@ -12,6 +12,8 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	Vector3 GetWorldPosition();
+
 public:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;

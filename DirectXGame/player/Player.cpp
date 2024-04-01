@@ -99,7 +99,7 @@ void Player::NotHitInitialize() {
 }
 void Player::SunnyUpdate() {
 
-	// 当たった判定
+	// ボックス当たった判定
 	if (normalHit_ == true) {
 		notRotate = true;
 		weatherHitRequest_ = WeatherHit::Normal;
@@ -145,6 +145,13 @@ void Player::SunnyUpdate() {
 }
 
 void Player::ThunderstormUpdate() {
+
+	// ボックス当たった判定
+	if (normalHit_ == true) {
+		notRotate = true;
+		weatherHitRequest_ = WeatherHit::Normal;
+		normalHit_ = false;
+	}
 
 	// 雷に当たった判定
 	if (thunderHit_ == true) {

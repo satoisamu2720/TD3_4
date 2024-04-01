@@ -8,15 +8,20 @@ void SunnyStage::Initialize() {
 
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
+
+#pragma region タイム
+
 	timer_ = std::make_unique<Timer>();
-	// スコア
+
 	textureHandleNumber_ = TextureManager::Load("number.png");
 	
 	for (int i = 0; i < 2; i++) {
-		spriteMathTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
-		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
+		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
+		//spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
 	}
-	timer_->SetTime(2, 0);
+	timer_->SetTime(0, 30);
+
+#pragma endregion 
 
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
@@ -54,8 +59,13 @@ void SunnyStage::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelStartSkydome_ = Model::CreateFromOBJ("StartSkydome", true);
 	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
+	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
 	
-	LoadSkydomePopData();
+	LoadMiddleSkydomePopData();
+
+	LoadStartSkydomePopData();
+
+	LoadGoalSkydomePopData();
 
 	// ステージ地面モデル読み込み
 	modelGround_ = Model::CreateFromOBJ("ground", true);
@@ -104,14 +114,19 @@ void SunnyStage::Update() {
 		accelerator_->Update();
 	}
 
-	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : MiddleSkydomes_) {
+	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
 		MiddleSkydome_->Update();
 	}
+
+	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+		goalSkydome_->Update();
+	}
+
 
 	ground_->Update();
 
 	if (input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = SELECT;
+		Reset();
 	}
 
 	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
@@ -124,7 +139,10 @@ void SunnyStage::Update() {
 	}
 
 	if (input_->TriggerKey(DIK_R)) {
-		Reset();
+		timer_->SetTimerFlag(false);
+		railCamera_->SetStart(false);
+		timer_->SetTime(0, 30);
+		railCamera_->SetPos({0, 4, 0});
 	}
 
 #pragma endregion
@@ -153,6 +171,13 @@ void SunnyStage::Update() {
 	ImGui::InputFloat("PlayerRightXSize_", &PlayerRightXHit_, 0.1f);
 	ImGui::InputFloat("PlayerLeftXSize_", &PlayerLeftXHit_, 0.1f);
 	ImGui::End();
+
+	
+	ImGui::Begin("Clear ");
+	ImGui::Checkbox("clearFlag", &clearTimerFlag);
+	ImGui::InputFloat("clearTimer", &clearTimer, 0.1f);
+	ImGui::End();
+	
 #endif
 
 	// 当たり判定
@@ -178,7 +203,7 @@ void SunnyStage::Update() {
 		    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
 			if (timerFlag == false) {
 				player_->SetNormalHit(true);
-				player_->SetThunderHit(true);
+				//player_->SetThunderHit(true);
 				railCamera_->SetIsSpeedDown(true);
 				timerFlag = true;
 			}
@@ -206,6 +231,26 @@ void SunnyStage::Update() {
 
 #pragma endregion
 
+	#pragma region プレイヤーとゴールの当たり判定
+
+	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+		goalBackZ_ = goalSkydome_->GetWorldPosition().z - 0.0f;
+		goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
+		goalLeftX_ = goalSkydome_->GetWorldPosition().x - 10.0f;
+		goalRightX_ = goalSkydome_->GetWorldPosition().x + 10.0f;
+
+		if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
+		    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
+
+			timer_->SetTimerFlag(false);
+			railCamera_->SetStart(false);
+			timer_->SetTime(0, 30);
+			railCamera_->SetPos({0, 4, 0});
+			clearTimerFlag = true;
+		}
+	}
+#pragma endregion
+	
 #pragma region CSV 更新処理,デスフラグ
 	// デスフラグの立った敵を削除
 	boxs_.remove_if([](std::unique_ptr<Box>& item) {
@@ -232,7 +277,7 @@ void SunnyStage::Update() {
 	UpdateAcceleratorPopCommands();
 
 	// デスフラグの立った敵を削除
-	MiddleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+	middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
 		if (item->IsDead()) {
 			item.release();
 			return true;
@@ -240,28 +285,48 @@ void SunnyStage::Update() {
 		return false;
 	});
 
-	// 加速装置のCSVファイルの更新処理
-	UpdateSkydomePopCommands();
+	// 装置のCSVファイルの更新処理
+	UpdateMiddleSkydomePopCommands();
+
+	startSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
+	UpdateStartSkydomePopCommands();
+
+	goalSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
+	UpdateGoalSkydomePopCommands();
 
 #pragma endregion 
 
 	Time();
-
+	Clear();
 }
 
 #pragma region タイム
 
 void SunnyStage::DrawTime() {
 
-	//分数
-	int eachMathNumber[2] = {};
-	int mathNumber = timer_->GetTimeMath();
-	int mathKeta = 10;
-	for (int i = 0; i < 2; i++) {
-		eachMathNumber[i] = mathNumber / mathKeta;
-		mathNumber = mathNumber % mathKeta;
-		mathKeta = mathKeta / 10;
-	}
+	////分数
+	//int eachMathNumber[2] = {};
+	//int mathNumber = timer_->GetTimeMath();
+	//int mathKeta = 10;
+	//for (int i = 0; i < 2; i++) {
+	//	eachMathNumber[i] = mathNumber / mathKeta;
+	//	mathNumber = mathNumber % mathKeta;
+	//	mathKeta = mathKeta / 10;
+	//}
 	//秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
@@ -277,9 +342,9 @@ void SunnyStage::DrawTime() {
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 
-		spriteMathTime_[i]->SetSize({32, 64});
+		/*spriteMathTime_[i]->SetSize({32, 64});
 		spriteMathTime_[i]->SetTextureRect({32.0f * eachMathNumber[i], 0}, {32, 64});
-		spriteMathTime_[i]->Draw();
+		spriteMathTime_[i]->Draw();*/
 		
 	}
 }
@@ -310,8 +375,15 @@ void SunnyStage::Draw() { // コマンドリストの取得
 
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
-	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : MiddleSkydomes_) {
+
+	for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
+		startSkydome_->Draw(viewProjection_);
+	}
+	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
 		MiddleSkydome_->Draw(viewProjection_);
+	}
+	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+		goalSkydome_->Draw(viewProjection_);
 	}
 	//ground_->Draw(viewProjection_);
 
@@ -323,6 +395,7 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Draw(viewProjection_);
 	}
+
 
 	Model::PostDraw();
 
@@ -461,6 +534,7 @@ void SunnyStage::UpdateAcceleratorPopCommands() {
 		}
 	}
 }
+
 void SunnyStage::AcceleratorGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	Accelerator* accelerator_ = new Accelerator();
@@ -468,28 +542,30 @@ void SunnyStage::AcceleratorGenerate(Vector3 position) {
 	accelerators_.push_back(static_cast<std::unique_ptr<Accelerator>>(accelerator_));
 }
 
+
+
 #pragma endregion
 
-#pragma region 背景 CSV
+#pragma region 開始背景 CSV
 
-void SunnyStage::LoadSkydomePopData() {
-	MiddlekydomePopCommands.clear();
+void SunnyStage::LoadStartSkydomePopData() {
+	startSkydomePopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/MiddleSkydomePop.csv");
+	file.open("Resources/CSV/StartSkydomePop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
-	MiddlekydomePopCommands << file.rdbuf();
+	startSkydomePopCommands << file.rdbuf();
 
 	// ファイルを閉じる
 	file.close();
 }
 
-void SunnyStage::UpdateSkydomePopCommands() {
+void SunnyStage::UpdateStartSkydomePopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
-	while (getline(MiddlekydomePopCommands, line)) {
+	while (getline(startSkydomePopCommands, line)) {
 		std::istringstream line_stream(line);
 
 		std::string word;
@@ -517,23 +593,165 @@ void SunnyStage::UpdateSkydomePopCommands() {
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			SkydomeGenerate({x, y, z});
+			StartSkydomeGenerate({x, y, z});
 		}
 	}
 }
 
-void SunnyStage::SkydomeGenerate(Vector3 position) {
+void SunnyStage::StartSkydomeGenerate(Vector3 position) {// アイテムの生成と初期化処理
+	Skydome* startSkydome_ = new Skydome();
+	startSkydome_->Initialize(modelStartSkydome_, position);
+	startSkydomes_.push_back(static_cast<std::unique_ptr<Skydome>>(startSkydome_));
+}
+
+#pragma endregion
+
+#pragma region 直線背景 CSV
+
+void SunnyStage::LoadMiddleSkydomePopData() {
+	middleSkydomePopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/MiddleSkydomePop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	middleSkydomePopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdateMiddleSkydomePopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(middleSkydomePopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			MiddleSkydomeGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::MiddleSkydomeGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
-	Skydome* MiddleSkydome_ = new Skydome();
-	MiddleSkydome_->Initialize(modelMiddleSkydome_, position);
-	MiddleSkydomes_.push_back(static_cast<std::unique_ptr<Skydome>>(MiddleSkydome_));
+	Skydome* middleSkydome_ = new Skydome();
+	middleSkydome_->Initialize(modelMiddleSkydome_, position);
+	middleSkydomes_.push_back(static_cast<std::unique_ptr<Skydome>>(middleSkydome_));
+}
+
+#pragma endregion
+
+#pragma region ゴール背景 CSV
+
+void SunnyStage::LoadGoalSkydomePopData() {
+
+	goalSkydomePopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/GoalSkydomePop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	goalSkydomePopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdateGoalSkydomePopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(goalSkydomePopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			GoalSkydomeGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::GoalSkydomeGenerate(Vector3 position) {
+	// アイテムの生成と初期化処理
+	Skydome* goalSkydome_ = new Skydome();
+	goalSkydome_->Initialize(modelGoalSkydome_, position);
+	goalSkydomes_.push_back(static_cast<std::unique_ptr<Skydome>>(goalSkydome_));
 }
 
 #pragma endregion
 
 void SunnyStage::Reset() { 
-	timer_->SetTimerFlag(false);
-	railCamera_->SetStart(false);
-	timer_->SetTime(2, 0);
-	railCamera_->SetPos({0, 4, 0});
+	boxs_.clear();
+	accelerators_.clear();
+	startSkydomes_.clear();
+	middleSkydomes_.clear();
+	goalSkydomes_.clear();
+	sceneNo = SELECT;
+}
+
+void SunnyStage::Clear() {
+
+	if (clearTimerFlag == true) {
+		clearTimer++;
+	}
+	if (clearTimer >= 60) {
+	boxs_.clear();
+	accelerators_.clear();
+	startSkydomes_.clear();
+	middleSkydomes_.clear();
+	goalSkydomes_.clear();
+	clearTimer = 0;
+	clearTimerFlag = false;
+	sceneNo = SELECT;
+	}
+	
 }
