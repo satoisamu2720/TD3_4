@@ -31,19 +31,18 @@ private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	WorldTransform worldTransform_;
-	WorldTransform worldTransform_2;
+	WorldTransform worldTransformSunny_;
+	WorldTransform worldTransformRain_;
+	WorldTransform worldTransformSnow_;
+	WorldTransform worldTransformFog_;
+
 	ViewProjection viewProjection_;
 
 	std::unique_ptr<Model> selectModel_;
 
-	std::unique_ptr<Model> selectModel_2;
-
 	uint32_t buttonSound_;
 
 	uint32_t titleTexHandle_ = 0;
-	Sprite* sunnySprite_ = nullptr;
-	Sprite* rainSprite_ = nullptr;
 
 	int stageCount_ = false;
 
@@ -53,13 +52,9 @@ private:
 
 	bool rightFlag_ = false;
 
-	Vector3 g;
+	float degree[4];
 
-	float rotf;
-
-	/*float moveStart[3];
-
-	float moveEnd[3];*/
+	float rotf[4];
 
 	const float timer = 60;
 
@@ -67,9 +62,7 @@ private:
 
 	int weatherNo_[4] = {SUNNY, RAIN, SNOW, FOG};
 
-	Vector3 position_[4];
-
-	// Vector3 position_2 = {}
+	const float position_[4] = {90, 180, 270, 0};
 
 	int stageNo_[3] = {TITLE, TEST, SUNNYSTAGE};
 };
