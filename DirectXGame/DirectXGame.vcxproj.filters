@@ -82,6 +82,9 @@
     <Filter Include="Obstacle\Accelerator">
       <UniqueIdentifier>{7b6383ee-5abf-4cab-860e-f4d8cce5dbed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="stage\guardRail">
+      <UniqueIdentifier>{81316513-9930-4005-b11a-1302124a9623}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -123,9 +126,6 @@
     <ClCompile Include="stage\skydome\Skydome.cpp">
       <Filter>stage\skydome</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="scene\ClearScene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
@@ -143,6 +143,15 @@
     </ClCompile>
     <ClCompile Include="scene\TitleScene.cpp">
       <Filter>ソース ファイル\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\GameManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="stage\guardRail\GuardRail.cpp">
+      <Filter>stage\guardRail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +263,6 @@
     <ClInclude Include="stage\skydome\Skydome.h">
       <Filter>stage\skydome</Filter>
     </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="scene\ClearScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
@@ -274,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="scene\TitleScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="stage\guardRail\GuardRail.h">
+      <Filter>stage\guardRail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

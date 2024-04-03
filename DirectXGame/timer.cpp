@@ -22,12 +22,8 @@ void Timer::Update() {
 			secondTime -= 1;
 			wTime = 1000;
 		}
-		if (secondTime <= 0 && mathTime > 0) {
-			secondTime = 59;
-			mathTime -= 1;
-		}
 	}
-
+#ifdef _DEBUG
 	ImGui::Begin("Timer");
 
 	if (isFlag == true) {
@@ -42,6 +38,7 @@ void Timer::Update() {
 	ImGui::End();
 
 	number = secondTime;
+#endif
 }
 
 void Timer::Draw() {

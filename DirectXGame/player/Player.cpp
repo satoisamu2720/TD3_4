@@ -29,7 +29,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 }
 
 void Player::Update() {
-
+	move_ = {0, 0, 0};
 	if (weatherHitRequest_) {
 		// 振るまいを変更する
 		weatherHit_ = weatherHitRequest_.value();
@@ -52,8 +52,8 @@ void Player::Update() {
 
 	switch (weatherHit_) {
 	case Player::WeatherHit::NotHit:
+		NormalUpdate();
 	default:
-
 		break;
 	case Player::WeatherHit::Normal:
 		NormalHitMotion();
@@ -62,6 +62,42 @@ void Player::Update() {
 		ThunderHitMotion();
 		break;
 	}
+
+	// 押した方向で移動ベクトルを変更（左右）
+	if (input_->PushKey(DIK_A)) {
+		move_.x -= kCharacterSpeed;
+		if (notRotate == false) {
+			LeftMove();
+		}
+	} else if (input_->PushKey(DIK_D)) {
+		move_.x += kCharacterSpeed;
+		if (notRotate == false) {
+			RightMove();
+		}
+	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
+		worldTransform_.rotation_.y += 0.05f;
+		worldTransformFront_.rotation_.y += 0.025f;
+	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
+		worldTransform_.rotation_.y -= 0.05f;
+		worldTransformFront_.rotation_.y -= 0.025f;
+	}
+	if (worldTransform_.rotation_.y >= bestRotation) {
+		worldTransform_.rotation_.y = 0.0f;
+	}
+#ifdef _DEBUG
+	if (input_->PushKey(DIK_W)) {
+		move_.z += kCharacterSpeed;
+	} else if (input_->PushKey(DIK_S)) {
+		move_.z -= kCharacterSpeed;
+	}
+	if (input_->PushKey(DIK_F)) {
+		thunderHit_ = true;
+	}
+#endif
+
+	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
+	// ベクターの加算
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
 
 	worldTransform_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
@@ -97,6 +133,42 @@ void Player::NotHitInitialize() {
 	worldTransform_.rotation_.z = 0.0f;
 	worldTransformBody_.rotation_ = {0.0f, 0.0f, 0.0f};
 }
+void Player::NormalUpdate() {
+
+	// ボックス当たった判定
+	if (normalHit_ == true) {
+	notRotate = true;
+	weatherHitRequest_ = WeatherHit::Normal;
+	normalHit_ = false;
+	}
+
+	// 雷に当たった判定
+	if (thunderHit_ == true) {
+	notRotate = true;
+	weatherHitRequest_ = WeatherHit::Thunder;
+	thunderHit_ = false;
+	}
+
+	
+	if (weather_ == 1) {
+
+		// 0だったら左の風
+		if (setRand_ == 0) {
+		// 左風力0.2
+		wind = windLeft;
+		move_.x -= wind;
+		}
+		// 1だったら右の風
+		if (setRand_ == 1) {
+		// 右風力-0.2
+		wind = windRight;
+		move_.x -= wind;
+		}
+	}
+
+	
+}
+
 void Player::SunnyUpdate() {
 
 	// ボックス当たった判定

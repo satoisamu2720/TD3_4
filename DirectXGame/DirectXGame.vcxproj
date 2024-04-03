@@ -124,6 +124,7 @@
     <ClCompile Include="scene\SunnyStage.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
     <ClCompile Include="stage\ground\Ground.cpp" />
+    <ClCompile Include="stage\guardRail\GuardRail.cpp" />
     <ClCompile Include="stage\skydome\Skydome.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="WorldTransform.EX.cpp" />
@@ -163,7 +164,6 @@
     <ClInclude Include="Obstacle\box\Box.h" />
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="scene\ClearScene.h" />
-    <ClInclude Include="scene\GameManager.h" />
     <ClInclude Include="scene\GameOverScene.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\IScene.h" />
@@ -171,6 +171,7 @@
     <ClInclude Include="scene\SunnyStage.h" />
     <ClInclude Include="scene\TitleScene.h" />
     <ClInclude Include="stage\ground\Ground.h" />
+    <ClInclude Include="stage\guardRail\GuardRail.h" />
     <ClInclude Include="stage\skydome\Skydome.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>
