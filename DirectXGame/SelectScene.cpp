@@ -41,44 +41,58 @@ void SelectScene::Initialize() {
 
 void SelectScene::Update() {
 
-	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
-
+	if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
+	    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false) {
+		stageCount_--;
 		leftFlag_ = true;
+	}
 
-	} else if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
-
+	if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
+	    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false) {
+		stageCount_++;
 		rightFlag_ = true;
 	}
 
-	if (input_->TriggerKey(DIK_1)) {
-		rotf[SUNNY] -= DirectX::XMConvertToRadians(1);
+	if (stageCount_ > 3) {
+		stageCount_ = 0;
+	} else if (stageCount_ < 0) {
+		stageCount_ = 3;
 	}
 
-	if (input_->PushKey(DIK_2)) {
-		rotf[SUNNY] -= DirectX::XMConvertToRadians(1);
-	}
+	if (leftFlag_ == true && rightFlag_ == false) {
+		target_++;
 
-	if (leftFlag_ == true) {
-		if (degree[SUNNY] != degree[FOG]) {
-			degree[SUNNY] -= 1;
-			rotf[SUNNY] = DirectX::XMConvertToRadians(degree[SUNNY]);
-		} else {
+		if (target_ >= 90) {
 			leftFlag_ = false;
+			target_ = 0;
+		}
+
+		for (int i = 0; i < 4; i++) {
+			if (target_ != 90) {
+				degree[i] -= 1;
+				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+			}
 		}
 	}
 
-	if (rightFlag_ == true) {
-		if (degree[SUNNY] != degree[SUNNY + 1]) {
-			degree[SUNNY] += 1;
-			rotf[SUNNY] = DirectX::XMConvertToRadians(degree[SUNNY]);
-		} else {
+	if (rightFlag_ == true && leftFlag_ == false) {
+		target_++;
+
+		if (target_ >= 90) {
 			rightFlag_ = false;
+			target_ = 0;
+		}
+		for (int i = 0; i < 4; i++) {
+			if (target_ != 90) {
+				degree[i] += 1;
+				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+			}
 		}
 	}
 
-	/*if (input_->TriggerKey(DIK_SPACE)) {
-	    sceneNo = stageNo_[stageCount_];
-	}*/
+	if (input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = stageNo_[stageCount_];
+	}
 
 	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
 	worldTransformSunny_.translation_.z = -sinf(rotf[SUNNY]) * 20.0f;
@@ -102,13 +116,19 @@ void SelectScene::Update() {
 	    worldTransform_2.translation_.x, worldTransform_2.translation_.y,
 	    worldTransform_2.translation_.z};*/
 
-	ImGui::Text("SelectScene");
+	ImGui::Text("StageCount %d", stageCount_);
 
-	ImGui::Text("rotf %f", rotf[SUNNY]);
+	ImGui::Text("rotf %d", leftFlag_);
+
+	ImGui::Text("Speed%d", target_);
 
 	ImGui::Text("degreeSunny %f", degree[SUNNY]);
 
 	ImGui::Text("degreeRain %f", degree[RAIN]);
+
+	ImGui::Text("degreeSnow %f", degree[SNOW]);
+
+	ImGui::Text("degreeFog %f", degree[FOG]);
 
 	ImGui::SliderFloat3("3DPosition", position, -40.0f, 360.0f);
 
@@ -146,11 +166,11 @@ void SelectScene::Draw() {
 
 	selectModel_->Draw(worldTransformSunny_, viewProjection_);
 
-	/*selectModel_->Draw(worldTransformRain_, viewProjection_);
+	selectModel_->Draw(worldTransformRain_, viewProjection_);
 
 	selectModel_->Draw(worldTransformSnow_, viewProjection_);
 
-	selectModel_->Draw(worldTransformFog_, viewProjection_);*/
+	selectModel_->Draw(worldTransformFog_, viewProjection_);
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる

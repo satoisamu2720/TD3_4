@@ -15,6 +15,7 @@ enum Weather {
 	RAIN,
 	SNOW,
 	FOG,
+	MAX,
 };
 
 class SelectScene : public IScene {
@@ -40,29 +41,23 @@ private:
 
 	std::unique_ptr<Model> selectModel_;
 
-	uint32_t buttonSound_;
+	//　矢印を押したときの番号
+	int stageCount_ = 0;
 
-	uint32_t titleTexHandle_ = 0;
-
-	int stageCount_ = false;
-
+	// 左右のキーを押したときのフラグ
 	bool leftFlag_ = false;
-
-	bool moveLeftFlag_ = false;
-
 	bool rightFlag_ = false;
-
+	
+	// 回転の処理
 	float degree[4];
-
 	float rotf[4];
 
-	const float timer = 60;
-
-	const float SelectSpace = 420;
-
-	int weatherNo_[4] = {SUNNY, RAIN, SNOW, FOG};
-
-	const float position_[4] = {90, 180, 270, 0};
-
-	int stageNo_[3] = {TITLE, TEST, SUNNYSTAGE};
+	// 移動を管理する変数
+	int target_ = 0;
+	
+	// 初期ポジション
+	float position_[4] = {90, 180, 270, 360};
+	
+	// ステージナンバー
+	int stageNo_[4] = {SUNNYSTAGE, RAINSTAGE, SNOWSTAGE, FOGSTAGE};
 };
