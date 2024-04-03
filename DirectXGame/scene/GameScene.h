@@ -114,7 +114,7 @@ private:
 	float SpeedRightX_;
 	float SpeedLeftX_;
 
-	std::list<Box*> boxs_;
+	
 
 	float weather = 0;
 
