@@ -179,7 +179,7 @@ void GameScene::Update() {
 
 #pragma region プレイヤーの当たり判定
 
-	PlayerBackZ_ = player_->GetWorldPosition().z - PlayerBackZHit_;
+		PlayerBackZ_ = player_->GetWorldPosition().z - PlayerBackZHit_;
 	PlayerFlontZ_ = player_->GetWorldPosition().z + PlayerFlontZHit_;
 	PlayerLeftX_ = player_->GetWorldPosition().x - PlayerLeftXHit_;
 	PlayerRightX_ = player_->GetWorldPosition().x + PlayerRightXHit_;
@@ -188,21 +188,39 @@ void GameScene::Update() {
 
 #pragma region プレイヤーとボックスの当たり判定
 
-	BoxBackZ_ = box_->GetWorldPosition().z - 1.0f;
-	BoxFlontZ_ = box_->GetWorldPosition().z + 1.0f;
-	BoxLeftX_ = box_->GetWorldPosition().x - 1.0f;
-	BoxRightX_ = box_->GetWorldPosition().x + 1.0f;
+	for (Box* box : boxs_) 
+	{
 
-	if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
-	    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
-		if (timerFlag == false) {
-			player_->SetNormalHit(true);
-			player_->SetThunderHit(true);
-			//Timer_.Timer(time_, flag);
-			timerFlag = true;
+		bool boxMoveFlag = box->IsDead();
+
+		BoxBackZ_ = box_->GetWorldPosition().z - 1.0f;
+		BoxFlontZ_ = box_->GetWorldPosition().z + 1.0f;
+		BoxLeftX_ = box_->GetWorldPosition().x - 1.0f;
+		BoxRightX_ = box_->GetWorldPosition().x + 1.0f;
+
+	
+
+
+		if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
+		    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
+
+			boxMoveFlag = true;
+
+			if (boxMoveFlag) {
+
+				Vector3 tmpTranslate = box->GetWorldPosition();
+
+				tmpTranslate.y += 2.0f;
+
+				if (timerFlag == false) {
+					player_->SetNormalHit(true);
+					player_->SetThunderHit(true);
+					// Timer_.Timer(time_, flag);
+					timerFlag = true;
+				}
+			}
 		}
 	}
-
 #pragma endregion
 
 #pragma region プレイヤーと加速装置の当たり判定

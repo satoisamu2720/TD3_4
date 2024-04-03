@@ -229,4 +229,7 @@ private:
 	//クリアフラグ
 	bool clearTimerFlag = false;
 	float clearTimer = 0;
+
+
+
 };

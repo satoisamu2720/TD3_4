@@ -30,5 +30,10 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	void SetTranslate(Vector3 translate);
+
+	void SetBoxFlag(bool boxflag) { isDead_ = boxflag; }
+
 	Vector3 GetWorldPosition();
+
 };

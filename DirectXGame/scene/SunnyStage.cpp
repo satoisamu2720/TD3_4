@@ -122,7 +122,6 @@ void SunnyStage::Update() {
 		goalSkydome_->Update();
 	}
 
-
 	ground_->Update();
 
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -148,10 +147,10 @@ void SunnyStage::Update() {
 #pragma endregion
 
 #pragma region カメラセット
-		railCamera_->Update();
-		viewProjection_.matView = railCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
+	railCamera_->Update();
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
 #pragma endregion
 
 #ifdef _DEBUG
@@ -172,12 +171,11 @@ void SunnyStage::Update() {
 	ImGui::InputFloat("PlayerLeftXSize_", &PlayerLeftXHit_, 0.1f);
 	ImGui::End();
 
-	
 	ImGui::Begin("Clear ");
 	ImGui::Checkbox("clearFlag", &clearTimerFlag);
 	ImGui::InputFloat("clearTimer", &clearTimer, 0.1f);
 	ImGui::End();
-	
+
 #endif
 
 	// 当たり判定
@@ -193,22 +191,40 @@ void SunnyStage::Update() {
 
 #pragma region プレイヤーとボックスの当たり判定
 
-	for (const std::unique_ptr<Box>& box_ : boxs_) {
-		BoxBackZ_ = box_->GetWorldPosition().z - 1.0f;
-		BoxFlontZ_ = box_->GetWorldPosition().z + 1.0f;
-		BoxLeftX_ = box_->GetWorldPosition().x - 1.0f;
-		BoxRightX_ = box_->GetWorldPosition().x + 1.0f;
+	for (const std::unique_ptr<Box>& box : boxs_) {
+
+		bool boxMoveFlag = box->IsDead();
+
+		BoxBackZ_ = box->GetWorldPosition().z - 1.0f;
+		BoxFlontZ_ = box->GetWorldPosition().z + 1.0f;
+		BoxLeftX_ = box->GetWorldPosition().x - 1.0f;
+		BoxRightX_ = box->GetWorldPosition().x + 1.0f;
 
 		if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
 		    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
-			if (timerFlag == false) {
-				player_->SetNormalHit(true);
-				//player_->SetThunderHit(true);
-				railCamera_->SetIsSpeedDown(true);
-				timerFlag = true;
+
+			boxMoveFlag = true;
+
+			if (boxMoveFlag) {
+
+				Vector3 tmpTranslate = box->GetWorldPosition();
+
+				tmpTranslate.y += 7.0f;
+
+				if (timerFlag == false) {
+					player_->SetNormalHit(true);
+					// player_->SetThunderHit(true);
+					railCamera_->SetIsSpeedDown(true);
+					timerFlag = true;
+				}
+
+				box->SetTranslate(tmpTranslate);
+				box->SetBoxFlag(boxMoveFlag);
 			}
 		}
 	}
+
+
 #pragma endregion
 
 #pragma region プレイヤーと加速装置の当たり判定

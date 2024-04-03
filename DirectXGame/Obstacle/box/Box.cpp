@@ -14,6 +14,11 @@ void Box::Update() { worldTransform_.UpdateMatrix(); }
 
 void Box::Draw(ViewProjection& view) { model_->Draw(worldTransform_, view); }
 
+void Box::SetTranslate(Vector3 translate) {
+
+	worldTransform_.translation_ = translate;
+}
+
 
 Vector3 Box::GetWorldPosition() {
 	Vector3 worldPos;
