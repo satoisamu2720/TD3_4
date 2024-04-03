@@ -8,8 +8,9 @@
 class timer {
 
 public:
+	void Initilize();
 
-	void Timer(int seconds, bool* flag);
+	void Update(int seconds, bool* flag);
 
 private:
 

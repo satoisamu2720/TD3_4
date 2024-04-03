@@ -80,7 +80,7 @@ void GameScene::Update() {
 	boxTransform_.UpdateMatrix();
 
 
-	Timer_.Timer(time_, flag);
+	timer_.Timer(time_, flag);
 
 
 
