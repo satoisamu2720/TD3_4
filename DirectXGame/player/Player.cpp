@@ -291,18 +291,18 @@ void Player::ThunderstormUpdate() {
 void Player::NormalHitMotionInitialize() {
 	worldTransform_.rotation_.y = 0.0f;
 	normalHitRootParameter_ = 0.0f;
-	normalHitTime = 120;
+	normalHitTime =	60;
 }
 // 障害物に当たった時の更新処理
 void Player::NormalHitMotion() {
-	const uint16_t period = 120;
+	const uint16_t period = 60;
 	const float step = 2.0f * (float)M_PI /*3.14f*/ / period;
 
 	normalHitRootParameter_ += step;
 	normalHitRootParameter_ =
 	    std::fmod(normalHitRootParameter_, /*6.28 = */ 2.0f * /*3.14f*/ (float)M_PI);
 
-	const float amplitude = 0.2f;
+	const float amplitude = 0.05f;
 
 	worldTransform_.rotation_.y += std::cos(normalHitRootParameter_) * amplitude;
 

@@ -249,6 +249,4 @@ private:
 	//ゴールフラグ
 	bool goalTimerFlag = false;
 	float goalTimer = 0;
-
-	int gg;
 };

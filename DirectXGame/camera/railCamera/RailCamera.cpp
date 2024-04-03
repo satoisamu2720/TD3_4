@@ -54,7 +54,7 @@ void RailCamera::Update() {
 	} 
 	else if (isSpeedDownTime <= 0.0f) {
 		isSpeedDown = false;
-		isSpeedDownTime = 60.0f;
+		isSpeedDownTime = 30.0f;
 	}
 
 	if (isSpeedUpTime > 0.0f && isSpeedUp == true) {
