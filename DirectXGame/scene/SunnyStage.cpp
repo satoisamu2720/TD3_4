@@ -8,20 +8,19 @@ void SunnyStage::Initialize() {
 
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
-
 #pragma region タイム
 
 	timer_ = std::make_unique<Timer>();
 
 	textureHandleNumber_ = TextureManager::Load("number.png");
-	
+
 	for (int i = 0; i < 2; i++) {
 		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
-		//spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
+		// spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
 	}
 	timer_->SetTime(0, 30);
 
-#pragma endregion 
+#pragma endregion
 
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
@@ -60,7 +59,7 @@ void SunnyStage::Initialize() {
 	modelStartSkydome_ = Model::CreateFromOBJ("StartSkydome", true);
 	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
-	
+
 	LoadMiddleSkydomePopData();
 
 	LoadStartSkydomePopData();
@@ -72,6 +71,11 @@ void SunnyStage::Initialize() {
 	// 地面モデル初期化
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
+
+	//ガードレール
+	modelGuardRail_ = Model::CreateFromOBJ("guardRail", true);
+
+	LoadGuardRailPopData();
 
 #pragma endregion
 
@@ -97,15 +101,10 @@ void SunnyStage::Update() {
 
 	timer_->Update();
 
-	if (player_->GetWeather() == 0) {
-		player_->Update();
-		player_->SunnyUpdate();
-	}
-	if (player_->GetWeather() == 1) {
-		player_->Update();
-		player_->ThunderstormUpdate();
-	}
+	player_->Update();
+	
 	player_->SetWeather(weather);
+
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
 	}
@@ -120,6 +119,9 @@ void SunnyStage::Update() {
 
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 		goalSkydome_->Update();
+	}
+	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+		guardRail_->Update();
 	}
 
 	ground_->Update();
@@ -172,8 +174,8 @@ void SunnyStage::Update() {
 	ImGui::End();
 
 	ImGui::Begin("Clear ");
-	ImGui::Checkbox("clearFlag", &clearTimerFlag);
-	ImGui::InputFloat("clearTimer", &clearTimer, 0.1f);
+	ImGui::Checkbox("clearFlag", &goalTimerFlag);
+	ImGui::InputFloat("clearTimer", &goalTimer, 0.1f);
 	ImGui::End();
 
 #endif
@@ -238,19 +240,16 @@ void SunnyStage::Update() {
 
 		if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
 		    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
-
 			railCamera_->SetIsSpeedUp(true);
-
-			// player_->SetPosition({0.0f, 0.0f, -50.0f});
 		}
 	}
 
 #pragma endregion
 
-	#pragma region プレイヤーとゴールの当たり判定
+#pragma region プレイヤーとゴールの当たり判定
 
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-		goalBackZ_ = goalSkydome_->GetWorldPosition().z - 0.0f;
+		goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
 		goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
 		goalLeftX_ = goalSkydome_->GetWorldPosition().x - 10.0f;
 		goalRightX_ = goalSkydome_->GetWorldPosition().x + 10.0f;
@@ -258,11 +257,8 @@ void SunnyStage::Update() {
 		if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
 		    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
 
-			timer_->SetTimerFlag(false);
-			railCamera_->SetStart(false);
-			timer_->SetTime(0, 30);
-			railCamera_->SetPos({0, 4, 0});
-			clearTimerFlag = true;
+			
+			goalTimerFlag = true;
 		}
 	}
 #pragma endregion
@@ -324,10 +320,20 @@ void SunnyStage::Update() {
 
 	UpdateGoalSkydomePopCommands();
 
+	guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
+	UpdateGuardRailPopCommands();
+
 #pragma endregion 
 
 	Time();
-	Clear();
+	Goal();
 }
 
 #pragma region タイム
@@ -411,6 +417,9 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Draw(viewProjection_);
 	}
+	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+		guardRail_->Draw(viewProjection_);
+	}*/
 
 
 	Model::PostDraw();
@@ -431,7 +440,7 @@ void SunnyStage::Time() {
 	if (timerFlag == true) {
 		timer++;
 	}
-	if (timer >= 120) {
+	if (timer >= 30) {
 		timer = 0;
 		timerFlag = false;
 	}
@@ -745,6 +754,69 @@ void SunnyStage::GoalSkydomeGenerate(Vector3 position) {
 
 #pragma endregion
 
+#pragma region ガードレール CSV
+
+void SunnyStage::LoadGuardRailPopData() {
+
+	guardRailPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/GuardRailPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	guardRailPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdateGuardRailPopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(guardRailPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			GuardRailGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::GuardRailGenerate(Vector3 position) {
+	// アイテムの生成と初期化処理
+	GuardRail* guardRail_ = new GuardRail();
+	guardRail_->Initialize(modelGuardRail_, position);
+	guardRails_.push_back(static_cast<std::unique_ptr<GuardRail>>(guardRail_));
+}
+
+#pragma endregion
+
+
 void SunnyStage::Reset() { 
 	boxs_.clear();
 	accelerators_.clear();
@@ -754,20 +826,35 @@ void SunnyStage::Reset() {
 	sceneNo = SELECT;
 }
 
-void SunnyStage::Clear() {
+void SunnyStage::Goal() {
 
-	if (clearTimerFlag == true) {
-		clearTimer++;
+	if (goalTimerFlag == true) {
+		goalTimer++;
 	}
-	if (clearTimer >= 60) {
-	boxs_.clear();
-	accelerators_.clear();
-	startSkydomes_.clear();
-	middleSkydomes_.clear();
-	goalSkydomes_.clear();
-	clearTimer = 0;
-	clearTimerFlag = false;
-	sceneNo = SELECT;
+	if (goalTimer >= 60) {
+		boxs_.clear();
+		accelerators_.clear();
+		startSkydomes_.clear();
+		middleSkydomes_.clear();
+		goalSkydomes_.clear();
+		guardRails_.clear();
+		goalTimer = 0;
+		goalTimerFlag = false;
+
+
+		if (timer_->GetTimeSecond() > 0) {
+			timer_->SetTimerFlag(false);
+			railCamera_->SetStart(false);
+			timer_->SetTime(0, 30);
+			railCamera_->SetPos({0, 4, 0});
+			sceneNo = CLEAR;
+		} else {
+			timer_->SetTimerFlag(false);
+			railCamera_->SetStart(false);
+			timer_->SetTime(0, 30);
+			railCamera_->SetPos({0, 4, 0});
+			sceneNo = END;
+		}
 	}
-	
 }
+ 

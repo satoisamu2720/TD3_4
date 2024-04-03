@@ -38,24 +38,33 @@ void RailCamera::Update() {
 	/// 加速関係
 
 	if (isSpeedDown == true) {
-		move_.z += 0.5f;
+		move_.z -= 0.01f * isSpeedDownTime;
 	} 
 	if (start == true && isSpeedDown == false) {
 		move_.z += 1.0f;
 	}
 
 	if (isSpeedUp == true) {
-		move_.z += 0.03f * isSpeedTime;
-		
+		move_.z += 0.02f * isSpeedUpTime;
+
 	}
 
-	if (isSpeedTime >  0.0f) {
-		isSpeedTime--;
-	} else if(isSpeedTime <= 0.0f) {
-		isSpeedUp = false;
+	if (isSpeedDownTime > 0.0f && isSpeedDown == true) {
+		isSpeedDownTime--;
+	} 
+	else if (isSpeedDownTime <= 0.0f) {
 		isSpeedDown = false;
-		isSpeedTime = 90.0f;
+		isSpeedDownTime = 30.0f;
 	}
+
+	if (isSpeedUpTime > 0.0f && isSpeedUp == true) {
+		isSpeedUpTime--;
+	} 
+	else if (isSpeedUpTime <= 0.0f) {
+		isSpeedUp = false;
+		isSpeedUpTime = 60.0f;
+	}
+	
 	///
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(
@@ -79,6 +88,7 @@ void RailCamera::Update() {
 
 	ImGui::Begin("Speed");
 	ImGui::Checkbox("SpeedUp", &isSpeedUp);
+	ImGui::Checkbox("SpeedDown", &isSpeedDown);
 	ImGui::End();
 #endif
 

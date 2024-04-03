@@ -18,7 +18,7 @@ public:
 	void SetTime(int math, int second);
 
 	int GetTimeMath() { return mathTime; }
-	int GetTimeSecond() { return secondTime; }
+	int  GetTimeSecond() { return secondTime; }
 
 	void TimerOn();
 

@@ -50,7 +50,8 @@ private:
 	bool isSpeedUp = false;
 	bool isSpeedDown = false;
 
-	float isSpeedTime = 0.0f;
+	float isSpeedDownTime = 30.0f;
+	float isSpeedUpTime = 0.0f;
 
 	
 };

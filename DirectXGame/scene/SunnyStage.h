@@ -11,6 +11,7 @@
 #include "camera/railCamera/RailCamera.h"
 #include "stage/skydome/Skydome.h"
 #include "stage/ground/Ground.h"
+#include "stage/guardRail/GuardRail.h"
 #include "Obstacle/box/Box.h"
 #include "Obstacle/accelerator/Accelerator.h"
 #include "timer.h"
@@ -39,7 +40,7 @@ public:
 
 	void Reset();
 
-	void Clear();
+	void Goal();
 
 #pragma region ボックスCSV関数
 
@@ -99,6 +100,16 @@ public:
 
 	/// ゴール背景の生成
 	void GoalSkydomeGenerate(Vector3 position);
+
+	
+	// ガードレールの発生データを読み込み
+	void LoadGuardRailPopData();
+
+	// ガードレールの発生コマンドの更新
+	void UpdateGuardRailPopCommands();
+
+	/// ガードレールの生成
+	void GuardRailGenerate(Vector3 position);
 #pragma endregion
 
 private:
@@ -163,10 +174,19 @@ private:
 	// ステージの発生コマンド
 	std::stringstream goalSkydomePopCommands;
 
+	//ガードレール
+	std::list<std::unique_ptr<GuardRail>> guardRails_;
+	//発生コマンド
+	std::stringstream guardRailPopCommands;
+
+
+
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
 	Model* modelMiddleSkydome_ = nullptr;
 	Model* modelGoalSkydome_ = nullptr;
+
+	Model* modelGuardRail_ = nullptr;
 
 	std::unique_ptr<Ground> ground_;
 	Model* modelGround_ = nullptr;
@@ -232,4 +252,7 @@ private:
 
 
 
+	//ゴールフラグ
+	bool goalTimerFlag = false;
+	float goalTimer = 0;
 };

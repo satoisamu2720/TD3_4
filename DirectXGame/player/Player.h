@@ -43,6 +43,9 @@ public:
 	//更新処理
 	void Update();
 
+	//通常キャラクターの更新
+	void NormalUpdate();
+
 	//プレイヤーの角度制限
 	void RightMove();
 	void LeftMove();
