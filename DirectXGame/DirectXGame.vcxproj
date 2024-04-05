@@ -107,15 +107,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2d\ImGuiManager.cpp" />
-    <ClCompile Include="3d\LightGroup.cpp" />
     <ClCompile Include="baseCharacter\BaseCharacter.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
-    <ClCompile Include="ClearScene.cpp" />
     <ClCompile Include="Easings.cpp" />
-    <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="GameOverScene.cpp" />
-    <ClCompile Include="IScene.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />
@@ -126,10 +121,6 @@
     <ClCompile Include="scene\GameOverScene.cpp" />
     <ClCompile Include="MT.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
-    <ClCompile Include="SelectScene.cpp" />
-    <ClCompile Include="SunnyStage.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="WorlsTransformEx.cpp" />
     <ClCompile Include="scene\IScene.cpp" />
     <ClCompile Include="scene\SelectScene.cpp" />
     <ClCompile Include="scene\SunnyStage.cpp" />
@@ -165,10 +156,8 @@
     <ClInclude Include="base\StringUtility.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
-    <ClInclude Include="ClearScene.h" />
     <ClInclude Include="Easings.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="camera\railCamera\RailCamera.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Matrix4x4.h" />

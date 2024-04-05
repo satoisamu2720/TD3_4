@@ -95,7 +95,7 @@ void Player::Update() {
 	}
 #endif
 
-	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
+	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
 
@@ -211,7 +211,7 @@ void Player::SunnyUpdate() {
 	}
 #endif
 
-	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
+	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
 }
@@ -280,7 +280,7 @@ void Player::ThunderstormUpdate() {
 	}
 #endif
 
-	move_ = TransformNormal(move_, MakeRotateYMatrix(viewProjection_->rotation_.y));
+	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
 }

@@ -74,7 +74,7 @@ void RailCamera::Update() {
 	// ベクターの加算
 	viewProjection_.translation_ = Add(worldTransform_.translation_, worldTransform_.rotation_); 
 
-	 move_ = TransformNormal(move_, MakeRotateYMatrix(worldTransform_.rotation_.y));
+	 move_ = TransformNormal(move_, MakeRotateYmatrix(worldTransform_.rotation_.y));
 	 // ベクターの加算
 	 worldTransform_.translation_ = Add(worldTransform_.translation_, move_); 
 
