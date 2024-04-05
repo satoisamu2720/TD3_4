@@ -1,33 +1,92 @@
 ﻿#include "SelectScene.h"
+#include "Easings.h"
 #include "ImGuiManager.h"
+#include "MT.h"
+#include <DirectXMath.h>
+#include <vector>
 
 void SelectScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	// 背景スプライト
-	titleTexHandle_ = TextureManager::Load("Select.png");
-	
+	worldTransformSunny_.Initialize();
 
-	titleSprite_ = Sprite::Create(titleTexHandle_, {640,360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
-	/*SelectSprite_ =
-	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});*/
+	worldTransformRain_.Initialize();
+
+	worldTransformSnow_.Initialize();
+
+	worldTransformFog_.Initialize();
+
+	viewProjection_.Initialize();
+
+	selectModel_.reset(Model::CreateFromOBJ("cube", true));
+
+	degree[SUNNY] = position_[SUNNY];
+
+	degree[RAIN] = position_[RAIN];
+
+	degree[SNOW] = position_[SNOW];
+
+	degree[FOG] = position_[FOG];
+
+	rotf[SUNNY] = DirectX::XMConvertToRadians(degree[SUNNY]);
+
+	rotf[RAIN] = DirectX::XMConvertToRadians(degree[RAIN]);
+
+	rotf[SNOW] = DirectX::XMConvertToRadians(degree[SNOW]);
+
+	rotf[FOG] = DirectX::XMConvertToRadians(degree[FOG]);
 }
 
 void SelectScene::Update() {
 
-	Vector2 position_ = titleSprite_->GetPosition();
+	if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
+	    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false) {
+		stageCount_--;
+		leftFlag_ = true;
+	}
 
-	if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
-		if (stageCount_ >= 1) {
-			stageCount_ -= 1;
-			stageMove_ = 420;
+	if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
+	    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false) {
+		stageCount_++;
+		rightFlag_ = true;
+	}
+
+	if (stageCount_ > 3) {
+		stageCount_ = 0;
+	} else if (stageCount_ < 0) {
+		stageCount_ = 3;
+	}
+
+	if (leftFlag_ == true && rightFlag_ == false) {
+		target_++;
+
+		if (target_ >= 90) {
+			leftFlag_ = false;
+			target_ = 0;
 		}
-	} else if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
-		if (stageCount_ < 2) {
-			stageCount_ += 1;
-			stageMove_ = -420;
+
+		for (int i = 0; i < 4; i++) {
+			if (target_ != 90) {
+				degree[i] -= 1;
+				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+			}
+		}
+	}
+
+	if (rightFlag_ == true && leftFlag_ == false) {
+		target_++;
+
+		if (target_ >= 90) {
+			rightFlag_ = false;
+			target_ = 0;
+		}
+		for (int i = 0; i < 4; i++) {
+			if (target_ != 90) {
+				degree[i] += 1;
+				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+			}
 		}
 	}
 
@@ -35,17 +94,55 @@ void SelectScene::Update() {
 		sceneNo = stageNo_[stageCount_];
 	}
 
+	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
+	worldTransformSunny_.translation_.z = -sinf(rotf[SUNNY]) * 20.0f;
+
+	worldTransformRain_.translation_.x = -cosf(rotf[RAIN]) * 20.0f;
+	worldTransformRain_.translation_.z = -sinf(rotf[RAIN]) * 20.0f;
+
+	worldTransformSnow_.translation_.x = -cosf(rotf[SNOW]) * 20.0f;
+	worldTransformSnow_.translation_.z = -sinf(rotf[SNOW]) * 20.0f;
 	if (input_->TriggerKey(DIK_TAB)) {
 	}
 #ifdef _DEBUG
 
+	worldTransformFog_.translation_.x = -cosf(rotf[FOG]) * 20.0f;
+	worldTransformFog_.translation_.z = -sinf(rotf[FOG]) * 20.0f;
+
 	ImGui::Begin("stageNum");
 
-	ImGui::Text("SelectScene");
+	float position[3]{
+	    worldTransformSunny_.translation_.x, worldTransformSunny_.translation_.y,
+	    worldTransformSunny_.translation_.z};
 
-	ImGui::Text("Count%d", stageCount_);
+	/*float position_2[3]{
+	    worldTransform_2.translation_.x, worldTransform_2.translation_.y,
+	    worldTransform_2.translation_.z};*/
+
+	ImGui::Text("StageCount %d", stageCount_);
+
+	ImGui::Text("rotf %d", leftFlag_);
+
+	ImGui::Text("Speed%d", target_);
+
+	ImGui::Text("degreeSunny %f", degree[SUNNY]);
+
+	ImGui::Text("degreeRain %f", degree[RAIN]);
+
+	ImGui::Text("degreeSnow %f", degree[SNOW]);
+
+	ImGui::Text("degreeFog %f", degree[FOG]);
+
+	ImGui::SliderFloat3("3DPosition", position, -40.0f, 360.0f);
+
+	worldTransformSunny_.translation_ = {position[0], position[1], position[2]};
 
 	ImGui::End();
+
+	worldTransformSunny_.UpdateMatrix();
+	worldTransformRain_.UpdateMatrix();
+	worldTransformSnow_.UpdateMatrix();
+	worldTransformFog_.UpdateMatrix();
 #endif
 }
 
@@ -56,9 +153,6 @@ void SelectScene::Draw() {
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
-
-	titleSprite_->Draw();
-	//SelectSprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
@@ -73,6 +167,14 @@ void SelectScene::Draw() {
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
+
+	selectModel_->Draw(worldTransformSunny_, viewProjection_);
+
+	selectModel_->Draw(worldTransformRain_, viewProjection_);
+
+	selectModel_->Draw(worldTransformSnow_, viewProjection_);
+
+	selectModel_->Draw(worldTransformFog_, viewProjection_);
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
