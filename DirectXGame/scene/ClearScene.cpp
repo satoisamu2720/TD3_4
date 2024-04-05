@@ -21,12 +21,13 @@ void ClearScene::Update() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = TITLE;
 	}
-
+#ifdef _DEBUG
 	ImGui::Begin("stageNum");
 
 	ImGui::Text("ClearScene");
 
 	ImGui::End();
+#endif
 }
 
 void ClearScene::Draw() {

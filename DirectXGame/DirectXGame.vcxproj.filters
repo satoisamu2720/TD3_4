@@ -153,6 +153,9 @@
     <ClCompile Include="stage\guardRail\GuardRail.cpp">
       <Filter>stage\guardRail</Filter>
     </ClCompile>
+    <ClCompile Include="3d\LightGroup.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">

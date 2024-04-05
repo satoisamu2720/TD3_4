@@ -33,6 +33,8 @@ public: // 定数
 
 public: // サブクラス
 	// 定数バッファ用データ構造体
+	// 点光源の配列
+	std::array<PointLight, kPointLightNum> pointLights_;
 	struct ConstBufferData {
 		// 環境光の色
 		Vector3 ambientColor;
@@ -231,8 +233,7 @@ private: // メンバ変数
 	// 平行光源の配列
 	std::array<DirectionalLight, kDirLightNum> dirLights_;
 
-	// 点光源の配列
-	std::array<PointLight, kPointLightNum> pointLights_;
+	
 
 	// スポットライトの配列
 	std::array<SpotLight, kSpotLightNum> spotLights_;

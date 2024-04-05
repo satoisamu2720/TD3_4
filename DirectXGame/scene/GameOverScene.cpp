@@ -22,11 +22,13 @@ void GameOverScene::Update() {
 		sceneNo = TITLE;
 	}
 
+#ifdef _DEBUG
 	ImGui::Begin("stageNum");
 
 	ImGui::Text("GameOverScene");
 
 	ImGui::End();
+#endif
 
 }
 

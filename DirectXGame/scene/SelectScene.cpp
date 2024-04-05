@@ -37,26 +37,16 @@ void SelectScene::Update() {
 
 	if (input_->TriggerKey(DIK_TAB)) {
 	}
-
-	position_.x = stageMove_;
-
-	titleSprite_->SetPosition(position_);
+#ifdef _DEBUG
 
 	ImGui::Begin("stageNum");
-
-	float position[2]{position_.x, position_.y};
 
 	ImGui::Text("SelectScene");
 
 	ImGui::Text("Count%d", stageCount_);
 
-	ImGui::SliderFloat2("TexturePosition", position, 10.0f, 1280.0f);
-
-	position_ = {position[0], position[1]};
-
-	titleSprite_->SetPosition(position_);
-
 	ImGui::End();
+#endif
 }
 
 void SelectScene::Draw() {

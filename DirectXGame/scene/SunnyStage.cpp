@@ -5,7 +5,10 @@ void SunnyStage::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
+	light_ = LightGroup::Create();
 
+	
+	
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
 #pragma region タイム
@@ -77,6 +80,8 @@ void SunnyStage::Initialize() {
 
 	LoadGuardRailPopData();
 
+	
+
 #pragma endregion
 
 #pragma region カメラ
@@ -102,7 +107,7 @@ void SunnyStage::Update() {
 	timer_->Update();
 
 	player_->Update();
-	
+
 	player_->SetWeather(weather);
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
@@ -420,7 +425,6 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 		guardRail_->Draw(viewProjection_);
 	}*/
-
 
 	Model::PostDraw();
 

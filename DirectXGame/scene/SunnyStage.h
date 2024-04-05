@@ -23,6 +23,11 @@
 #include <fstream>
 #include <cassert>
 
+#include "CircleShadow.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
+
 
 class SunnyStage : public IScene {
 
@@ -117,6 +122,9 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+	//ライト
+	LightGroup* light_ = nullptr;
+
 
 	std::unique_ptr<Timer> timer_;
 
