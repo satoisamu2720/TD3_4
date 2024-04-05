@@ -8,12 +8,14 @@ void Particle::Intilize() {
 	sprite_->SetTextureHandle(Texture_);
 	BlendSprite_->SetTextureHandle(BlendTexture_);
 
+	sprite_->SetColor(SpriteColor);
+	BlendSprite_->SetColor(BlendSpriteColor);
 
 }
 
 void Particle::Update() {}
 
-void Particle::Draw() {
+void Particle::Draw(ViewProjection viwe) {
 
 	sprite_->Draw();
 

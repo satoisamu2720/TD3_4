@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Vector4.h"
 #include "TextureManager.h"
+#include "ViewProjection.h"
 
 
 class  Particle :public Sprite{
@@ -14,7 +15,7 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(ViewProjection viewProjection);
 
 
 
@@ -27,6 +28,7 @@ private:
 	uint32_t Texture_;
 	uint32_t BlendTexture_;
 
-
+	Vector4 SpriteColor = {1,1,1};
+	Vector4 BlendSpriteColor = {1, 1, 1};
 
 };

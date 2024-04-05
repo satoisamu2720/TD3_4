@@ -14,6 +14,7 @@
 #include "WorldTransform.h"
 #include <memory>
 #include "timer.h"
+#include "Particle.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -81,5 +82,8 @@ private:
 
 	int time_ = 600;
 	bool *flag;
+
+	Particle* particle_ = nullptr;
+
 
 };

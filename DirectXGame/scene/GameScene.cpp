@@ -60,6 +60,9 @@ void GameScene::Initialize() {
 
 	player_->SetViewProjection(&railCamera_->GetViewProjection());
 
+	particle_->Initialize();
+
+
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
 	// 軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -79,8 +82,6 @@ void GameScene::Update() {
 
 	boxTransform_.UpdateMatrix();
 
-
-	timer_.Timer(time_, flag);
 
 
 
@@ -151,6 +152,9 @@ void GameScene::Draw() {
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
+
+	particle_->Draw(viewProjection_);
+
 	if (*flag=true)
 	{
 		player_->Draw(viewProjection_);
