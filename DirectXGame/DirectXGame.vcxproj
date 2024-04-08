@@ -115,6 +115,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />
     <ClCompile Include="Obstacle\box\Box.cpp" />
+    <ClCompile Include="Obstacle\garbageCan\GarbageCan.cpp" />
     <ClCompile Include="player\Player.cpp" />
     <ClCompile Include="scene\ClearScene.cpp" />
     <ClCompile Include="scene\GameManager.cpp" />
@@ -157,7 +158,6 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="Easings.h" />
-    <ClInclude Include="GameManager.h" />
     <ClInclude Include="camera\railCamera\RailCamera.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Matrix4x4.h" />
@@ -166,8 +166,10 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="Obstacle\accelerator\Accelerator.h" />
     <ClInclude Include="Obstacle\box\Box.h" />
+    <ClInclude Include="Obstacle\garbageCan\GarbageCan.h" />
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="scene\ClearScene.h" />
+    <ClInclude Include="scene\GameManager.h" />
     <ClInclude Include="scene\GameOverScene.h" />
     <ClInclude Include="MT.h" />
     <ClInclude Include="scene\GameScene.h" />

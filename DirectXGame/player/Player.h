@@ -116,8 +116,8 @@ private:
 	const ViewProjection* viewProjection_ = nullptr;
 
 	 float weather_ = 0;
-	//ノーマル当たり判定
 
+	//ノーマル当たり判定
 	bool normalHit_ = false;
 	float normalHitRootParameter_ = 0.0f;
 	float normalHitTime = 0;
