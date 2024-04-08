@@ -212,10 +212,10 @@ private:
 
 	//確認用あたり判定
 
-	float FlontZHit_ =1.0f;
-	float BackZHit_ = 1.0f;
-	float RightXHit_ =1.0f;
-	float LeftXHit_ = 1.0f;
+	float FlontZHit_ = 2.0f;
+	float BackZHit_ =  2.0f;
+	float RightXHit_ = 2.0f;
+	float LeftXHit_ =  2.0f;
 
 	// プレイヤーの当たり判定
 	float PlayerFlontZ_;
@@ -231,10 +231,10 @@ private:
 	float BoxLeftX_;
 
 	//ゴミ箱
-	float GarbageCanFlontZ_;
-	float GarbageCanBackZ_;
-	float GarbageCanRightX_;
-	float GarbageCanLeftX_;
+	float GarbageCanFlontZ_ ;
+	float GarbageCanBackZ_  ;
+	float GarbageCanRightX_ ;
+	float GarbageCanLeftX_  ;
 
 	// 加速装置の当たり判定
 	float SpeedFlontZ_;

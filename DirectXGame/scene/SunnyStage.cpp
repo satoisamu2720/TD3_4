@@ -55,10 +55,10 @@ void SunnyStage::Initialize() {
 	LoadAcceleratorPopData();
 
 	// ゴミ箱モデル読み込み
-	modelGarbageCan_ = (Model::CreateFromOBJ("woodenBox", true));
+	modelGarbageCan_ = (Model::CreateFromOBJ("GarbageCan", true));
 	// ゴミ箱モデル初期化
 	garbageCan_ = std::make_unique<GarbageCan>();
-	garbageCan_->Initialize(modelGarbageCan_, {-16.0f, 1.0f, 50.0f});
+	garbageCan_->Initialize(modelGarbageCan_, {-16.0f, 1.5f, 50.0f});
 #pragma endregion
 
 #pragma region ステージ

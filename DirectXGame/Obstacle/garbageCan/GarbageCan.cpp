@@ -5,7 +5,8 @@ void GarbageCan::Initialize(Model* model, Vector3 position) {
 	model_ = model;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransform_.rotation_.x = -3.14f /2;
+	worldTransform_.scale_ = {0.5f, 0.5f, 0.5f};
 	input_ = Input::GetInstance();
 	
 }
@@ -41,14 +42,14 @@ void GarbageCan::Update() {
 
 
 	if (input_->TriggerKey(DIK_L)) {
-		worldTransform_.translation_ = {0, 1, 50};
+		worldTransform_.translation_ = {0, 1.5f, 50};
 	}
 
 	worldTransform_.UpdateMatrix(); 
 }
 
 void GarbageCan::NotHitMotionInitialize() {
-	worldTransform_.rotation_.y = 0.0f;
+	worldTransform_.rotation_ = {-3.14f/2, 0, 0};
 	worldTransform_.translation_ = {-16,1,50};
 	NotTime = 60;
 	NotRootParameter_ = 0.0f;
@@ -63,7 +64,7 @@ void GarbageCan::NotHitMotion() {
 	NotRootParameter_ += step;
 	NotRootParameter_ = std::fmod(NotRootParameter_, /*6.28 = */ 2.0f * /*3.14f*/ (float)M_PI);
 
-	const float amplitude = 0.02f;
+	const float amplitude = 0.1f;
 
 	worldTransform_.translation_.x += 0.1f;
 
@@ -78,7 +79,7 @@ void GarbageCan::NotHitMotion() {
 }
 
 void GarbageCan::YesHitMotionInitialize() {
-	YesTime = 60;
+	YesTime = 120;
 	YesRootParameter_ = 0.0f;
 }
 
@@ -94,6 +95,7 @@ void GarbageCan::YesHitMotion() {
 	worldTransform_.translation_.z += 0.8f;
 
 	worldTransform_.rotation_.z -= 0.02f;
+	worldTransform_.rotation_.x -= 0.2f;
 	//worldTransform_.rotation_.x -= 0.01f;
 
 	worldTransform_.translation_.y += std::cos(YesRootParameter_) * amplitude;
