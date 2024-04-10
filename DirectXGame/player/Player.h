@@ -81,6 +81,7 @@ public:
 	
 
 	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; };
+	Vector3 GetTranslate() {return worldTransform_.translation_; };
 
 	 float GetWeather() { return weather_; }
 	 void  SetWeather(float weather) { weather_ = weather; }

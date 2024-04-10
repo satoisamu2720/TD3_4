@@ -155,19 +155,21 @@ void SunnyStage::Update() {
 		timer_->SetTimerFlag(false);
 		railCamera_->SetStart(false);
 		timer_->SetTime(0, 30);
-		railCamera_->SetPos({0, 4, 0});
+		//railCamera_->SetPos({0, 4, 0});
+		garbageCan_->SetPlayerGetPos({railCamera_->GetWorldTransform().translation_});
 	}
 
 #pragma endregion
 
 #pragma region カメラセット
-	railCamera_->Update();
+  	railCamera_->Update();
 	viewProjection_.matView = railCamera_->GetViewProjection().matView;
 	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 	viewProjection_.TransferMatrix();
 #pragma endregion
 
 #ifdef _DEBUG
+	
 	ImGui::Begin("weather");
 	ImGui::InputFloat("weather", &weather, 1.0f);
 	// ImGui::Checkbox("", &);
@@ -274,7 +276,10 @@ void SunnyStage::Update() {
 			    //garbageCan_->SetGarbageCanFlag(garbageCanMoveFlag);
 			}
 		}
-	
+	  
+	    if (garbageCan_->GetHit() == true) {
+		    garbageCan_->SetPlayerGetPos({railCamera_->GetWorldTransform().translation_});
+	    }
 
 #pragma endregion
 

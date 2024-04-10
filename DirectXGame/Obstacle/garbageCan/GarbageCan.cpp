@@ -19,6 +19,7 @@ void GarbageCan::Update() {
 		// 各振るまいごとの初期化を実行
 		switch (Hit_) {
 		case Hit::NotHit:
+			
 			NotHitMotionInitialize();
 		default:
 			break;
@@ -42,17 +43,29 @@ void GarbageCan::Update() {
 
 
 	if (input_->TriggerKey(DIK_L)) {
-		worldTransform_.translation_ = {0, 1.5f, 50};
+		worldTransform_.translation_ = {-16, 1.5f, 50};
 	}
 
 	worldTransform_.UpdateMatrix(); 
+	#ifdef _DEBUG
+
+	ImGui::Begin("hitFlag ");
+	ImGui::Checkbox("hitFlag", &hitFlag);
+	
+	ImGui::End();
+
+#endif
 }
+
+
 
 void GarbageCan::NotHitMotionInitialize() {
 	worldTransform_.rotation_ = {-3.14f/2, 0, 0};
-	worldTransform_.translation_ = {-16,1,50};
+	//worldTransform_.translation_ = {-16,1,50};
 	NotTime = 60;
 	NotRootParameter_ = 0.0f;
+	
+	hitFlag = false;
 }
 
 // 障害物に当たった時の更新処理
@@ -64,13 +77,13 @@ void GarbageCan::NotHitMotion() {
 	NotRootParameter_ += step;
 	NotRootParameter_ = std::fmod(NotRootParameter_, /*6.28 = */ 2.0f * /*3.14f*/ (float)M_PI);
 
-	const float amplitude = 0.1f;
+	//const float amplitude = 0.1f;
 
-	worldTransform_.translation_.x += 0.1f;
+	worldTransform_.translation_.x += 0.2f;
 
 	worldTransform_.rotation_.z -= 0.1f;
 
-	worldTransform_.translation_.y += std::cos(NotRootParameter_) * amplitude;
+	//worldTransform_.translation_.y += std::cos(NotRootParameter_) * amplitude;
 
 	if (rotate) {
 	hitRequest_ = Hit::YesHit;
@@ -79,7 +92,7 @@ void GarbageCan::NotHitMotion() {
 }
 
 void GarbageCan::YesHitMotionInitialize() {
-	YesTime = 120;
+	
 	YesRootParameter_ = 0.0f;
 }
 
@@ -104,8 +117,11 @@ void GarbageCan::YesHitMotion() {
 
 	if (YesTime <= 0) {
 		hitRequest_ = Hit::NotHit;
+	    YesTime = 120;
 		rotate = false;
+		hitFlag = true;
 	}
+	
 }
 
 void GarbageCan::SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; }
@@ -123,4 +139,10 @@ Vector3 GarbageCan::GetWorldPosition() {
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
 
 	return worldPos;
+}
+
+void GarbageCan::SetPlayerGetPos(Vector3 pos) {
+	worldTransform_.translation_.x = pos.x - 16.0f;
+	worldTransform_.translation_.y = pos.y - 2.0f;
+	worldTransform_.translation_.z = pos.z + 100.0f;
 }

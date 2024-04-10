@@ -7,6 +7,7 @@
 #include "math.h"
 #include "Input.h"
 #include "MT.h"
+#include "ImGuiManager.h"
 class GarbageCan {
 public:
 	void Initialize(Model* model, Vector3 position);
@@ -17,8 +18,7 @@ public:
 
 	void SetTranslate(Vector3 translate);
 
-
-    void SetRotate(bool SetRotate) { rotate = SetRotate; }
+	void SetRotate(bool SetRotate) { rotate = SetRotate; }
 
 	bool GetRotate() { return rotate; }
 
@@ -26,6 +26,8 @@ public:
 
 	void SetGarbageCanFlag(bool GarbageCanFlag) { isDead_ = GarbageCanFlag; }
 
+	void SetPlayerGetPos(Vector3 pos);
+	
 	void NotHitMotionInitialize();
 	void NotHitMotion();
 
@@ -33,6 +35,8 @@ public:
 	void YesHitMotion();
 
 	Vector3 GetWorldPosition();
+
+	bool GetHit() { return hitFlag; }
 
 	enum class Hit {
 		NotHit,
@@ -48,8 +52,10 @@ public:
 	float NotBestRotation = 12.0f;
 
 	float YesRootParameter_ = 0.0f;
-	float YesTime = 60;
+	float YesTime = 120;
 	float YesBestRotation = 12.0f;
+
+	bool hitFlag;
 
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
