@@ -15,7 +15,9 @@ void Particle::Intilize() {
 
 void Particle::Update() {}
 
-void Particle::Draw(ViewProjection viwe) {
+void Particle::Draw() {
+
+
 
 	sprite_->Draw();
 

@@ -47,7 +47,7 @@ private:
 	std::list<Player*> players_;
 
 	WorldTransform worldTransform_;
-	ViewProjection viewProjection_;
+	ViewProjection &viewProjection_;
 	WorldTransform boxTransform_;
 
 	uint32_t soundDataHandle_ = 0;

@@ -17,7 +17,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	
-	texHandle_ = TextureManager::Load("Box/Tex.png");
+	//texHandle_ = TextureManager::Load("fog.png");
 
   #pragma region プレイヤー初期化
 	// 自キャラモデル
@@ -125,6 +125,9 @@ void GameScene::Update() {
 		tmpTranslate.z += 10.0f;
 		player_->SetTranslate(tmpTranslate);
 	}
+
+
+	particle_->Update();
 }
 
 void GameScene::Draw() {
@@ -153,7 +156,7 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 
-	particle_->Draw(viewProjection_);
+	particle_->Draw();
 
 	if (*flag=true)
 	{
