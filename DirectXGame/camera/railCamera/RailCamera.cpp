@@ -38,33 +38,33 @@ void RailCamera::Update() {
 
 	/// 加速関係
 
-	if (isSpeedDown == true) {
-		move_.z += 0.5f;
-	} else {
-		move_.z += 2.0f;
-	}
-	// スピードダウン
-	if (input_->PushKey(DIK_J)) {
-		isSpeedDown = true;
-	} else if (input_->PushKey(DIK_K)) {
-		isSpeedDown = false;
-	}
+	//if (isSpeedDown == true) {
+	//	move_.z += 0.5f;
+	//} else {
+	//	move_.z += 2.0f;
+	//}
+	//// スピードダウン
+	//if (input_->PushKey(DIK_J)) {
+	//	isSpeedDown = true;
+	//} else if (input_->PushKey(DIK_K)) {
+	//	isSpeedDown = false;
+	//}
 
-	if (isSpeedUp == true) {
-	
-		move_.z += 0.1f * isSpeedTime;
+	//if (isSpeedUp == true) {
+	//
+	//	move_.z += 0.1f * isSpeedTime;
 
-	}
-	if (input_->PushKey(DIK_H)&& (isSpeedUp == false && isSpeedDown == false)) {
-		isSpeedUp = true;
-		isSpeedTime = 70.0f;
-	}
+	//}
+	//if (input_->PushKey(DIK_H)&& (isSpeedUp == false && isSpeedDown == false)) {
+	//	isSpeedUp = true;
+	//	isSpeedTime = 70.0f;
+	//}
 
-	if (isSpeedTime >  0.0f) {
-		isSpeedTime--;
-	} else if(isSpeedTime <= 0.0f) {
-		isSpeedUp = false;
-	}
+	//if (isSpeedTime >  0.0f) {
+	//	isSpeedTime--;
+	//} else if(isSpeedTime <= 0.0f) {
+	//	isSpeedUp = false;
+	///}
 	///
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(

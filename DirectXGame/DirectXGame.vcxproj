@@ -113,6 +113,7 @@
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player\Player.cpp" />
+    <ClCompile Include="rain\Rain.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="stage\ground\Ground.cpp" />
     <ClCompile Include="stage\skydome\Skydome.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="player\Player.h" />
+    <ClInclude Include="rain\Rain.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="stage\ground\Ground.h" />
