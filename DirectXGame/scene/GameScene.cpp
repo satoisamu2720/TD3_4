@@ -69,6 +69,20 @@ void GameScene::Initialize() {
 
    #pragma endregion
 
+	 #pragma region 雨
+	// 雨初期化
+	// 自キャラモデル読み込み
+	modelRain_.reset(Model::Create());
+	
+	// 自キャラモデル配列
+	std::vector<Model*> rainModels = {modelRain_.get(), modelRain_.get(), modelRain_.get()
+	};
+	// プレイヤー初期化
+	rain_ = std::make_unique<Rain>();
+	rain_->Initialize(rainModels);
+
+#pragma endregion
+
 
 	timer_ = std::make_unique<Timer>();
 	timer_->Initialize();
@@ -84,6 +98,8 @@ void GameScene::Update() {
 	player_->Update();
 	skydome_->Update();
 	ground_->Update();
+
+	rain_->Update();
 
 	if (input_->TriggerKey(DIK_Z)) {
 		timer_->TimerOn();
@@ -154,6 +170,9 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
+
+	rain_->Draw(viewProjection_);
+
 	Model::PostDraw();
 
 	// 前景スプライト描画前処理

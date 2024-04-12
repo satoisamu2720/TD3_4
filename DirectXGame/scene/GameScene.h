@@ -9,11 +9,14 @@
 #include "camera/railCamera/RailCamera.h"
 #include "stage/skydome/Skydome.h"
 #include "stage/ground/Ground.h"
+#include "rain/Rain.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <memory>
 #include "timer/Timer.h"
+
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -38,6 +41,10 @@ private:
 	std::unique_ptr<Model> modelPlayerFrontRight_;
 	std::unique_ptr<Model> modelPlayerBackLeft_;
 	std::unique_ptr<Model> modelPlayerBackRight_;
+
+	std::unique_ptr<Rain> rain_;
+	std::unique_ptr<Model> modelRain_;
+
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;

@@ -27,7 +27,9 @@ class Rain : public BaseCharacter {
 
 
   private:
-	WorldTransform worldTransform_[20];
+	WorldTransform worldTransform_[3];
+
+	WorldTransform fastTransform_[3];
 
 	Model* model_ = nullptr;
 
