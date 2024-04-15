@@ -14,7 +14,7 @@
 
 class Rain : public BaseCharacter {
 
-
+  public: 
 	void Initalize(const std::vector<Model*>& models);
 
 	void Update();

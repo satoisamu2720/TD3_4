@@ -80,6 +80,8 @@ void GameScene::Initialize() {
 	// プレイヤー初期化
 	rain_ = std::make_unique<Rain>();
 	rain_->Initialize(rainModels);
+	//rain_->SetTarget(player_->GetWorldTransform());
+
 
 #pragma endregion
 
