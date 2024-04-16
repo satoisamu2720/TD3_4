@@ -21,6 +21,7 @@ void SunnyStage::Initialize() {
 		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
 		// spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
 	}
+
 	timer_->SetTime(0, 30);
 
 #pragma endregion
@@ -59,7 +60,7 @@ void SunnyStage::Initialize() {
 #pragma region ステージ
 	// ステージ外モデル読み込み
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
-	modelStartSkydome_ = Model::CreateFromOBJ("StartSkydome", true);
+	modelStartSkydome_ = Model::CreateFromOBJ("stage", true);
 	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
 
