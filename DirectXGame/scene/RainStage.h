@@ -1,36 +1,35 @@
 ﻿#pragma once
 #include "Audio.h"
+#include "AxisIndicator.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
-#include "Input.h"
-#include "scene/IScene.h"
-#include "Model.h"
-#include "AxisIndicator.h"
-#include "TextureManager.h"
 #include "ImGuiManager.h"
-#include "player/Player.h"
-#include "camera/railCamera/RailCamera.h"
-#include "stage/skydome/Skydome.h"
-#include "stage/ground/Ground.h"
-#include "stage/guardRail/GuardRail.h"
-#include "Obstacle/box/Box.h"
+#include "Input.h"
+#include "MT.h"
+#include "Model.h"
 #include "Obstacle/accelerator/Accelerator.h"
-#include "timer.h"
+#include "Obstacle/box/Box.h"
 #include "Sprite.h"
+#include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "MT.h"
-#include <memory>
-#include <fstream>
+#include "camera/railCamera/RailCamera.h"
+#include "player/Player.h"
+#include "scene/IScene.h"
+#include "stage/ground/Ground.h"
+#include "stage/guardRail/GuardRail.h"
+#include "stage/skydome/Skydome.h"
+#include "timer.h"
 #include <cassert>
+#include <fstream>
+#include <memory>
 
 #include "CircleShadow.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 
-
-class SunnyStage : public IScene {
+class RainStage : public IScene {
 
 public:
 	void Initialize() override;
@@ -41,7 +40,7 @@ public:
 
 	void Time();
 
-	//タイム
+	// タイム
 	void DrawTime();
 
 	void Reset();
@@ -85,8 +84,6 @@ public:
 	/// 開始背景の生成
 	void StartSkydomeGenerate(Vector3 position);
 
-
-
 	// 直線背景の発生データを読み込み
 	void LoadMiddleSkydomePopData();
 
@@ -95,8 +92,6 @@ public:
 
 	/// 直線背景の生成
 	void MiddleSkydomeGenerate(Vector3 position);
-
-
 
 	// ゴール背景の発生データを読み込み
 	void LoadGoalSkydomePopData();
@@ -107,7 +102,6 @@ public:
 	/// ゴール背景の生成
 	void GoalSkydomeGenerate(Vector3 position);
 
-	
 	// ガードレールの発生データを読み込み
 	void LoadGuardRailPopData();
 
@@ -119,13 +113,11 @@ public:
 #pragma endregion
 
 private:
-
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	//ライト
+	// ライト
 	LightGroup* light_ = nullptr;
-
 
 	std::unique_ptr<Timer> timer_;
 
@@ -142,7 +134,7 @@ private:
 	std::list<std::unique_ptr<Box>> boxs_;
 	// ボックスの発生コマンド
 	std::stringstream boxPopCommands;
-	
+
 	Model* BoxModel_ = nullptr;
 
 	// 加速装置
@@ -151,7 +143,6 @@ private:
 	std::stringstream acceleratorPopCommands;
 
 	Model* acceleratorModel_ = nullptr;
-
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
@@ -183,12 +174,10 @@ private:
 	// ステージの発生コマンド
 	std::stringstream goalSkydomePopCommands;
 
-	//ガードレール
+	// ガードレール
 	std::list<std::unique_ptr<GuardRail>> guardRails_;
-	//発生コマンド
+	// 発生コマンド
 	std::stringstream guardRailPopCommands;
-
-
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
@@ -227,16 +216,16 @@ private:
 	float SpeedRightX_;
 	float SpeedLeftX_;
 
-	//ゴールの当たり判定
+	// ゴールの当たり判定
 	float goalFlontZ_;
 	float goalBackZ_;
 	float goalRightX_;
 	float goalLeftX_;
 
-	//天候
-	float weather = 0;
+	// 天候
+	float weather = 1;
 
-	//ゲームスタート
+	// ゲームスタート
 	bool start;
 
 	bool timerFlag = false;
@@ -255,13 +244,11 @@ private:
 	Sprite* spriteSecondTime_[2] = {};
 	int gameScore_ = 10;
 
-	//クリアフラグ
+	// クリアフラグ
 	bool clearTimerFlag = false;
 	float clearTimer = 0;
 
-
-
-	//ゴールフラグ
+	// ゴールフラグ
 	bool goalTimerFlag = false;
 	float goalTimer = 0;
 };

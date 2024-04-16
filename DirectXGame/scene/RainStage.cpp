@@ -1,13 +1,11 @@
-﻿#include "SunnyStage.h"
+﻿#include "RainStage.h"
 
-void SunnyStage::Initialize() {
+void RainStage::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	light_ = LightGroup::Create();
 
-	
-	
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
 #pragma region タイム
@@ -74,12 +72,10 @@ void SunnyStage::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
-	//ガードレール
+	// ガードレール
 	modelGuardRail_ = Model::CreateFromOBJ("guardRail", true);
 
 	LoadGuardRailPopData();
-
-	
 
 #pragma endregion
 
@@ -99,13 +95,15 @@ void SunnyStage::Initialize() {
 	viewProjection_.Initialize();
 }
 
-void SunnyStage::Update() {
+void RainStage::Update() {
 
 #pragma region 更新処理
 
 	timer_->Update();
 
 	player_->Update();
+
+	player_->SetWeather(weather);
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
@@ -158,9 +156,13 @@ void SunnyStage::Update() {
 #pragma endregion
 
 #ifdef _DEBUG
-	
+	ImGui::Begin("weather");
+	ImGui::InputFloat("weather", &weather, 1.0f);
+	// ImGui::Checkbox("", &);
+	ImGui::End();
+
 	ImGui::Begin("stage");
-	ImGui::Text("SunnyStage");
+	ImGui::Text("Rain");
 	ImGui::Checkbox("Game Start", &start);
 	ImGui::End();
 
@@ -224,7 +226,6 @@ void SunnyStage::Update() {
 		}
 	}
 
-
 #pragma endregion
 
 #pragma region プレイヤーと加速装置の当たり判定
@@ -255,13 +256,12 @@ void SunnyStage::Update() {
 		if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
 		    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
 
-			
 			goalTimerFlag = true;
 		}
 	}
 #pragma endregion
-	
-#pragma region CSV 更新処理,デスフラグ
+
+#pragma region CSV 更新処理, デスフラグ
 	// デスフラグの立った敵を削除
 	boxs_.remove_if([](std::unique_ptr<Box>& item) {
 		if (item->IsDead()) {
@@ -328,7 +328,7 @@ void SunnyStage::Update() {
 
 	UpdateGuardRailPopCommands();
 
-#pragma endregion 
+#pragma endregion
 
 	Time();
 	Goal();
@@ -336,18 +336,18 @@ void SunnyStage::Update() {
 
 #pragma region タイム
 
-void SunnyStage::DrawTime() {
+void RainStage::DrawTime() {
 
 	////分数
-	//int eachMathNumber[2] = {};
-	//int mathNumber = timer_->GetTimeMath();
-	//int mathKeta = 10;
-	//for (int i = 0; i < 2; i++) {
+	// int eachMathNumber[2] = {};
+	// int mathNumber = timer_->GetTimeMath();
+	// int mathKeta = 10;
+	// for (int i = 0; i < 2; i++) {
 	//	eachMathNumber[i] = mathNumber / mathKeta;
 	//	mathNumber = mathNumber % mathKeta;
 	//	mathKeta = mathKeta / 10;
-	//}
-	//秒数
+	// }
+	// 秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
 	int secondKeta = 10;
@@ -365,13 +365,12 @@ void SunnyStage::DrawTime() {
 		/*spriteMathTime_[i]->SetSize({32, 64});
 		spriteMathTime_[i]->SetTextureRect({32.0f * eachMathNumber[i], 0}, {32, 64});
 		spriteMathTime_[i]->Draw();*/
-		
 	}
 }
 
 #pragma endregion
 
-void SunnyStage::Draw() { // コマンドリストの取得
+void RainStage::Draw() { // コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	// 背景スプライト描画前処理
@@ -405,7 +404,7 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 		goalSkydome_->Draw(viewProjection_);
 	}
-	//ground_->Draw(viewProjection_);
+	// ground_->Draw(viewProjection_);
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Draw(viewProjection_);
@@ -416,7 +415,7 @@ void SunnyStage::Draw() { // コマンドリストの取得
 		accelerator_->Draw(viewProjection_);
 	}
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
-		guardRail_->Draw(viewProjection_);
+	    guardRail_->Draw(viewProjection_);
 	}*/
 
 	Model::PostDraw();
@@ -433,7 +432,7 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	Sprite::PostDraw();
 }
 
-void SunnyStage::Time() {
+void RainStage::Time() {
 	if (timerFlag == true) {
 		timer++;
 	}
@@ -443,9 +442,9 @@ void SunnyStage::Time() {
 	}
 }
 
-#pragma region  ボックス CSV
+#pragma region ボックス CSV
 
-void SunnyStage::LoadBoxPopData() {
+void RainStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/BoxPop.csv");
@@ -458,7 +457,7 @@ void SunnyStage::LoadBoxPopData() {
 	file.close();
 }
 
-void SunnyStage::UpdateBoxPopCommands() {
+void RainStage::UpdateBoxPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -495,7 +494,7 @@ void SunnyStage::UpdateBoxPopCommands() {
 	}
 }
 
-void SunnyStage::BoxGenerate(Vector3 position) { 
+void RainStage::BoxGenerate(Vector3 position) {
 
 	// アイテムの生成と初期化処理
 	Box* box_ = new Box();
@@ -507,7 +506,7 @@ void SunnyStage::BoxGenerate(Vector3 position) {
 
 #pragma region 加速装置 CSV
 
-void SunnyStage::LoadAcceleratorPopData() {
+void RainStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/AcceleratorPop.csv");
@@ -520,7 +519,7 @@ void SunnyStage::LoadAcceleratorPopData() {
 	file.close();
 }
 
-void SunnyStage::UpdateAcceleratorPopCommands() {
+void RainStage::UpdateAcceleratorPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -557,20 +556,18 @@ void SunnyStage::UpdateAcceleratorPopCommands() {
 	}
 }
 
-void SunnyStage::AcceleratorGenerate(Vector3 position) {
+void RainStage::AcceleratorGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	Accelerator* accelerator_ = new Accelerator();
 	accelerator_->Initialize(acceleratorModel_, position);
 	accelerators_.push_back(static_cast<std::unique_ptr<Accelerator>>(accelerator_));
 }
 
-
-
 #pragma endregion
 
 #pragma region 開始背景 CSV
 
-void SunnyStage::LoadStartSkydomePopData() {
+void RainStage::LoadStartSkydomePopData() {
 	startSkydomePopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/StartSkydomePop.csv");
@@ -583,7 +580,7 @@ void SunnyStage::LoadStartSkydomePopData() {
 	file.close();
 }
 
-void SunnyStage::UpdateStartSkydomePopCommands() {
+void RainStage::UpdateStartSkydomePopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -620,7 +617,7 @@ void SunnyStage::UpdateStartSkydomePopCommands() {
 	}
 }
 
-void SunnyStage::StartSkydomeGenerate(Vector3 position) {// アイテムの生成と初期化処理
+void RainStage::StartSkydomeGenerate(Vector3 position) { // アイテムの生成と初期化処理
 	Skydome* startSkydome_ = new Skydome();
 	startSkydome_->Initialize(modelStartSkydome_, position);
 	startSkydomes_.push_back(static_cast<std::unique_ptr<Skydome>>(startSkydome_));
@@ -630,7 +627,7 @@ void SunnyStage::StartSkydomeGenerate(Vector3 position) {// アイテムの生�
 
 #pragma region 直線背景 CSV
 
-void SunnyStage::LoadMiddleSkydomePopData() {
+void RainStage::LoadMiddleSkydomePopData() {
 	middleSkydomePopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/MiddleSkydomePop.csv");
@@ -643,7 +640,7 @@ void SunnyStage::LoadMiddleSkydomePopData() {
 	file.close();
 }
 
-void SunnyStage::UpdateMiddleSkydomePopCommands() {
+void RainStage::UpdateMiddleSkydomePopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -680,7 +677,7 @@ void SunnyStage::UpdateMiddleSkydomePopCommands() {
 	}
 }
 
-void SunnyStage::MiddleSkydomeGenerate(Vector3 position) {
+void RainStage::MiddleSkydomeGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	Skydome* middleSkydome_ = new Skydome();
 	middleSkydome_->Initialize(modelMiddleSkydome_, position);
@@ -691,7 +688,7 @@ void SunnyStage::MiddleSkydomeGenerate(Vector3 position) {
 
 #pragma region ゴール背景 CSV
 
-void SunnyStage::LoadGoalSkydomePopData() {
+void RainStage::LoadGoalSkydomePopData() {
 
 	goalSkydomePopCommands.clear();
 	std::ifstream file;
@@ -705,7 +702,7 @@ void SunnyStage::LoadGoalSkydomePopData() {
 	file.close();
 }
 
-void SunnyStage::UpdateGoalSkydomePopCommands() {
+void RainStage::UpdateGoalSkydomePopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -742,7 +739,7 @@ void SunnyStage::UpdateGoalSkydomePopCommands() {
 	}
 }
 
-void SunnyStage::GoalSkydomeGenerate(Vector3 position) {
+void RainStage::GoalSkydomeGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	Skydome* goalSkydome_ = new Skydome();
 	goalSkydome_->Initialize(modelGoalSkydome_, position);
@@ -753,7 +750,7 @@ void SunnyStage::GoalSkydomeGenerate(Vector3 position) {
 
 #pragma region ガードレール CSV
 
-void SunnyStage::LoadGuardRailPopData() {
+void RainStage::LoadGuardRailPopData() {
 
 	guardRailPopCommands.clear();
 	std::ifstream file;
@@ -767,7 +764,7 @@ void SunnyStage::LoadGuardRailPopData() {
 	file.close();
 }
 
-void SunnyStage::UpdateGuardRailPopCommands() {
+void RainStage::UpdateGuardRailPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -804,7 +801,7 @@ void SunnyStage::UpdateGuardRailPopCommands() {
 	}
 }
 
-void SunnyStage::GuardRailGenerate(Vector3 position) {
+void RainStage::GuardRailGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	GuardRail* guardRail_ = new GuardRail();
 	guardRail_->Initialize(modelGuardRail_, position);
@@ -813,8 +810,7 @@ void SunnyStage::GuardRailGenerate(Vector3 position) {
 
 #pragma endregion
 
-
-void SunnyStage::Reset() { 
+void RainStage::Reset() {
 	boxs_.clear();
 	accelerators_.clear();
 	startSkydomes_.clear();
@@ -823,7 +819,7 @@ void SunnyStage::Reset() {
 	sceneNo = SELECT;
 }
 
-void SunnyStage::Goal() {
+void RainStage::Goal() {
 
 	if (goalTimerFlag == true) {
 		goalTimer++;
@@ -837,7 +833,6 @@ void SunnyStage::Goal() {
 		guardRails_.clear();
 		goalTimer = 0;
 		goalTimerFlag = false;
-
 
 		if (timer_->GetTimeSecond() > 0) {
 			timer_->SetTimerFlag(false);
@@ -854,4 +849,3 @@ void SunnyStage::Goal() {
 		}
 	}
 }
- 

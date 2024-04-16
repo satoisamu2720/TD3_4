@@ -122,6 +122,7 @@
     <ClCompile Include="MT.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\IScene.cpp" />
+    <ClCompile Include="scene\RainStage.cpp" />
     <ClCompile Include="scene\SelectScene.cpp" />
     <ClCompile Include="scene\SunnyStage.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="MT.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\IScene.h" />
+    <ClInclude Include="scene\RainStage.h" />
     <ClInclude Include="scene\SelectScene.h" />
     <ClInclude Include="scene\SunnyStage.h" />
     <ClInclude Include="scene\TitleScene.h" />
