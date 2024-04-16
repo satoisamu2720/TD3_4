@@ -15,7 +15,6 @@
 #include "stage/guardRail/GuardRail.h"
 #include "Obstacle/box/Box.h"
 #include "Obstacle/accelerator/Accelerator.h"
-#include "Obstacle/garbageCan/GarbageCan.h"
 #include "timer.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
@@ -147,11 +146,7 @@ private:
 	Model* BoxModel_ = nullptr;
 
 
-	//ゴミ箱（雨の時のみ）
-	std::unique_ptr<GarbageCan> garbageCan_;
-	// モデル
-	Model* modelGarbageCan_ = nullptr;
-
+	
 
 	// 加速装置
 	std::list<std::unique_ptr<Accelerator>> accelerators_;
@@ -231,11 +226,7 @@ private:
 	float BoxRightX_;
 	float BoxLeftX_;
 
-	//ゴミ箱
-	float GarbageCanFlontZ_ ;
-	float GarbageCanBackZ_  ;
-	float GarbageCanRightX_ ;
-	float GarbageCanLeftX_  ;
+	
 
 	// 加速装置の当たり判定
 	float SpeedFlontZ_;

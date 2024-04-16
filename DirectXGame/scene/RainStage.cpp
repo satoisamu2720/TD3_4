@@ -51,6 +51,12 @@ void RainStage::Initialize() {
 	// 加速装置のCSVファイル読み込み
 	LoadAcceleratorPopData();
 
+	// ゴミ箱モデル読み込み
+	modelGarbageCan_ = (Model::CreateFromOBJ("GarbageCan", true));
+	// ゴミ箱モデル初期化
+	garbageCan_ = std::make_unique<GarbageCan>();
+	garbageCan_->Initialize(modelGarbageCan_, {-16.0f, 1.5f, 50.0f});
+
 #pragma endregion
 
 #pragma region ステージ
@@ -105,6 +111,8 @@ void RainStage::Update() {
 
 	player_->SetWeather(weather);
 
+	garbageCan_->Update();
+
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
 	}
@@ -144,6 +152,7 @@ void RainStage::Update() {
 		railCamera_->SetStart(false);
 		timer_->SetTime(0, 30);
 		railCamera_->SetPos({0, 4, 0});
+		garbageCan_->SetPlayerGetPos({railCamera_->GetWorldTransform().translation_});
 	}
 
 #pragma endregion
@@ -224,6 +233,44 @@ void RainStage::Update() {
 				box->SetBoxFlag(boxMoveFlag);
 			}
 		}
+	}
+
+#pragma endregion
+
+	#pragma region プレイヤーとゴミ箱の当たり判定
+
+	bool garbageCanMoveFlag = garbageCan_->IsDead();
+
+	GarbageCanFlontZ_ = garbageCan_->GetWorldPosition().z + FlontZHit_;
+	GarbageCanBackZ_ = garbageCan_->GetWorldPosition().z - BackZHit_;
+	GarbageCanRightX_ = garbageCan_->GetWorldPosition().x + RightXHit_;
+	GarbageCanLeftX_ = garbageCan_->GetWorldPosition().x - LeftXHit_;
+
+	if ((PlayerLeftX_ < GarbageCanRightX_ && PlayerRightX_ > GarbageCanLeftX_) &&
+	    (GarbageCanFlontZ_ > PlayerBackZ_ && GarbageCanBackZ_ < PlayerFlontZ_)) {
+
+		garbageCanMoveFlag = true;
+
+		if (garbageCanMoveFlag) {
+
+			// Vector3 tmpTranslate = garbageCan_->GetWorldPosition();
+
+			// tmpTranslate.x += 7.0f;
+
+			if (timerFlag == false) {
+				player_->SetNormalHit(true);
+				railCamera_->SetIsSpeedDown(true);
+				garbageCan_->SetRotate(true);
+				timerFlag = true;
+			}
+
+			// garbageCan_->SetTranslate(tmpTranslate);
+			// garbageCan_->SetGarbageCanFlag(garbageCanMoveFlag);
+		}
+	}
+
+	if (garbageCan_->GetHit() == true) {
+		garbageCan_->SetPlayerGetPos({railCamera_->GetWorldTransform().translation_});
 	}
 
 #pragma endregion
@@ -394,6 +441,8 @@ void RainStage::Draw() { // コマンドリストの取得
 
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
+
+	garbageCan_->Draw(viewProjection_);
 
 	for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
 		startSkydome_->Draw(viewProjection_);

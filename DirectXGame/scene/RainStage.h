@@ -19,6 +19,7 @@
 #include "stage/ground/Ground.h"
 #include "stage/guardRail/GuardRail.h"
 #include "stage/skydome/Skydome.h"
+#include "Obstacle/garbageCan/GarbageCan.h"
 #include "timer.h"
 #include <cassert>
 #include <fstream>
@@ -137,6 +138,12 @@ private:
 
 	Model* BoxModel_ = nullptr;
 
+	// ゴミ箱（雨の時のみ）
+	std::unique_ptr<GarbageCan> garbageCan_;
+	// モデル
+	Model* modelGarbageCan_ = nullptr;
+
+
 	// 加速装置
 	std::list<std::unique_ptr<Accelerator>> accelerators_;
 	// 加速装置の発生コマンド
@@ -192,6 +199,14 @@ private:
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
 
+	
+	// 確認用あたり判定
+
+	float FlontZHit_ = 2.0f;
+	float BackZHit_ = 2.0f;
+	float RightXHit_ = 2.0f;
+	float LeftXHit_ = 2.0f;
+
 	// プレイヤーの当たり判定
 	float PlayerFlontZ_;
 	float PlayerBackZ_;
@@ -209,6 +224,12 @@ private:
 	float BoxBackZ_;
 	float BoxRightX_;
 	float BoxLeftX_;
+
+	// ゴミ箱
+	float GarbageCanFlontZ_;
+	float GarbageCanBackZ_;
+	float GarbageCanRightX_;
+	float GarbageCanLeftX_;
 
 	// 加速装置の当たり判定
 	float SpeedFlontZ_;

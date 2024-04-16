@@ -53,11 +53,7 @@ void SunnyStage::Initialize() {
 	// 加速装置のCSVファイル読み込み
 	LoadAcceleratorPopData();
 
-	// ゴミ箱モデル読み込み
-	modelGarbageCan_ = (Model::CreateFromOBJ("GarbageCan", true));
-	// ゴミ箱モデル初期化
-	garbageCan_ = std::make_unique<GarbageCan>();
-	garbageCan_->Initialize(modelGarbageCan_, {-16.0f, 1.5f, 50.0f});
+
 #pragma endregion
 
 #pragma region ステージ
@@ -150,8 +146,8 @@ void SunnyStage::Update() {
 		timer_->SetTimerFlag(false);
 		railCamera_->SetStart(false);
 		timer_->SetTime(0, 30);
-		//railCamera_->SetPos({0, 4, 0});
-		garbageCan_->SetPlayerGetPos({railCamera_->GetWorldTransform().translation_});
+		railCamera_->SetPos({0, 4, 0});
+		
 	}
 
 #pragma endregion
@@ -233,45 +229,7 @@ void SunnyStage::Update() {
 
 #pragma endregion
 
-#pragma region プレイヤーとゴミ箱の当たり判定
 
-	  
-
-		bool garbageCanMoveFlag = garbageCan_->IsDead();
-
-		GarbageCanFlontZ_ = garbageCan_->GetWorldPosition().z + FlontZHit_;
-	    GarbageCanBackZ_ = garbageCan_->GetWorldPosition().z - BackZHit_;
-	    GarbageCanRightX_ = garbageCan_->GetWorldPosition().x + RightXHit_;
-	    GarbageCanLeftX_ = garbageCan_->GetWorldPosition().x - LeftXHit_;
-
-		if ((PlayerLeftX_ < GarbageCanRightX_ && PlayerRightX_ > GarbageCanLeftX_) &&
-	        (GarbageCanFlontZ_ > PlayerBackZ_ && GarbageCanBackZ_ < PlayerFlontZ_)) {
-
-			garbageCanMoveFlag = true;
-
-			if (garbageCanMoveFlag) {
-
-				// Vector3 tmpTranslate = garbageCan_->GetWorldPosition();
-
-				//tmpTranslate.x += 7.0f;
-
-				if (timerFlag == false) {
-					player_->SetNormalHit(true);
-					railCamera_->SetIsSpeedDown(true);
-				    garbageCan_->SetRotate(true);
-					timerFlag = true;
-				}
-
-				//garbageCan_->SetTranslate(tmpTranslate);
-			    //garbageCan_->SetGarbageCanFlag(garbageCanMoveFlag);
-			}
-		}
-	  
-	    if (garbageCan_->GetHit() == true) {
-		    garbageCan_->SetPlayerGetPos({railCamera_->GetWorldTransform().translation_});
-	    }
-
-#pragma endregion
 
 #pragma region プレイヤーと加速装置の当たり判定
 	// 加速装置
@@ -442,7 +400,7 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 
-	garbageCan_->Draw(viewProjection_);
+	
 
 	for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
 		startSkydome_->Draw(viewProjection_);
