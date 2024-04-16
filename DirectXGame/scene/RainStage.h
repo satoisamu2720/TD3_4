@@ -190,6 +190,7 @@ private:
 	Model* modelStartSkydome_ = nullptr;
 	Model* modelMiddleSkydome_ = nullptr;
 	Model* modelGoalSkydome_ = nullptr;
+	Model* modelRaindrop_ = nullptr;
 
 	Model* modelGuardRail_ = nullptr;
 
