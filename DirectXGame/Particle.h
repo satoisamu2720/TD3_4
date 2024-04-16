@@ -31,6 +31,4 @@ private:
 	Vector4 SpriteColor = {1,1,1};
 	Vector4 BlendSpriteColor = {1, 1, 1};
 
-	ViewProjection &viewProijecton_; 
-
 };

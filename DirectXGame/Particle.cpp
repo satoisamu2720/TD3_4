@@ -2,10 +2,13 @@
 
 void Particle::Intilize() {
 
+
+
 	Texture_ = TextureManager::Load("fog.png");
 	BlendTexture_ = TextureManager::Load("fog2.png");
 
 	sprite_->SetTextureHandle(Texture_);
+
 	BlendSprite_->SetTextureHandle(BlendTexture_);
 
 	sprite_->SetColor(SpriteColor);

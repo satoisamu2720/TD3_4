@@ -47,7 +47,7 @@ private:
 	std::list<Player*> players_;
 
 	WorldTransform worldTransform_;
-	ViewProjection &viewProjection_;
+	ViewProjection viewProjection_;
 	WorldTransform boxTransform_;
 
 	uint32_t soundDataHandle_ = 0;
@@ -83,7 +83,7 @@ private:
 	int time_ = 600;
 	bool *flag;
 
-	Particle* particle_ = nullptr;
+	std::unique_ptr<Particle> particle_;
 
 
 };
