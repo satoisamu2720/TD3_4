@@ -43,13 +43,13 @@ void SelectScene::Update() {
 
 	if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
 	    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false) {
-		stageCount_--;
+		stageCount_++;
 		leftFlag_ = true;
 	}
 
 	if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
 	    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false) {
-		stageCount_++;
+		stageCount_--;
 		rightFlag_ = true;
 	}
 
