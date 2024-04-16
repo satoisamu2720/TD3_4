@@ -35,15 +35,19 @@ void Rain::Update() {
 		}
 
 
-		worldTransform_[i].translation_.z -= 0.1f;
+		worldTransform_[i].translation_.z -= 0.01f;
 
 		  if (worldTransform_[i].translation_.z <= 0) {
 		
 		  worldTransform_[i].translation_.z = 100.0f;
 		  }
 		 
-		worldTransform_[i].UpdateMatrix();
+		
 
+	}
+	for (int i = 0; i < 3; i++) {
+		worldTransform_[i].UpdateMatrix();
+	
 	}
 
 	ImGui::Begin("Rain");

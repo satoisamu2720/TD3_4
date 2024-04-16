@@ -75,7 +75,7 @@ void GameScene::Initialize() {
 	modelRain_.reset(Model::Create());
 	
 	// 自キャラモデル配列
-	std::vector<Model*> rainModels = {modelRain_.get(), modelRain_.get(), modelRain_.get()
+	std::vector<Model*> rainModels = {modelRain_.get(), modelRain_.get(), modelRain_.get(),
 	};
 	// プレイヤー初期化
 	rain_ = std::make_unique<Rain>();
