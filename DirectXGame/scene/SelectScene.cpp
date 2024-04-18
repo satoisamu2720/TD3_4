@@ -67,48 +67,52 @@ void SelectScene::Update() {
 			stageCount_--;
 			rightFlag_ = true;
 		}
-	}
 
-	if (stageCount_ > 3) {
-		stageCount_ = 0;
-	} else if (stageCount_ < 0) {
-		stageCount_ = 3;
-	}
-
-	if (leftFlag_ == true && rightFlag_ == false) {
-		target_++;
-
-		if (target_ >= 90) {
-			leftFlag_ = false;
-			target_ = 0;
+		if (stageCount_ > 3) {
+			stageCount_ = 0;
+		} else if (stageCount_ < 0) {
+			stageCount_ = 3;
 		}
 
-		for (int i = 0; i < 4; i++) {
-			if (target_ != 90) {
-				degree[i] -= 1;
-				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+		if (leftFlag_ == true && rightFlag_ == false) {
+			target_++;
+
+			if (target_ >= 90) {
+				leftFlag_ = false;
+				target_ = 0;
+			}
+
+			for (int i = 0; i < 4; i++) {
+				if (target_ != 90) {
+					degree[i] -= 1;
+					rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+				}
 			}
 		}
-	}
 
-	if (rightFlag_ == true && leftFlag_ == false) {
-		target_++;
+		if (rightFlag_ == true && leftFlag_ == false) {
+			target_++;
 
-		if (target_ >= 90) {
-			rightFlag_ = false;
-			target_ = 0;
-		}
-		for (int i = 0; i < 4; i++) {
-			if (target_ != 90) {
-				degree[i] += 1;
-				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+			if (target_ >= 90) {
+				rightFlag_ = false;
+				target_ = 0;
+			}
+			for (int i = 0; i < 4; i++) {
+				if (target_ != 90) {
+					degree[i] += 1;
+					rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+				}
 			}
 		}
+
+		if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
+			Sleep(1 * 300);
+			sceneNo = stageNo_[stageCount_];
+		}
+
 	}
 
-	if (input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = stageNo_[stageCount_];
-	}
+	
 
 	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
 	worldTransformSunny_.translation_.z = -sinf(rotf[SUNNY]) * 20.0f;
