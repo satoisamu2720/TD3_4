@@ -10,6 +10,7 @@ VSOutput main(float4 pos : POSITION, float3 normal : NORMAL, float2 uv : TEXCOOR
 	output.svpos = mul(pos, mul(world, mul(view, projection)));
 
 	output.worldpos = worldPos;
+   
 	output.normal = worldNormal.xyz;
 	output.uv = uv;
 

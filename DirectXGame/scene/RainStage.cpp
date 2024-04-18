@@ -65,9 +65,8 @@ void RainStage::Initialize() {
 	modelStartSkydome_ = Model::CreateFromOBJ("StartSkydome", true);
 	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
-	//modelRaindrop_= Model::CreateFromOBJ()
 
-	//LoadMiddleSkydomePopData();
+	LoadMiddleSkydomePopData();
 
 	LoadStartSkydomePopData();
 
@@ -97,6 +96,19 @@ void RainStage::Initialize() {
 
 #pragma endregion
 
+#pragma region 雪
+
+	modelRaindrop_ = Model::CreateFromOBJ("raindrop", true);
+
+	// 雪の初期化
+	for (int i = 0; i < 100; i++) {
+		worldTransformSnow_[i].Initialize();
+	}
+	
+	snowDownSpeed = 0.5;
+
+#pragma endregion
+
 	viewProjection_.farZ = 200.0f;
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -113,6 +125,11 @@ void RainStage::Update() {
 	player_->SetWeather(weather);
 
 	garbageCan_->Update();
+
+	// 雪の更新
+	for (int i = 0; i < 100; i++) {
+		
+	}
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
@@ -238,7 +255,7 @@ void RainStage::Update() {
 
 #pragma endregion
 
-	#pragma region プレイヤーとゴミ箱の当たり判定
+#pragma region プレイヤーとゴミ箱の当たり判定
 
 	bool garbageCanMoveFlag = garbageCan_->IsDead();
 
@@ -443,27 +460,27 @@ void RainStage::Draw() { // コマンドリストの取得
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 
-	garbageCan_->Draw(viewProjection_);
+	// garbageCan_->Draw(viewProjection_);
 
-	for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
-		startSkydome_->Draw(viewProjection_);
-	}
-	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
-		MiddleSkydome_->Draw(viewProjection_);
-	}
-	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-		goalSkydome_->Draw(viewProjection_);
-	}
-	// ground_->Draw(viewProjection_);
+	// for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
+	//	startSkydome_->Draw(viewProjection_);
+	// }
+	// for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
+	//	MiddleSkydome_->Draw(viewProjection_);
+	// }
+	// for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+	//	goalSkydome_->Draw(viewProjection_);
+	// }
+	//// ground_->Draw(viewProjection_);
 
-	for (const std::unique_ptr<Box>& box_ : boxs_) {
-		box_->Draw(viewProjection_);
-	}
+	// for (const std::unique_ptr<Box>& box_ : boxs_) {
+	//	box_->Draw(viewProjection_);
+	// }
 
-	// 加速装置
-	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-		accelerator_->Draw(viewProjection_);
-	}
+	//// 加速装置
+	// for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+	//	accelerator_->Draw(viewProjection_);
+	// }
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 	    guardRail_->Draw(viewProjection_);
 	}*/

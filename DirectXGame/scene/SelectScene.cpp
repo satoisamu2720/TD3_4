@@ -159,11 +159,12 @@ void SelectScene::Update() {
 
 	ImGui::End();
 
+#endif
+
 	worldTransformSunny_.UpdateMatrix();
 	worldTransformRain_.UpdateMatrix();
 	worldTransformSnow_.UpdateMatrix();
 	worldTransformFog_.UpdateMatrix();
-#endif
 }
 
 void SelectScene::Draw() {

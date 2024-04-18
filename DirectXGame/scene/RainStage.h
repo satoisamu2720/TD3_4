@@ -154,6 +154,12 @@ private:
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 
+	// 雪の処理
+	WorldTransform worldTransformSnow_[100];
+	float snowDownSpeed;
+	bool snowCheck = false;
+
+
 	uint32_t soundDataHandle_ = 0;
 	uint32_t voiceHandle_ = 0;
 
@@ -243,6 +249,9 @@ private:
 	float goalBackZ_;
 	float goalRightX_;
 	float goalLeftX_;
+
+	// 雪の範囲
+	float snowRange_;
 
 	// 天候
 	float weather = 1;
