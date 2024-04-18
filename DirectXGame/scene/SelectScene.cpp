@@ -41,16 +41,32 @@ void SelectScene::Initialize() {
 
 void SelectScene::Update() {
 
-	if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
-	    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false) {
-		stageCount_++;
-		leftFlag_ = true;
-	}
+	XINPUT_STATE joyState;
 
-	if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
-	    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false) {
-		stageCount_--;
-		rightFlag_ = true;
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		/*if (joyState.Gamepad.sThumbLX < -100) {
+		    stageCount_++;
+		    leftFlag_ = true;
+		}
+
+		if (joyState.Gamepad.sThumbLX > 100) {
+		    stageCount_--;
+		    rightFlag_ = true;
+		}*/
+
+		if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
+		    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false ||
+		    joyState.Gamepad.sThumbLX < -100 && leftFlag_ == false && rightFlag_ == false) {
+			stageCount_++;
+			leftFlag_ = true;
+		}
+
+		if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
+		    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false ||
+		    joyState.Gamepad.sThumbLX > 100 && leftFlag_ == false && rightFlag_ == false) {
+			stageCount_--;
+			rightFlag_ = true;
+		}
 	}
 
 	if (stageCount_ > 3) {
