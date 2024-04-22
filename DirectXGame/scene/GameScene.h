@@ -42,8 +42,7 @@ private:
 	std::unique_ptr<Model> modelPlayerBackLeft_;
 	std::unique_ptr<Model> modelPlayerBackRight_;
 
-	std::unique_ptr<Rain> rain_;
-	std::unique_ptr<Model> modelRain_;
+	
 
 
 	WorldTransform worldTransform_;
@@ -64,6 +63,9 @@ private:
 
 	std::unique_ptr<Ground> ground_;
 	Model* modelGround_ = nullptr;
+
+	std::unique_ptr<Rain> rain_;
+	Model* modelRain_ = nullptr;
 	
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;

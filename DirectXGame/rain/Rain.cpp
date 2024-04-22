@@ -1,14 +1,20 @@
 ﻿#include "Rain.h"
 
-void Rain::Initalize(const std::vector<Model*>& models) { 
-	BaseCharacter::Initialize(models);
-
+void Rain::Initialize(Model* model) { 
 	
-	worldTransform_[0].translation_ = {0.0f, 4.0f, 100.0f};
+	assert(model);
+	for (int i = 0; i < 3; i++) {
+		rainModel[i] = model;
+	}
+	
+	worldTransform_[0].translation_ = {
+	    0.0f,
+	    100.0f,4.0f
+	};
 
-	worldTransform_[1].translation_ = {10.0f, 4.0f, 150.0f};
+	worldTransform_[1].translation_ = {10.0f,150.0f ,4.0f };
 
-	worldTransform_[2].translation_ = {50.9f, 4.0f, 120.0f};
+	worldTransform_[2].translation_ = {50.9f, 120.0f ,4.0f};
 
 
 
@@ -31,15 +37,15 @@ void Rain::Update() {
 	
 		if (target_) {
 			worldTransform_[i].translation_.x = fastTransform_[i].translation_.x + target_->translation_.x;
-			worldTransform_[i].translation_.y = fastTransform_[i].translation_.y + target_->translation_.y;
+			worldTransform_[i].translation_.z = fastTransform_[i].translation_.z + target_->translation_.z;
 		}
 
 
-		worldTransform_[i].translation_.z -= 0.01f;
+		worldTransform_[i].translation_.y -= 3.0f;
 
-		  if (worldTransform_[i].translation_.z <= 0) {
+		  if (worldTransform_[i].translation_.y <= 0) {
 		
-		  worldTransform_[i].translation_.z = 100.0f;
+		  worldTransform_[i].translation_.y = 100.0f;
 		  }
 		 
 		
@@ -62,7 +68,7 @@ void Rain::Draw(ViewProjection& viewProjection) {
 
 
 	for (int i = 0; i < 3; i++) {
-		models_[i]->Draw(worldTransform_[i], viewProjection);
+		rainModel[i]->Draw(worldTransform_[i], viewProjection);
 	}
 
 }

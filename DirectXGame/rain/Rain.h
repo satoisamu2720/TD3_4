@@ -12,10 +12,10 @@
 #include "VectraCalculation.h"
 #include "ViewProjection.h"
 
-class Rain : public BaseCharacter {
+class Rain  {
 
   public: 
-	void Initalize(const std::vector<Model*>& models);
+	void Initialize(Model* model);
 
 	void Update();
 
@@ -34,7 +34,7 @@ class Rain : public BaseCharacter {
 	Model* model_ = nullptr;
 
 	// 3Dモデル
-	Model* aitem = nullptr;
+	Model* rainModel[3] = {nullptr};
 
 	Input* input_ = nullptr;
 

@@ -72,14 +72,12 @@ void GameScene::Initialize() {
 	 #pragma region 雨
 	// 雨初期化
 	// 自キャラモデル読み込み
-	modelRain_.reset(Model::Create());
+	modelRain_ = Model::Create();
 	
-	// 自キャラモデル配列
-	std::vector<Model*> rainModels = {modelRain_.get(), modelRain_.get(), modelRain_.get(),
-	};
+	
 	// プレイヤー初期化
 	rain_ = std::make_unique<Rain>();
-	rain_->Initialize(rainModels);
+	rain_->Initialize(modelRain_);
 	//rain_->SetTarget(player_->GetWorldTransform());
 
 
