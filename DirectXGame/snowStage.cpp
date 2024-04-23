@@ -1,6 +1,5 @@
-﻿#include "RainStage.h"
-
-void RainStage::Initialize() {
+#include "SnowStage.h"
+void SnowStage::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
@@ -95,12 +94,42 @@ void RainStage::Initialize() {
 
 #pragma endregion
 
+#pragma region 雪
+
+	modelRaindrop_ = Model::CreateFromOBJ("raindrop", true);
+
+	// 雪の初期化
+	for (int i = 0; i < 100; i++) {
+		worldTransformSnow_[i].Initialize();
+		snowCheck_[i] = false;
+	}
+
+	snowDownSpeed = 0;
+
+#pragma endregion
+
 	viewProjection_.farZ = 200.0f;
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 }
 
-void RainStage::Update() {
+void SnowStage::Update() {
+
+#pragma region 雪
+
+	// 雪の更新
+	for (int i = 0; i < 100; i++) {
+		if (snowCheck_[i] == false) {
+			snowCheck_[i] = true;
+			/*worldTransformSnow_->translation_.x = ;
+			worldTransformSnow_->translation_.y = ;*/
+			worldTransformSnow_[i].translation_.z = player_->GetWorldTransform().translation_.z+40.0f;
+
+
+		}
+	}
+
+#pragma endregion
 
 #pragma region 更新処理
 
@@ -111,6 +140,15 @@ void RainStage::Update() {
 	player_->SetWeather(weather);
 
 	garbageCan_->Update();
+
+	// 雪の更新
+	for (int i = 0; i < 100; i++) {
+		if (snowCheck_[i] == false) {
+			snowCheck_[i] = true;
+			/*worldTransformSnow_->translation_.x = ;
+			worldTransformSnow_->translation_.y = ;*/
+		}
+	}
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
@@ -382,7 +420,7 @@ void RainStage::Update() {
 
 #pragma region タイム
 
-void RainStage::DrawTime() {
+void SnowStage::DrawTime() {
 
 	////分数
 	// int eachMathNumber[2] = {};
@@ -416,7 +454,7 @@ void RainStage::DrawTime() {
 
 #pragma endregion
 
-void RainStage::Draw() { // コマンドリストの取得
+void SnowStage::Draw() { // コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	// 背景スプライト描画前処理
@@ -480,7 +518,7 @@ void RainStage::Draw() { // コマンドリストの取得
 	Sprite::PostDraw();
 }
 
-void RainStage::Time() {
+void SnowStage::Time() {
 	if (timerFlag == true) {
 		timer++;
 	}
@@ -492,7 +530,7 @@ void RainStage::Time() {
 
 #pragma region ボックス CSV
 
-void RainStage::LoadBoxPopData() {
+void SnowStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/BoxPop.csv");
@@ -505,7 +543,7 @@ void RainStage::LoadBoxPopData() {
 	file.close();
 }
 
-void RainStage::UpdateBoxPopCommands() {
+void SnowStage::UpdateBoxPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -542,7 +580,7 @@ void RainStage::UpdateBoxPopCommands() {
 	}
 }
 
-void RainStage::BoxGenerate(Vector3 position) {
+void SnowStage::BoxGenerate(Vector3 position) {
 
 	// アイテムの生成と初期化処理
 	Box* box_ = new Box();
@@ -554,7 +592,7 @@ void RainStage::BoxGenerate(Vector3 position) {
 
 #pragma region 加速装置 CSV
 
-void RainStage::LoadAcceleratorPopData() {
+void SnowStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/AcceleratorPop.csv");
@@ -567,7 +605,7 @@ void RainStage::LoadAcceleratorPopData() {
 	file.close();
 }
 
-void RainStage::UpdateAcceleratorPopCommands() {
+void SnowStage::UpdateAcceleratorPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -604,7 +642,7 @@ void RainStage::UpdateAcceleratorPopCommands() {
 	}
 }
 
-void RainStage::AcceleratorGenerate(Vector3 position) {
+void SnowStage::AcceleratorGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	Accelerator* accelerator_ = new Accelerator();
 	accelerator_->Initialize(acceleratorModel_, position);
@@ -615,7 +653,7 @@ void RainStage::AcceleratorGenerate(Vector3 position) {
 
 #pragma region 開始背景 CSV
 
-void RainStage::LoadStartSkydomePopData() {
+void SnowStage::LoadStartSkydomePopData() {
 	startSkydomePopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/StartSkydomePop.csv");
@@ -628,7 +666,7 @@ void RainStage::LoadStartSkydomePopData() {
 	file.close();
 }
 
-void RainStage::UpdateStartSkydomePopCommands() {
+void SnowStage::UpdateStartSkydomePopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -665,7 +703,7 @@ void RainStage::UpdateStartSkydomePopCommands() {
 	}
 }
 
-void RainStage::StartSkydomeGenerate(Vector3 position) { // アイテムの生成と初期化処理
+void SnowStage::StartSkydomeGenerate(Vector3 position) { // アイテムの生成と初期化処理
 	Skydome* startSkydome_ = new Skydome();
 	startSkydome_->Initialize(modelStartSkydome_, position);
 	startSkydomes_.push_back(static_cast<std::unique_ptr<Skydome>>(startSkydome_));
@@ -675,7 +713,7 @@ void RainStage::StartSkydomeGenerate(Vector3 position) { // アイテムの生�
 
 #pragma region 直線背景 CSV
 
-void RainStage::LoadMiddleSkydomePopData() {
+void SnowStage::LoadMiddleSkydomePopData() {
 	middleSkydomePopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/MiddleSkydomePop.csv");
@@ -688,7 +726,7 @@ void RainStage::LoadMiddleSkydomePopData() {
 	file.close();
 }
 
-void RainStage::UpdateMiddleSkydomePopCommands() {
+void SnowStage::UpdateMiddleSkydomePopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -725,7 +763,7 @@ void RainStage::UpdateMiddleSkydomePopCommands() {
 	}
 }
 
-void RainStage::MiddleSkydomeGenerate(Vector3 position) {
+void SnowStage::MiddleSkydomeGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	Skydome* middleSkydome_ = new Skydome();
 	middleSkydome_->Initialize(modelMiddleSkydome_, position);
@@ -736,7 +774,7 @@ void RainStage::MiddleSkydomeGenerate(Vector3 position) {
 
 #pragma region ゴール背景 CSV
 
-void RainStage::LoadGoalSkydomePopData() {
+void SnowStage::LoadGoalSkydomePopData() {
 
 	goalSkydomePopCommands.clear();
 	std::ifstream file;
@@ -750,7 +788,7 @@ void RainStage::LoadGoalSkydomePopData() {
 	file.close();
 }
 
-void RainStage::UpdateGoalSkydomePopCommands() {
+void SnowStage::UpdateGoalSkydomePopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -787,7 +825,7 @@ void RainStage::UpdateGoalSkydomePopCommands() {
 	}
 }
 
-void RainStage::GoalSkydomeGenerate(Vector3 position) {
+void SnowStage::GoalSkydomeGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	Skydome* goalSkydome_ = new Skydome();
 	goalSkydome_->Initialize(modelGoalSkydome_, position);
@@ -798,7 +836,7 @@ void RainStage::GoalSkydomeGenerate(Vector3 position) {
 
 #pragma region ガードレール CSV
 
-void RainStage::LoadGuardRailPopData() {
+void SnowStage::LoadGuardRailPopData() {
 
 	guardRailPopCommands.clear();
 	std::ifstream file;
@@ -812,7 +850,7 @@ void RainStage::LoadGuardRailPopData() {
 	file.close();
 }
 
-void RainStage::UpdateGuardRailPopCommands() {
+void SnowStage::UpdateGuardRailPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
@@ -849,7 +887,7 @@ void RainStage::UpdateGuardRailPopCommands() {
 	}
 }
 
-void RainStage::GuardRailGenerate(Vector3 position) {
+void SnowStage::GuardRailGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
 	GuardRail* guardRail_ = new GuardRail();
 	guardRail_->Initialize(modelGuardRail_, position);
@@ -858,7 +896,7 @@ void RainStage::GuardRailGenerate(Vector3 position) {
 
 #pragma endregion
 
-void RainStage::Reset() {
+void SnowStage::Reset() {
 	boxs_.clear();
 	accelerators_.clear();
 	startSkydomes_.clear();
@@ -867,7 +905,7 @@ void RainStage::Reset() {
 	sceneNo = SELECT;
 }
 
-void RainStage::Goal() {
+void SnowStage::Goal() {
 
 	if (goalTimerFlag == true) {
 		goalTimer++;
