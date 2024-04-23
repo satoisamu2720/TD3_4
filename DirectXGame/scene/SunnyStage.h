@@ -245,6 +245,10 @@ private:
 
 	//ゲームスタート
 	bool start;
+	bool gameStart;
+	int startTimer = 3 * 60;
+	Sprite* spriteStartTime_[2] = {};
+	Vector2 testPosTimer = {570.0f,170.0f};
 
 	bool timerFlag = false;
 	float timer = 0;
@@ -258,7 +262,6 @@ private:
 
 	// ナンバー
 	uint32_t textureHandleNumber_ = 0;
-	Sprite* spriteMathTime_[2] = {};
 	Sprite* spriteSecondTime_[2] = {};
 	int gameScore_ = 10;
 

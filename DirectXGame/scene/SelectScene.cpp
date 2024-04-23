@@ -44,26 +44,24 @@ void SelectScene::Update() {
 	XINPUT_STATE joyState;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		/*if (joyState.Gamepad.sThumbLX < -100) {
-		    stageCount_++;
-		    leftFlag_ = true;
+		if (joyState.Gamepad.sThumbLX < -100 && leftFlag_ == false && rightFlag_ == false) {
+			stageCount_++;
+			leftFlag_ = true;
 		}
 
-		if (joyState.Gamepad.sThumbLX > 100) {
-		    stageCount_--;
-		    rightFlag_ = true;
-		}*/
-
+		if (joyState.Gamepad.sThumbLX > 100 && leftFlag_ == false && rightFlag_ == false) {
+			stageCount_--;
+			rightFlag_ = true;
+		}
+	}
 		if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
-		    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false ||
-		    joyState.Gamepad.sThumbLX < -100 && leftFlag_ == false && rightFlag_ == false) {
+		    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false ) {
 			stageCount_++;
 			leftFlag_ = true;
 		}
 
 		if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
-		    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false ||
-		    joyState.Gamepad.sThumbLX > 100 && leftFlag_ == false && rightFlag_ == false) {
+		    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false ) {
 			stageCount_--;
 			rightFlag_ = true;
 		}
@@ -110,9 +108,6 @@ void SelectScene::Update() {
 			sceneNo = stageNo_[stageCount_];
 		}
 
-	}
-
-	
 
 	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
 	worldTransformSunny_.translation_.z = -sinf(rotf[SUNNY]) * 20.0f;
@@ -124,10 +119,10 @@ void SelectScene::Update() {
 	worldTransformSnow_.translation_.z = -sinf(rotf[SNOW]) * 20.0f;
 	if (input_->TriggerKey(DIK_TAB)) {
 	}
-#ifdef _DEBUG
-
 	worldTransformFog_.translation_.x = -cosf(rotf[FOG]) * 20.0f;
 	worldTransformFog_.translation_.z = -sinf(rotf[FOG]) * 20.0f;
+#ifdef _DEBUG
+
 
 	ImGui::Begin("stageNum");
 
@@ -155,15 +150,15 @@ void SelectScene::Update() {
 
 	ImGui::SliderFloat3("3DPosition", position, -40.0f, 360.0f);
 
-	worldTransformSunny_.translation_ = {position[0], position[1], position[2]};
 
 	ImGui::End();
 
+#endif
+	//worldTransformSunny_.translation_ = {position[0], position[1], position[2]};
 	worldTransformSunny_.UpdateMatrix();
 	worldTransformRain_.UpdateMatrix();
 	worldTransformSnow_.UpdateMatrix();
 	worldTransformFog_.UpdateMatrix();
-#endif
 }
 
 void SelectScene::Draw() {

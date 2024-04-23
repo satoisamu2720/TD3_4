@@ -13,15 +13,15 @@ void SunnyStage::Initialize() {
 #pragma region タイム
 
 	timer_ = std::make_unique<Timer>();
-
+	
 	textureHandleNumber_ = TextureManager::Load("number.png");
 
 	for (int i = 0; i < 2; i++) {
 		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
-		// spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
+		spriteStartTime_[i] = Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
 	timer_->SetTime(0, 30);
-
+	timer_->SetStartTimer(3);
 #pragma endregion
 
 #pragma region プレイヤー初期化
@@ -103,36 +103,214 @@ void SunnyStage::Initialize() {
 void SunnyStage::Update() {
 
 #pragma region 更新処理
+	
+	
+
+	timer_->SetStartTimerFlag(true);
 
 	timer_->Update();
 
-	player_->Update();
+	if (start) {
 
-	for (const std::unique_ptr<Box>& box_ : boxs_) {
-		box_->Update();
+		player_->Update();
 	}
-	// 加速装置
-	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-		accelerator_->Update();
-	}
+		for (const std::unique_ptr<Box>& box_ : boxs_) {
+			box_->Update();
+		}
+		// 加速装置
+		for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+			accelerator_->Update();
+		}
 
-	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
-		MiddleSkydome_->Update();
-	}
+		for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
+			MiddleSkydome_->Update();
+		}
 
-	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-		goalSkydome_->Update();
-	}
-	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
-		guardRail_->Update();
-	}
+		for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+			goalSkydome_->Update();
+		}
+		for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+			guardRail_->Update();
+		}
 
-	ground_->Update();
+		ground_->Update();
 
-	if (input_->TriggerKey(DIK_SPACE)) {
-		Reset();
-	}
+		if (input_->TriggerKey(DIK_SPACE)) {
+			Reset();
+		}
 
+		if (timer_->GetStartTime() <= 0 && start == false) {
+			start = true;
+			railCamera_->SetStart(start);
+			timer_->SetTimerFlag(true);
+		}
+
+#pragma endregion
+
+#pragma region カメラセット
+		railCamera_->Update();
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+
+#pragma endregion
+
+		// 当たり判定
+
+#pragma region プレイヤーの当たり判定
+
+		PlayerBackZ_ = player_->GetWorldPosition().z - 2.4f;
+		PlayerFlontZ_ = player_->GetWorldPosition().z + 2.3f;
+		PlayerLeftX_ = player_->GetWorldPosition().x - 1.3f;
+		PlayerRightX_ = player_->GetWorldPosition().x + 1.3f;
+
+#pragma endregion
+
+#pragma region プレイヤーとボックスの当たり判定
+
+		for (const std::unique_ptr<Box>& box : boxs_) {
+
+			bool boxMoveFlag = box->IsDead();
+
+			BoxBackZ_ = box->GetWorldPosition().z - 1.0f;
+			BoxFlontZ_ = box->GetWorldPosition().z + 1.0f;
+			BoxLeftX_ = box->GetWorldPosition().x - 1.0f;
+			BoxRightX_ = box->GetWorldPosition().x + 1.0f;
+
+			if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
+			    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
+
+				boxMoveFlag = true;
+
+				if (boxMoveFlag) {
+
+					Vector3 tmpTranslate = box->GetWorldPosition();
+
+					tmpTranslate.y += 7.0f;
+
+					if (timerFlag == false) {
+						player_->SetNormalHit(true);
+						// player_->SetThunderHit(true);
+						railCamera_->SetIsSpeedDown(true);
+						timerFlag = true;
+					}
+
+					box->SetTranslate(tmpTranslate);
+					box->SetBoxFlag(boxMoveFlag);
+				}
+			}
+		}
+
+#pragma endregion
+
+#pragma region プレイヤーと加速装置の当たり判定
+		// 加速装置
+
+		for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+			SpeedBackZ_ = accelerator_->GetWorldPosition().z - 1.0f;
+			SpeedFlontZ_ = accelerator_->GetWorldPosition().z + 1.0f;
+			SpeedLeftX_ = accelerator_->GetWorldPosition().x - 5.0f;
+			SpeedRightX_ = accelerator_->GetWorldPosition().x + 5.0f;
+
+			if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
+			    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
+				railCamera_->SetIsSpeedUp(true);
+			}
+		}
+
+#pragma endregion
+
+#pragma region プレイヤーとゴールの当たり判定
+
+		for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+			goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
+			goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
+			goalLeftX_ = goalSkydome_->GetWorldPosition().x - 10.0f;
+			goalRightX_ = goalSkydome_->GetWorldPosition().x + 10.0f;
+
+			if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
+			    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
+
+				goalTimerFlag = true;
+			}
+		}
+#pragma endregion
+
+#pragma region CSV 更新処理, デスフラグ
+		// デスフラグの立った敵を削除
+		boxs_.remove_if([](std::unique_ptr<Box>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
+
+		// ボックスのCSVファイルの更新処理
+		UpdateBoxPopCommands();
+
+		// デスフラグの立った敵を削除
+		accelerators_.remove_if([](std::unique_ptr<Accelerator>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
+
+		// 加速装置のCSVファイルの更新処理
+		UpdateAcceleratorPopCommands();
+
+		// デスフラグの立った敵を削除
+		middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
+
+		// 装置のCSVファイルの更新処理
+		UpdateMiddleSkydomePopCommands();
+
+		startSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
+
+		UpdateStartSkydomePopCommands();
+
+		goalSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
+
+		UpdateGoalSkydomePopCommands();
+
+		guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
+
+		UpdateGuardRailPopCommands();
+
+#pragma endregion
+
+		Time();
+		Goal();
+	
+
+#ifdef _DEBUG
+	
 	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
 		start = true;
 		railCamera_->SetStart(start);
@@ -149,18 +327,6 @@ void SunnyStage::Update() {
 		railCamera_->SetPos({0, 4, 0});
 		
 	}
-
-#pragma endregion
-
-#pragma region カメラセット
-  	railCamera_->Update();
-	viewProjection_.matView = railCamera_->GetViewProjection().matView;
-	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-	viewProjection_.TransferMatrix();
-#pragma endregion
-
-#ifdef _DEBUG
-	
 	ImGui::Begin("stage");
 	ImGui::Text("SunnyStage");
 	ImGui::Checkbox("Game Start", &start);
@@ -178,179 +344,28 @@ void SunnyStage::Update() {
 	ImGui::InputFloat("clearTimer", &goalTimer, 0.1f);
 	ImGui::End();
 
+	ImGui::Begin("start timer ");
+	ImGui::DragFloat("start timer pos x", &testPosTimer.x);
+	ImGui::DragFloat("start timer pos y", &testPosTimer.y);
+	ImGui::End();
+
 #endif
 
-	// 当たり判定
-
-#pragma region プレイヤーの当たり判定
-
-	PlayerBackZ_ = player_->GetWorldPosition().z - 2.4f;
-	PlayerFlontZ_ = player_->GetWorldPosition().z + 2.3f;
-	PlayerLeftX_ = player_->GetWorldPosition().x - 1.3f;
-	PlayerRightX_ = player_->GetWorldPosition().x + 1.3f;
-
-#pragma endregion
-
-#pragma region プレイヤーとボックスの当たり判定
-
-	for (const std::unique_ptr<Box>& box : boxs_) {
-
-		bool boxMoveFlag = box->IsDead();
-
-		BoxBackZ_ = box->GetWorldPosition().z - 1.0f;
-		BoxFlontZ_ = box->GetWorldPosition().z + 1.0f;
-		BoxLeftX_ = box->GetWorldPosition().x - 1.0f;
-		BoxRightX_ = box->GetWorldPosition().x + 1.0f;
-
-		if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
-		    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
-
-			boxMoveFlag = true;
-
-			if (boxMoveFlag) {
-
-				Vector3 tmpTranslate = box->GetWorldPosition();
-
-				tmpTranslate.y += 7.0f;
-
-				if (timerFlag == false) {
-					player_->SetNormalHit(true);
-					// player_->SetThunderHit(true);
-					railCamera_->SetIsSpeedDown(true);
-					timerFlag = true;
-				}
-
-				box->SetTranslate(tmpTranslate);
-				box->SetBoxFlag(boxMoveFlag);
-			}
-		}
-	}
-
-
-#pragma endregion
-
-
-
-#pragma region プレイヤーと加速装置の当たり判定
-	// 加速装置
-
-	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-		SpeedBackZ_ = accelerator_->GetWorldPosition().z - 1.0f;
-		SpeedFlontZ_ = accelerator_->GetWorldPosition().z + 1.0f;
-		SpeedLeftX_ = accelerator_->GetWorldPosition().x - 5.0f;
-		SpeedRightX_ = accelerator_->GetWorldPosition().x + 5.0f;
-
-		if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
-		    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
-			railCamera_->SetIsSpeedUp(true);
-		}
-	}
-
-#pragma endregion
-
-#pragma region プレイヤーとゴールの当たり判定
-
-	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-		goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
-		goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
-		goalLeftX_ = goalSkydome_->GetWorldPosition().x - 10.0f;
-		goalRightX_ = goalSkydome_->GetWorldPosition().x + 10.0f;
-
-		if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
-		    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
-
-			
-			goalTimerFlag = true;
-		}
-	}
-#pragma endregion
-	
-#pragma region CSV 更新処理,デスフラグ
-	// デスフラグの立った敵を削除
-	boxs_.remove_if([](std::unique_ptr<Box>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
-
-	// ボックスのCSVファイルの更新処理
-	UpdateBoxPopCommands();
-
-	// デスフラグの立った敵を削除
-	accelerators_.remove_if([](std::unique_ptr<Accelerator>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
-
-	// 加速装置のCSVファイルの更新処理
-	UpdateAcceleratorPopCommands();
-
-	// デスフラグの立った敵を削除
-	middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
-
-	// 装置のCSVファイルの更新処理
-	UpdateMiddleSkydomePopCommands();
-
-	startSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
-
-	UpdateStartSkydomePopCommands();
-
-	goalSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
-
-	UpdateGoalSkydomePopCommands();
-
-	guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
-
-	UpdateGuardRailPopCommands();
-
-#pragma endregion 
-
-	Time();
-	Goal();
 }
 
 #pragma region タイム
 
 void SunnyStage::DrawTime() {
 
-	////分数
-	//int eachMathNumber[2] = {};
-	//int mathNumber = timer_->GetTimeMath();
-	//int mathKeta = 10;
-	//for (int i = 0; i < 2; i++) {
-	//	eachMathNumber[i] = mathNumber / mathKeta;
-	//	mathNumber = mathNumber % mathKeta;
-	//	mathKeta = mathKeta / 10;
-	//}
+	//ゲームスタートタイマー秒数
+	int eachMathNumber[2] = {};
+	int mathNumber = timer_->GetStartTime();
+	int mathKeta = 10;
+	for (int i = 0; i < 2; i++) {
+		eachMathNumber[i] = mathNumber / mathKeta;
+		mathNumber = mathNumber % mathKeta;
+		mathKeta = mathKeta / 10;
+	}
 	//秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
@@ -362,13 +377,18 @@ void SunnyStage::DrawTime() {
 	}
 
 	for (int i = 0; i < 2; i++) {
+		//残り時間描画
 		spriteSecondTime_[i]->SetSize({32, 64});
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 
-		/*spriteMathTime_[i]->SetSize({32, 64});
-		spriteMathTime_[i]->SetTextureRect({32.0f * eachMathNumber[i], 0}, {32, 64});
-		spriteMathTime_[i]->Draw();*/
+		//スタート秒数描画
+		spriteStartTime_[1]->SetSize({128, 256});
+		spriteStartTime_[1]->SetPosition(testPosTimer);
+		spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
+		if (start == false) {
+		 spriteStartTime_[1]->Draw();
+		}
 		
 	}
 }
@@ -826,6 +846,13 @@ void SunnyStage::Reset() {
 	startSkydomes_.clear();
 	middleSkydomes_.clear();
 	goalSkydomes_.clear();
+	
+	timer_->SetTime(0, 30);
+	timer_->SetTimerFlag(false);
+	railCamera_->SetPos({0, 4, 0});
+	railCamera_->SetStart(false);
+	start = false;
+
 	sceneNo = SELECT;
 }
 
@@ -846,16 +873,18 @@ void SunnyStage::Goal() {
 
 
 		if (timer_->GetTimeSecond() > 0) {
-			timer_->SetTimerFlag(false);
-			railCamera_->SetStart(false);
 			timer_->SetTime(0, 30);
+			timer_->SetTimerFlag(false);
 			railCamera_->SetPos({0, 4, 0});
+			railCamera_->SetStart(false);
+			start = false;
 			sceneNo = CLEAR;
 		} else {
-			timer_->SetTimerFlag(false);
-			railCamera_->SetStart(false);
 			timer_->SetTime(0, 30);
+			timer_->SetTimerFlag(false);
 			railCamera_->SetPos({0, 4, 0});
+			railCamera_->SetStart(false);
+			start = false;
 			sceneNo = END;
 		}
 	}

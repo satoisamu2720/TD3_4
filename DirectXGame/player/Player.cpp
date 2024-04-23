@@ -26,6 +26,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, position);
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Update() {
@@ -66,7 +67,6 @@ void Player::Update() {
 	XINPUT_STATE joyState;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-
 		// 押した方向で移動ベクトルを変更（左右）
 		if (input_->PushKey(DIK_A) || joyState.Gamepad.sThumbLX < -100) {
 			move_.x -= kCharacterSpeed;
@@ -85,7 +85,25 @@ void Player::Update() {
 			worldTransform_.rotation_.y -= 0.05f;
 			worldTransformFront_.rotation_.y -= 0.025f;
 		}
-	}
+	}else
+		// 押した方向で移動ベクトルを変更（左右）
+		if (input_->PushKey(DIK_A) ) {
+			move_.x -= kCharacterSpeed;
+			if (notRotate == false) {
+				LeftMove();
+			}
+		} else if (input_->PushKey(DIK_D) ) {
+			move_.x += kCharacterSpeed;
+			if (notRotate == false) {
+				RightMove();
+			}
+		} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
+			worldTransform_.rotation_.y += 0.05f;
+			worldTransformFront_.rotation_.y += 0.025f;
+		} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
+			worldTransform_.rotation_.y -= 0.05f;
+			worldTransformFront_.rotation_.y -= 0.025f;
+		}
 
 	if (worldTransform_.rotation_.y >= bestRotation) {
 		worldTransform_.rotation_.y = 0.0f;
@@ -180,6 +198,8 @@ void Player::SunnyUpdate() {
 		weatherHitRequest_ = WeatherHit::Normal;
 		normalHit_ = false;
 	}
+	
+	
 
 	move_ = {0, 0, 0};
 

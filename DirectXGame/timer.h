@@ -17,14 +17,20 @@ public:
 
 	void SetTime(int math, int second);
 
+	void SetStartTimer(int time);
+
 	int GetTimeMath() { return mathTime; }
 	int  GetTimeSecond() { return secondTime; }
+
+	int GetStartTime() { return startTimer; }
 
 	void TimerOn();
 
 	void TimerOff();
 
 	bool SetTimerFlag(bool flag) { return isFlag = flag; } 
+
+	bool SetStartTimerFlag(bool flag) { return startIsFlag = flag; }
 
 private:
 	
@@ -38,15 +44,15 @@ private:
 
 	bool isFlag = false;
 
-	Sprite* texHandle[10] = {};
 
-	
 
-	//タイム 
-	uint32_t textureHandleNumber_ = 0;
-	Sprite* spriteNumber_[2] = {};
-	int gameScore_ = 0;
-	int number;
-	int eachNumber[2] = {};
-	int keta;
+	int startTimer = 3;
+
+	float wStartTime = 0.0f;
+
+	bool startIsFlag = false;
+
+
+
+
 };

@@ -16,10 +16,11 @@ void RainStage::Initialize() {
 
 	for (int i = 0; i < 2; i++) {
 		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
-		// spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
+		spriteStartTime_[i] =
+		    Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
 	timer_->SetTime(0, 30);
-
+	timer_->SetStartTimer(3);
 #pragma endregion
 
 #pragma region プレイヤー初期化
@@ -106,11 +107,14 @@ void RainStage::Update() {
 
 #pragma region 更新処理
 
+	timer_->SetStartTimerFlag(true);
+
 	timer_->Update();
 
-	player_->Update();
-
-	player_->SetWeather(weather);
+	if (start) {
+		player_->Update();
+		player_->SetWeather(weather);
+	}
 
 	garbageCan_->Update();
 
@@ -139,6 +143,24 @@ void RainStage::Update() {
 		Reset();
 	}
 
+	if (timer_->GetStartTime() <= 0 && start == false) {
+		start = true;
+		railCamera_->SetStart(start);
+		timer_->SetTimerFlag(true);
+	}
+
+	
+#pragma endregion
+
+#pragma region カメラセット
+	railCamera_->Update();
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
+#pragma endregion
+
+#ifdef _DEBUG
+
 	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
 		start = true;
 		railCamera_->SetStart(start);
@@ -153,19 +175,8 @@ void RainStage::Update() {
 		railCamera_->SetStart(false);
 		timer_->SetTime(0, 30);
 		railCamera_->SetPos({0, 4, 0});
-		garbageCan_->SetPlayerGetPos({railCamera_->GetWorldTransform().translation_});
 	}
 
-#pragma endregion
-
-#pragma region カメラセット
-	railCamera_->Update();
-	viewProjection_.matView = railCamera_->GetViewProjection().matView;
-	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-	viewProjection_.TransferMatrix();
-#pragma endregion
-
-#ifdef _DEBUG
 	ImGui::Begin("weather");
 	ImGui::InputFloat("weather", &weather, 1.0f);
 	// ImGui::Checkbox("", &);
@@ -386,15 +397,15 @@ void RainStage::Update() {
 
 void RainStage::DrawTime() {
 
-	////分数
-	// int eachMathNumber[2] = {};
-	// int mathNumber = timer_->GetTimeMath();
-	// int mathKeta = 10;
-	// for (int i = 0; i < 2; i++) {
-	//	eachMathNumber[i] = mathNumber / mathKeta;
-	//	mathNumber = mathNumber % mathKeta;
-	//	mathKeta = mathKeta / 10;
-	// }
+	// ゲームスタートタイマー秒数
+	int eachMathNumber[2] = {};
+	int mathNumber = timer_->GetStartTime();
+	int mathKeta = 10;
+	for (int i = 0; i < 2; i++) {
+		eachMathNumber[i] = mathNumber / mathKeta;
+		mathNumber = mathNumber % mathKeta;
+		mathKeta = mathKeta / 10;
+	}
 	// 秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
@@ -406,13 +417,18 @@ void RainStage::DrawTime() {
 	}
 
 	for (int i = 0; i < 2; i++) {
+		// 残り時間描画
 		spriteSecondTime_[i]->SetSize({32, 64});
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 
-		/*spriteMathTime_[i]->SetSize({32, 64});
-		spriteMathTime_[i]->SetTextureRect({32.0f * eachMathNumber[i], 0}, {32, 64});
-		spriteMathTime_[i]->Draw();*/
+		// スタート秒数描画
+		spriteStartTime_[1]->SetSize({128, 256});
+		spriteStartTime_[1]->SetPosition(testPosTimer);
+		spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
+		if (start == false) {
+			spriteStartTime_[1]->Draw();
+		}
 	}
 }
 
@@ -866,6 +882,13 @@ void RainStage::Reset() {
 	startSkydomes_.clear();
 	middleSkydomes_.clear();
 	goalSkydomes_.clear();
+
+	timer_->SetTime(0, 30);
+	timer_->SetTimerFlag(false);
+	railCamera_->SetPos({0, 4, 0});
+	railCamera_->SetStart(false);
+	start = false;
+
 	sceneNo = SELECT;
 }
 
@@ -874,7 +897,7 @@ void RainStage::Goal() {
 	if (goalTimerFlag == true) {
 		goalTimer++;
 	}
-	if (goalTimer >= 60) {
+	if (goalTimer >= 50) {
 		boxs_.clear();
 		accelerators_.clear();
 		startSkydomes_.clear();
@@ -885,16 +908,18 @@ void RainStage::Goal() {
 		goalTimerFlag = false;
 
 		if (timer_->GetTimeSecond() > 0) {
-			timer_->SetTimerFlag(false);
-			railCamera_->SetStart(false);
 			timer_->SetTime(0, 30);
+			timer_->SetTimerFlag(false);
 			railCamera_->SetPos({0, 4, 0});
+			railCamera_->SetStart(false);
+			start = false;
 			sceneNo = CLEAR;
 		} else {
-			timer_->SetTimerFlag(false);
-			railCamera_->SetStart(false);
 			timer_->SetTime(0, 30);
+			timer_->SetTimerFlag(false);
 			railCamera_->SetPos({0, 4, 0});
+			railCamera_->SetStart(false);
+			start = false;
 			sceneNo = END;
 		}
 	}

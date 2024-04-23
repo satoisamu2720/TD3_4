@@ -1,7 +1,7 @@
 ﻿#include "timer.h"
 #include "TextureManager.h"
 
-void Timer::Initialize() {
+void Timer::Initialize() { 
 	
 	
 }
@@ -23,6 +23,20 @@ void Timer::Update() {
 			wTime = 1000;
 		}
 	}
+
+	if (startIsFlag == true) {
+		wStartTime -= 18;
+	}
+
+	if (startIsFlag == true) {
+
+		if (wStartTime <= 0 && startTimer > 0) {
+			startTimer -= 1;
+			wStartTime = 1000;
+		}
+	}
+
+
 #ifdef _DEBUG
 	ImGui::Begin("Timer");
 
@@ -37,7 +51,7 @@ void Timer::Update() {
 
 	ImGui::End();
 
-	number = secondTime;
+	
 #endif
 }
 
@@ -51,6 +65,14 @@ void Timer::SetTime(int math, int second) {
 
 		mathTime = math;
 		secondTime = second;
+	}
+}
+
+void Timer::SetStartTimer(int time) {
+	if (startIsFlag == false) {
+
+		startTimer = time;
+		
 	}
 }
 
