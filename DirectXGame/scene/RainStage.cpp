@@ -130,8 +130,8 @@ void RainStage::Update() {
 	for (int i = 0; i < 100; i++) {
 		if (snowCheck_[i] == false) {
 			snowCheck_[i] = true;
-			worldTransformSnow_->translation_.x = ;
-			worldTransformSnow_->translation_.y = ;
+			/*worldTransformSnow_->translation_.x = ;
+			worldTransformSnow_->translation_.y = ;*/
 		}
 	}
 
