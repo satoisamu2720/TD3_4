@@ -11,7 +11,6 @@ void RainStage::Initialize() {
 #pragma region タイム
 
 	timer_ = std::make_unique<Timer>();
-
 	textureHandleNumber_ = TextureManager::Load("number.png");
 
 	for (int i = 0; i < 2; i++) {
@@ -103,9 +102,10 @@ void RainStage::Initialize() {
 	// 雪の初期化
 	for (int i = 0; i < 100; i++) {
 		worldTransformSnow_[i].Initialize();
+		snowCheck_[i] = false;
 	}
-	
-	snowDownSpeed = 0.5;
+
+	snowDownSpeed = 0;
 
 #pragma endregion
 
@@ -128,7 +128,11 @@ void RainStage::Update() {
 
 	// 雪の更新
 	for (int i = 0; i < 100; i++) {
-		
+		if (snowCheck_[i] == false) {
+			snowCheck_[i] = true;
+			worldTransformSnow_->translation_.x = ;
+			worldTransformSnow_->translation_.y = ;
+		}
 	}
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {

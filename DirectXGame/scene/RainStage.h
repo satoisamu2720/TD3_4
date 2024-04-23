@@ -157,7 +157,7 @@ private:
 	// 雪の処理
 	WorldTransform worldTransformSnow_[100];
 	float snowDownSpeed;
-	bool snowCheck = false;
+	bool snowCheck_[100];
 
 
 	uint32_t soundDataHandle_ = 0;
