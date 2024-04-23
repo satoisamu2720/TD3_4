@@ -3,23 +3,23 @@
 void Rain::Initialize(Model* model) { 
 	
 	assert(model);
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 5; i++) {
 		rainModel[i] = model;
 	}
 	
 	worldTransform_[0].translation_ = {
-	    0.0f,
-	    100.0f,4.0f
+	    0.0f,100.0f,4.0f
 	};
+	worldTransform_[1].translation_ = {
+		10.0f,150.0f ,4.0f };
+	worldTransform_[2].translation_ = {
+		50.9f, 120.0f ,4.0f};
+	worldTransform_[3].translation_ = {-10.0f, 130.0f, 2.0f};
+	worldTransform_[4].translation_ = {-50.9f, 120.0f, -52.0f};
 
-	worldTransform_[1].translation_ = {10.0f,150.0f ,4.0f };
-
-	worldTransform_[2].translation_ = {50.9f, 120.0f ,4.0f};
 
 
-
-
-	  for (int i = 0; i < 3; i++) {
+	  for (int i = 0; i < 5; i++) {
 		worldTransform_[i].scale_ = {3.0f, 3.0f, 3.0f};
 		worldTransform_[i].rotation_ = {0.0f, 10.0f, 0.0f};
 
@@ -32,26 +32,38 @@ void Rain::Initialize(Model* model) {
 
 void Rain::Update() {
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 5; i++) {
 
 	
 		if (target_) {
-			worldTransform_[i].translation_.x = fastTransform_[i].translation_.x + target_->translation_.x;
+			//worldTransform_[i].translation_.x = fastTransform_[i].translation_.x + target_->translation_.x;
 			worldTransform_[i].translation_.z = fastTransform_[i].translation_.z + target_->translation_.z;
 		}
 
 
-		worldTransform_[i].translation_.y -= 3.0f;
+		worldTransform_[i].translation_.y -= 5.0f;
 
 		  if (worldTransform_[i].translation_.y <= 0) {
 		
-		  worldTransform_[i].translation_.y = 100.0f;
+			  if (i % 2 == 0) {
+			  
+			  	    worldTransform_[i].translation_.y = 150.0f;
+			  } else
+				if(i % 2 != 0)  
+			  {
+				  worldTransform_[i].translation_.y = 120.0f;
+			  }
+
+
+		 
+
+
 		  }
 		 
 		
 
 	}
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 5; i++) {
 		worldTransform_[i].UpdateMatrix();
 	
 	}
@@ -67,7 +79,7 @@ void Rain::Update() {
 void Rain::Draw(ViewProjection& viewProjection) {
 
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 5; i++) {
 		rainModel[i]->Draw(worldTransform_[i], viewProjection);
 	}
 
