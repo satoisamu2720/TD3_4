@@ -82,6 +82,7 @@ void SelectScene::Update() {
 			rightFlag_ = false;
 			target_ = 0;
 		}
+
 		for (int i = 0; i < 4; i++) {
 			if (target_ != 90) {
 				degree[i] += 1;
@@ -90,7 +91,7 @@ void SelectScene::Update() {
 		}
 	}
 
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_SPACE) && leftFlag_ == false && rightFlag_ == false) {
 		sceneNo = stageNo_[stageCount_];
 	}
 
