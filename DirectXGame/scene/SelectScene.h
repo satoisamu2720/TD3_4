@@ -39,7 +39,17 @@ private:
 
 	ViewProjection viewProjection_;
 
-	std::unique_ptr<Model> selectModel_;
+	uint32_t titleTexHandle_ = 0;
+	Sprite* Sprite_ = nullptr;
+
+	// 晴
+	std::unique_ptr<Model> sunModel_;
+	// 雨
+	std::unique_ptr<Model> rainModel_;
+	// 雪
+	std::unique_ptr<Model> snowModel_;
+	// 霧
+	std::unique_ptr<Model> fogModel_;
 
 	//　矢印を押したときの番号
 	int stageCount_ = 0;
