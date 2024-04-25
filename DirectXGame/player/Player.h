@@ -96,6 +96,8 @@ public:
 
 	void SetPosition(float position_) { position.z = position_; }
 
+	void SetStart(bool start) { gameStart = start; }
+
 	~Player();
 
 	enum class WeatherHit {
@@ -107,8 +109,10 @@ public:
 
 private:
 	Vector3 move_ = {0, 0, 0};
+	Vector3 rotMove_ = {0, 0, 0};
 
 	bool notRotate = false;
+	bool gameStart = false;
 	// キャラクターの移動速度
 	const float kCharacterSpeed = 0.2f;
 

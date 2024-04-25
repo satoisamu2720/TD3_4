@@ -30,98 +30,103 @@ void Player::Initialize(const std::vector<Model*>& models) {
 }
 
 void Player::Update() {
-	move_ = {0, 0, 0};
-	if (weatherHitRequest_) {
-		// 振るまいを変更する
-		weatherHit_ = weatherHitRequest_.value();
-		// 各振るまいごとの初期化を実行
+	if (gameStart) {
+		move_ = {0, 0, 0};
+		if (weatherHitRequest_) {
+			// 振るまいを変更する
+			weatherHit_ = weatherHitRequest_.value();
+			// 各振るまいごとの初期化を実行
+			switch (weatherHit_) {
+			case Player::WeatherHit::NotHit:
+				NotHitInitialize();
+			default:
+				break;
+			case Player::WeatherHit::Normal:
+				NormalHitMotionInitialize();
+				break;
+			case Player::WeatherHit::Thunder:
+				ThunderHitMotionInitialize();
+				break;
+			}
+			// 振るまいリクエストをリセット
+			weatherHitRequest_ = std::nullopt;
+		}
+
 		switch (weatherHit_) {
 		case Player::WeatherHit::NotHit:
-			NotHitInitialize();
+			NormalUpdate();
 		default:
 			break;
 		case Player::WeatherHit::Normal:
-			NormalHitMotionInitialize();
+			NormalHitMotion();
 			break;
 		case Player::WeatherHit::Thunder:
-			ThunderHitMotionInitialize();
+			ThunderHitMotion();
 			break;
 		}
-		// 振るまいリクエストをリセット
-		weatherHitRequest_ = std::nullopt;
-	}
 
-	switch (weatherHit_) {
-	case Player::WeatherHit::NotHit:
-		NormalUpdate();
-	default:
-		break;
-	case Player::WeatherHit::Normal:
-		NormalHitMotion();
-		break;
-	case Player::WeatherHit::Thunder:
-		ThunderHitMotion();
-		break;
-	}
+		XINPUT_STATE joyState;
 
-	XINPUT_STATE joyState;
-
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		// 押した方向で移動ベクトルを変更（左右）
-		if (input_->PushKey(DIK_A) || joyState.Gamepad.sThumbLX < -100) {
-			move_.x -= kCharacterSpeed;
-			if (notRotate == false) {
-				LeftMove();
+		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+			// 押した方向で移動ベクトルを変更（左右）
+			if (input_->PushKey(DIK_A) || joyState.Gamepad.sThumbLX < -100) {
+				move_.x -= kCharacterSpeed;
+				if (notRotate == false) {
+					LeftMove();
+				}
+			} else if (input_->PushKey(DIK_D) || joyState.Gamepad.sThumbLX > 100) {
+				move_.x += kCharacterSpeed;
+				if (notRotate == false) {
+					RightMove();
+				}
+			} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
+				worldTransform_.rotation_.y += 0.05f;
+				worldTransformFront_.rotation_.y += 0.025f;
+			} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
+				worldTransform_.rotation_.y -= 0.05f;
+				worldTransformFront_.rotation_.y -= 0.025f;
 			}
-		} else if (input_->PushKey(DIK_D) || joyState.Gamepad.sThumbLX > 100) {
-			move_.x += kCharacterSpeed;
-			if (notRotate == false) {
-				RightMove();
+		} else
+			// 押した方向で移動ベクトルを変更（左右）
+			if (input_->PushKey(DIK_A)) {
+				move_.x -= kCharacterSpeed;
+				if (notRotate == false) {
+					LeftMove();
+				}
+			} else if (input_->PushKey(DIK_D)) {
+				move_.x += kCharacterSpeed;
+				if (notRotate == false) {
+					RightMove();
+				}
+			} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
+				worldTransform_.rotation_.y += 0.05f;
+				worldTransformFront_.rotation_.y += 0.025f;
+			} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
+				worldTransform_.rotation_.y -= 0.05f;
+				worldTransformFront_.rotation_.y -= 0.025f;
 			}
-		} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
-			worldTransform_.rotation_.y += 0.05f;
-			worldTransformFront_.rotation_.y += 0.025f;
-		} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
-			worldTransform_.rotation_.y -= 0.05f;
-			worldTransformFront_.rotation_.y -= 0.025f;
+
+		if (worldTransform_.rotation_.y >= bestRotation) {
+			worldTransform_.rotation_.y = 0.0f;
 		}
-	}else
-		// 押した方向で移動ベクトルを変更（左右）
-		if (input_->PushKey(DIK_A) ) {
-			move_.x -= kCharacterSpeed;
-			if (notRotate == false) {
-				LeftMove();
-			}
-		} else if (input_->PushKey(DIK_D) ) {
-			move_.x += kCharacterSpeed;
-			if (notRotate == false) {
-				RightMove();
-			}
-		} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
-			worldTransform_.rotation_.y += 0.05f;
-			worldTransformFront_.rotation_.y += 0.025f;
-		} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
-			worldTransform_.rotation_.y -= 0.05f;
-			worldTransformFront_.rotation_.y -= 0.025f;
-		}
+		//worldTransformFront_.rotation_.x += 0.01f;
 
-	if (worldTransform_.rotation_.y >= bestRotation) {
-		worldTransform_.rotation_.y = 0.0f;
-	}
 #ifdef _DEBUG
-	if (input_->PushKey(DIK_W)) {
-		move_.z += kCharacterSpeed;
-	} else if (input_->PushKey(DIK_S)) {
-		move_.z -= kCharacterSpeed;
-	}
-	if (input_->PushKey(DIK_F)) {
-		thunderHit_ = true;
-	}
+		if (input_->PushKey(DIK_W)) {
+			move_.z += kCharacterSpeed;
+		} else if (input_->PushKey(DIK_S)) {
+			move_.z -= kCharacterSpeed;
+		}
+		if (input_->PushKey(DIK_F)) {
+			thunderHit_ = true;
+		}
 #endif
-
+	}
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
 	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
+	worldTransformFront_.rotation_ = Add(worldTransformFront_.rotation_, rotMove_);
+	rotMove_ = TransformNormal(rotMove_, MakeRotateYmatrix(viewProjection_->rotation_.y));
 
 	worldTransform_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
@@ -198,40 +203,8 @@ void Player::SunnyUpdate() {
 		weatherHitRequest_ = WeatherHit::Normal;
 		normalHit_ = false;
 	}
-	
-	
 
 	move_ = {0, 0, 0};
-
-	// 押した方向で移動ベクトルを変更（左右）
-	if (input_->PushKey(DIK_A)) {
-		move_.x -= kCharacterSpeed;
-		if (notRotate == false) {
-			LeftMove();
-		}
-	} else if (input_->PushKey(DIK_D)) {
-		move_.x += kCharacterSpeed;
-		if (notRotate == false) {
-			RightMove();
-		}
-	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
-		worldTransform_.rotation_.y += 0.05f;
-		worldTransformFront_.rotation_.y += 0.025f;
-	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
-		worldTransform_.rotation_.y -= 0.05f;
-		worldTransformFront_.rotation_.y -= 0.025f;
-	}
-
-#ifdef _DEBUG
-	if (input_->PushKey(DIK_W)) {
-		move_.z += kCharacterSpeed;
-	} else if (input_->PushKey(DIK_S)) {
-		move_.z -= kCharacterSpeed;
-	}
-	if (input_->PushKey(DIK_F)) {
-		normalHit_ = true;
-	}
-#endif
 
 	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));
 	// ベクターの加算
@@ -268,38 +241,6 @@ void Player::ThunderstormUpdate() {
 		wind = windRight;
 		move_.x -= wind;
 	}
-
-	// 押した方向で移動ベクトルを変更（左右）
-	if (input_->PushKey(DIK_A)) {
-		move_.x -= kCharacterSpeed;
-		if (notRotate == false) {
-			LeftMove();
-		}
-	} else if (input_->PushKey(DIK_D)) {
-		move_.x += kCharacterSpeed;
-		if (notRotate == false) {
-			RightMove();
-		}
-	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
-		worldTransform_.rotation_.y += 0.05f;
-		worldTransformFront_.rotation_.y += 0.025f;
-	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
-		worldTransform_.rotation_.y -= 0.05f;
-		worldTransformFront_.rotation_.y -= 0.025f;
-	}
-	if (worldTransform_.rotation_.y >= bestRotation) {
-		worldTransform_.rotation_.y = 0.0f;
-	}
-#ifdef _DEBUG
-	if (input_->PushKey(DIK_W)) {
-		move_.z += kCharacterSpeed;
-	} else if (input_->PushKey(DIK_S)) {
-		move_.z -= kCharacterSpeed;
-	}
-	if (input_->PushKey(DIK_F)) {
-		thunderHit_ = true;
-	}
-#endif
 
 	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));
 	// ベクターの加算

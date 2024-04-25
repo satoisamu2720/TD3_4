@@ -5,6 +5,8 @@ void ClearScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	texHandle_ = TextureManager::Load("gameClear.png");
+	sprite_ = Sprite::Create(texHandle_, {0, 0});
 }
 
 void ClearScene::Update() {
@@ -67,7 +69,7 @@ void ClearScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
+	sprite_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 

@@ -33,7 +33,7 @@ private:
 
 	uint32_t buttonSound_;
 
-	uint32_t titleTexHandle_ = 0;
-	Sprite* titleSprite_ = nullptr;
+	uint32_t texHandle_ = 0;
+	Sprite* sprite_ = nullptr;
 
 };

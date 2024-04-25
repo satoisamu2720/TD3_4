@@ -17,11 +17,11 @@ void SunnyStage::Initialize() {
 	textureHandleNumber_ = TextureManager::Load("number.png");
 
 	for (int i = 0; i < 2; i++) {
-		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
+		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {10.0f + i * 46, 20});
 		spriteStartTime_[i] = Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
-	timer_->SetTime(0, 30);
-	timer_->SetStartTimer(3);
+	timer_->SetTime(0, 15);
+	timer_->SetStartTimer(4);
 #pragma endregion
 
 #pragma region プレイヤー初期化
@@ -109,11 +109,8 @@ void SunnyStage::Update() {
 	timer_->SetStartTimerFlag(true);
 
 	timer_->Update();
-
-	if (start) {
-
-		player_->Update();
-	}
+	player_->SetStart(start);
+	player_->Update();
 		for (const std::unique_ptr<Box>& box_ : boxs_) {
 			box_->Update();
 		}
@@ -378,7 +375,7 @@ void SunnyStage::DrawTime() {
 
 	for (int i = 0; i < 2; i++) {
 		//残り時間描画
-		spriteSecondTime_[i]->SetSize({32, 64});
+		spriteSecondTime_[i]->SetSize({64, 128});
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 

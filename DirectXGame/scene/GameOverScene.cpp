@@ -5,6 +5,9 @@ void GameOverScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	texHandle_ = TextureManager::Load("gameOver.png");
+	sprite_ = Sprite::Create(texHandle_, {0,0});
 }
 
 void GameOverScene::Update() {
@@ -65,7 +68,7 @@ void GameOverScene::Draw() {
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
-
+	sprite_->Draw();
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
