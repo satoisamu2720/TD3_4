@@ -20,10 +20,16 @@ void SelectScene::Initialize() {
 
 	viewProjection_.Initialize();
 
+	modelSkydome_.reset(Model::CreateFromOBJ("Sky", true));
+
+	// スカイドームの生成と初期化
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize(modelSkydome_.get(), {0,0,0});
+
 	// 背景スプライト
-	titleTexHandle_ = TextureManager::Load("sky.png");
-	Sprite_ =
-	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+	//titleTexHandle_ = TextureManager::Load("sky.png");
+	//Sprite_ =
+	//    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 
 #pragma region モデル
 
@@ -195,7 +201,7 @@ void SelectScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	Sprite_->Draw();
+	//Sprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
@@ -218,6 +224,8 @@ void SelectScene::Draw() {
 	snowModel_->Draw(worldTransformSnow_, viewProjection_);
 
 	fogModel_->Draw(worldTransformFog_, viewProjection_);
+
+	skydome_->Draw(viewProjection_);
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
