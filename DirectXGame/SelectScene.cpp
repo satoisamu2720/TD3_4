@@ -20,7 +20,24 @@ void SelectScene::Initialize() {
 
 	viewProjection_.Initialize();
 
-	selectModel_.reset(Model::CreateFromOBJ("cube", true));
+	// 背景スプライト
+	titleTexHandle_ = TextureManager::Load("sky.png");
+	Sprite_ =
+	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+
+#pragma region モデル
+
+	sunModel_.reset(Model::CreateFromOBJ("sunMark", true));
+
+	rainModel_.reset(Model::CreateFromOBJ("cube", true));
+
+	snowModel_.reset(Model::CreateFromOBJ("cube", true));
+
+	fogModel_.reset(Model::CreateFromOBJ("cube", true));
+
+#pragma endregion
+
+#pragma region 初期ポジション
 
 	degree[SUNNY] = position_[SUNNY];
 
@@ -30,6 +47,8 @@ void SelectScene::Initialize() {
 
 	degree[FOG] = position_[FOG];
 
+#pragma endregion
+
 	rotf[SUNNY] = DirectX::XMConvertToRadians(degree[SUNNY]);
 
 	rotf[RAIN] = DirectX::XMConvertToRadians(degree[RAIN]);
@@ -37,6 +56,9 @@ void SelectScene::Initialize() {
 	rotf[SNOW] = DirectX::XMConvertToRadians(degree[SNOW]);
 
 	rotf[FOG] = DirectX::XMConvertToRadians(degree[FOG]);
+
+	//worldTransformSunny_.rotation_.y = ;
+
 }
 
 void SelectScene::Update() {
@@ -151,6 +173,8 @@ void SelectScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
+	Sprite_->Draw();
+
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
@@ -165,13 +189,13 @@ void SelectScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 
-	selectModel_->Draw(worldTransformSunny_, viewProjection_);
+	sunModel_->Draw(worldTransformSunny_, viewProjection_);
 
-	selectModel_->Draw(worldTransformRain_, viewProjection_);
+	rainModel_->Draw(worldTransformRain_, viewProjection_);
 
-	selectModel_->Draw(worldTransformSnow_, viewProjection_);
+	snowModel_->Draw(worldTransformSnow_, viewProjection_);
 
-	selectModel_->Draw(worldTransformFog_, viewProjection_);
+	fogModel_->Draw(worldTransformFog_, viewProjection_);
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
