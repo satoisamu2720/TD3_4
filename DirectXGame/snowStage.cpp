@@ -123,10 +123,19 @@ void SnowStage::Update() {
 			snowCheck_[i] = true;
 			/*worldTransformSnow_->translation_.x = ;
 			worldTransformSnow_->translation_.y = ;*/
-			worldTransformSnow_[i].translation_.z = player_->GetWorldTransform().translation_.z+40.0f;
-
-
+			worldTransformSnow_[i].translation_.z =
+			    player_->GetWorldTransform().translation_.z + 40.0f;
 		}
+
+		if (snowCheck_[i] == true) {
+			worldTransformSnow_[i].translation_.y += snowDownSpeed;
+		}
+
+		if (worldTransformSnow_[i].translation_.y >= 720) {
+			worldTransformSnow_[i].translation_.y = 0;
+			snowCheck_[i] = false;
+		}
+
 	}
 
 #pragma endregion
@@ -140,15 +149,6 @@ void SnowStage::Update() {
 	player_->SetWeather(weather);
 
 	garbageCan_->Update();
-
-	// 雪の更新
-	for (int i = 0; i < 100; i++) {
-		if (snowCheck_[i] == false) {
-			snowCheck_[i] = true;
-			/*worldTransformSnow_->translation_.x = ;
-			worldTransformSnow_->translation_.y = ;*/
-		}
-	}
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
@@ -478,6 +478,10 @@ void SnowStage::Draw() { // コマンドリストの取得
 
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
+
+	for (int i = 0; i < 100; i++) {
+		modelRaindrop_->Draw(worldTransformSnow_[i], viewProjection_);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+	}
 
 	// garbageCan_->Draw(viewProjection_);
 
