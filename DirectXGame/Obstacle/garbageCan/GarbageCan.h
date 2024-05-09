@@ -18,6 +18,8 @@ public:
 
 	void SetTranslate(Vector3 translate);
 
+	Vector3 GetPos() { return worldTransform_.translation_; }
+
 	void SetRotate(bool SetRotate) { rotate = SetRotate; }
 
 	bool GetRotate() { return rotate; }

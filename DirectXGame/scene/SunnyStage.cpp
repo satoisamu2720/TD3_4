@@ -111,6 +111,7 @@ void SunnyStage::Update() {
 	timer_->Update();
 	player_->SetStart(start);
 	player_->Update();
+	player_->SunnyUpdate();
 		for (const std::unique_ptr<Box>& box_ : boxs_) {
 			box_->Update();
 		}

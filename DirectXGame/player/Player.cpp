@@ -69,12 +69,12 @@ void Player::Update() {
 
 		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 			// 押した方向で移動ベクトルを変更（左右）
-			if (input_->PushKey(DIK_A) || joyState.Gamepad.sThumbLX < -100) {
+			if ( joyState.Gamepad.sThumbLX < -100) {
 				move_.x -= kCharacterSpeed;
 				if (notRotate == false) {
 					LeftMove();
 				}
-			} else if (input_->PushKey(DIK_D) || joyState.Gamepad.sThumbLX > 100) {
+			} else if ( joyState.Gamepad.sThumbLX > 100) {
 				move_.x += kCharacterSpeed;
 				if (notRotate == false) {
 					RightMove();
@@ -86,7 +86,7 @@ void Player::Update() {
 				worldTransform_.rotation_.y -= 0.05f;
 				worldTransformFront_.rotation_.y -= 0.025f;
 			}
-		} else
+		} 
 			// 押した方向で移動ベクトルを変更（左右）
 			if (input_->PushKey(DIK_A)) {
 				move_.x -= kCharacterSpeed;
