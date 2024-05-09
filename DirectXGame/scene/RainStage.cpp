@@ -80,7 +80,7 @@ void RainStage::Initialize() {
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
 	// ガードレール
-	modelGuardRail_ = Model::CreateFromOBJ("guardRail", true);
+	modelGuardRail_ = Model::CreateFromOBJ("sinngou", true);
 
 	LoadGuardRailPopData();
 
@@ -483,9 +483,9 @@ void RainStage::Draw() { // コマンドリストの取得
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Draw(viewProjection_);
 	}
-	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 	    guardRail_->Draw(viewProjection_);
-	}*/
+	}
 
 	Model::PostDraw();
 
