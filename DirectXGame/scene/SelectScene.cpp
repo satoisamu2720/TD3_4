@@ -24,11 +24,11 @@ void SelectScene::Initialize() {
 
 	// スカイドームの生成と初期化
 	skydome_ = std::make_unique<Skydome>();
-	skydome_->Initialize(modelSkydome_.get(), {0,0,0});
+	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});
 
 	// 背景スプライト
-	//titleTexHandle_ = TextureManager::Load("sky.png");
-	//Sprite_ =
+	// titleTexHandle_ = TextureManager::Load("sky.png");
+	// Sprite_ =
 	//    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 
 #pragma region モデル
@@ -63,8 +63,7 @@ void SelectScene::Initialize() {
 
 	rotf[FOG] = DirectX::XMConvertToRadians(degree[FOG]);
 
-	//worldTransformSunny_.rotation_.y = ;
-
+	// worldTransformSunny_.rotation_.y = ;
 }
 
 void SelectScene::Update() {
@@ -82,42 +81,42 @@ void SelectScene::Update() {
 			rightFlag_ = true;
 		}
 	}
-		if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
-		    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false ) {
-			stageCount_++;
-			leftFlag_ = true;
+	if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
+	    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false) {
+		stageCount_++;
+		leftFlag_ = true;
+	}
+
+	if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
+	    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false) {
+		stageCount_--;
+		rightFlag_ = true;
+	}
+
+	if (stageCount_ > 3) {
+		stageCount_ = 0;
+	} else if (stageCount_ < 0) {
+		stageCount_ = 3;
+	}
+
+	if (leftFlag_ == true && rightFlag_ == false) {
+		target_++;
+
+		if (target_ >= 90) {
+			leftFlag_ = false;
+			target_ = 0;
 		}
 
-		if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
-		    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false ) {
-			stageCount_--;
-			rightFlag_ = true;
-		}
-
-		if (stageCount_ > 3) {
-			stageCount_ = 0;
-		} else if (stageCount_ < 0) {
-			stageCount_ = 3;
-		}
-
-		if (leftFlag_ == true && rightFlag_ == false) {
-			target_++;
-
-			if (target_ >= 90) {
-				leftFlag_ = false;
-				target_ = 0;
+		for (int i = 0; i < 4; i++) {
+			if (target_ != 90) {
+				degree[i] -= 1;
+				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
 			}
-
-			for (int i = 0; i < 4; i++) {
-				if (target_ != 90) {
-					degree[i] -= 1;
-					rotf[i] = DirectX::XMConvertToRadians(degree[i]);
-				}
-			}
 		}
+	}
 
-		if (rightFlag_ == true && leftFlag_ == false) {
-			target_++;
+	if (rightFlag_ == true && leftFlag_ == false) {
+		target_++;
 
 		if (target_ >= 90) {
 			rightFlag_ = false;
@@ -135,11 +134,11 @@ void SelectScene::Update() {
 	if (input_->TriggerKey(DIK_SPACE) && leftFlag_ == false && rightFlag_ == false) {
 		sceneNo = stageNo_[stageCount_];
 	}
-		if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
-			Sleep(1 * 300);
-			sceneNo = stageNo_[stageCount_];
-		}
-
+	if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
+		Sleep(1 * 300);
+		stageCount_ = 0;
+		sceneNo = stageNo_[stageCount_];
+	}
 
 	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
 	worldTransformSunny_.translation_.z = -sinf(rotf[SUNNY]) * 20.0f;
@@ -149,12 +148,11 @@ void SelectScene::Update() {
 
 	worldTransformSnow_.translation_.x = -cosf(rotf[SNOW]) * 20.0f;
 	worldTransformSnow_.translation_.z = -sinf(rotf[SNOW]) * 20.0f;
-	if (input_->TriggerKey(DIK_TAB)) {
-	}
+
 	worldTransformFog_.translation_.x = -cosf(rotf[FOG]) * 20.0f;
 	worldTransformFog_.translation_.z = -sinf(rotf[FOG]) * 20.0f;
-#ifdef _DEBUG
 
+#ifdef _DEBUG
 
 	ImGui::Begin("stageNum");
 
@@ -182,11 +180,10 @@ void SelectScene::Update() {
 
 	ImGui::SliderFloat3("3DPosition", position, -40.0f, 360.0f);
 
-
 	ImGui::End();
 
 #endif
-	//worldTransformSunny_.translation_ = {position[0], position[1], position[2]};
+	// worldTransformSunny_.translation_ = {position[0], position[1], position[2]};
 	worldTransformSunny_.UpdateMatrix();
 	worldTransformRain_.UpdateMatrix();
 	worldTransformSnow_.UpdateMatrix();
@@ -201,7 +198,7 @@ void SelectScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	//Sprite_->Draw();
+	// Sprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる

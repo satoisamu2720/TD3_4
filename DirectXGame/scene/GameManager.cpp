@@ -9,6 +9,7 @@ GameManager::GameManager() {
 	sceneArr_[TEST] = std::make_unique<GameScene>();
 	sceneArr_[SUNNYSTAGE] = std::make_unique<SunnyStage>();
 	sceneArr_[RAINSTAGE] = std::make_unique<RainStage>();
+	sceneArr_[SNOWSTAGE] = std::make_unique<SnowStage>();
 	sceneArr_[CLEAR] = std::make_unique<ClearScene>();
 	sceneArr_[END] = std::make_unique<GameOverScene>();
 
