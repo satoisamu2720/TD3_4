@@ -73,6 +73,7 @@ void GameScene::Initialize() {
 	// 雨初期化
 	// 自キャラモデル読み込み
 	modelRain_ = Model::Create();
+		//Model::CreateFromOBJ("raindrop", true);
 	
 	
 	// プレイヤー初期化

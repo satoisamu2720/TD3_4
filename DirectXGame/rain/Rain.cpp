@@ -42,16 +42,19 @@ void Rain::Update() {
 
 
 		worldTransform_[i].translation_.y -= 5.0f;
+		worldTransform_[i].translation_.x += 4.0f;
 
 		  if (worldTransform_[i].translation_.y <= 0) {
 		
 			  if (i % 2 == 0) {
 			  
-			  	    worldTransform_[i].translation_.y = 150.0f;
+			  	  worldTransform_[i].translation_.y = 150.0f;
+				  worldTransform_[i].translation_.x = -50.0f;
 			  } else
 				if(i % 2 != 0)  
 			  {
 				  worldTransform_[i].translation_.y = 120.0f;
+				  worldTransform_[i].translation_.x = -50.0f;
 			  }
 
 
