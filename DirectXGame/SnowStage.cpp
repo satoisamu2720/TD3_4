@@ -91,15 +91,49 @@ void SnowStage::Initialize() {
 
 #pragma endregion
 
+#pragma region 雪の初期化
+
+	for (int i = 0; i < 10; i++) {
+		worldTransformSnow_[i].Initialize();
+	}
+
+	modelSnow_->reset(Model::CreateFromOBJ("woodenBox", true));
+
+	for (int i = 0; i < 10; i++) {
+		worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
+		worldTransformSnow_->UpdateMatrix();
+	}
+
+#pragma endregion
+
 	viewProjection_.farZ = 200.0f;
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 }
 
 void SnowStage::Update() {
+
+#pragma region 雪の更新処理
+
+	for (int i = 0; i < 10; i++) {
+		if (snowFlag == false) {
+			snowFlag[i] = true;
+			worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
+		}
+
+		if (snowFlag[i] == true) {
+			worldTransformSnow_->translation_.y += 0.5;
+		}
+
+		if (worldTransformSnow_->translation_.y >= 720) {
+		
+		}
+
+	}
+
+#pragma endregion
+
 #pragma region 更新処理
-	
-	
 
 	timer_->SetStartTimerFlag(true);
 
@@ -340,11 +374,11 @@ void SnowStage::Update() {
 	ImGui::DragFloat("start timer pos y", &testPosTimer.y);
 	ImGui::End();
 
-#endif 
+#endif
 }
 
 void SnowStage::Draw() {
-	
+
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
@@ -385,6 +419,10 @@ void SnowStage::Draw() {
 		box_->Draw(viewProjection_);
 	}
 
+	for (int i = 0; i < 10; i++) {
+		modelSnow_[i]->Draw(worldTransformSnow_[i], viewProjection_);
+	}
+
 	// 加速装置
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Draw(viewProjection_);
@@ -417,7 +455,7 @@ void SnowStage::Time() {
 	}
 }
 
-void SnowStage::DrawTime() {//ゲームスタートタイマー秒数
+void SnowStage::DrawTime() { // ゲームスタートタイマー秒数
 	int eachMathNumber[2] = {};
 	int mathNumber = timer_->GetStartTime();
 	int mathKeta = 10;
@@ -550,7 +588,7 @@ void SnowStage::UpdateBoxPopCommands() {
 	}
 }
 
-void SnowStage::BoxGenerate(Vector3 position) {// アイテムの生成と初期化処理
+void SnowStage::BoxGenerate(Vector3 position) { // アイテムの生成と初期化処理
 	Box* box_ = new Box();
 	box_->Initialize(BoxModel_, position);
 	boxs_.push_back(static_cast<std::unique_ptr<Box>>(box_));
