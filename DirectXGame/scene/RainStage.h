@@ -24,6 +24,8 @@
 #include <cassert>
 #include <fstream>
 #include <memory>
+#include "rain/Rain.h"
+
 
 #include "CircleShadow.h"
 #include "DirectionalLight.h"
@@ -199,6 +201,10 @@ private:
 
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
+
+	//雨
+	 std::unique_ptr<Rain> rain_;
+
 
 	
 	// 確認用あたり判定

@@ -47,13 +47,13 @@ void Rain::Update() {
 		  if (worldTransform_[i].translation_.y <= 0) {
 		
 			  if (i % 2 == 0) {
-				  fastTransform_[i].translation_.z = 40.0f - (i * 24);
+				  fastTransform_[i].translation_.z = 20.0f + (i * 40);
 			  	  worldTransform_[i].translation_.y = 150.0f - (i * 10);
-				  worldTransform_[i].translation_.x = -50.0f + (i * 10);
+				  worldTransform_[i].translation_.x = -50.0f - (i * 10);
 			  } else
 				if(i % 2 != 0)  
 			  {
-				  fastTransform_[i].translation_.z = 10.0f - (i * 14);
+				  fastTransform_[i].translation_.z = 0.0f + (i * 14);
 				  worldTransform_[i].translation_.y = 120.0f + (i * 4);
 				  worldTransform_[i].translation_.x = -50.0f - (i * 20);
 			  }
@@ -73,9 +73,9 @@ void Rain::Update() {
 	}
 #ifdef _DEBUG
 	ImGui::Begin("Rain");
-	ImGui::DragFloat3("Position0", &fastTransform_[0].translation_.x, 0.1f);
-	ImGui::DragFloat3("Position1", &fastTransform_[1].translation_.x, 0.1f);
-	ImGui::DragFloat3("Position2", &fastTransform_[2].translation_.x, 0.1f);
+	ImGui::DragFloat3("Position0", &worldTransform_[0].translation_.x, 0.1f);
+	ImGui::DragFloat3("Position1", &worldTransform_[1].translation_.x, 0.1f);
+	ImGui::DragFloat3("Position2", &worldTransform_[2].translation_.x, 0.1f);
 	ImGui::End();
 #endif
 }
