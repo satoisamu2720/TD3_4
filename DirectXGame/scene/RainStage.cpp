@@ -86,6 +86,12 @@ void RainStage::Initialize() {
 
 #pragma endregion
 
+#pragma region	雨
+
+
+
+#pragma endregion
+
 #pragma region カメラ
 	// レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
