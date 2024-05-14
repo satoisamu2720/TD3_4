@@ -27,12 +27,12 @@ class Rain  {
 
 
   private:
-	WorldTransform worldTransform_[5];
+	WorldTransform worldTransform_[15];
 
-	WorldTransform fastTransform_[5];
+	WorldTransform fastTransform_[15];
 
 	// 3Dモデル
-	Model* rainModel[5] = {nullptr};
+	Model* rainModel[15] = {nullptr};
 
 	Model* model_ = nullptr;
 
