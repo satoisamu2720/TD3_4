@@ -20,7 +20,7 @@ void Rain::Initialize(Model* model) {
 
 
 	  for (int i = 0; i < 5; i++) {
-		worldTransform_[i].scale_ = {3.0f, 3.0f, 3.0f};
+		worldTransform_[i].scale_ = {1.0f, 1.0f, 1.0f};
 		worldTransform_[i].rotation_ = {0.0f, 10.0f, 0.0f};
 
 		fastTransform_[i].translation_ = worldTransform_[i].translation_;
