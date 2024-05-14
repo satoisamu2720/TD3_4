@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 
-class GuardRail {
+class TrafficLight {
 public:
 	void Initialize(Model* model, Vector3 position);
 
