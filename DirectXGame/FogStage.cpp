@@ -20,6 +20,10 @@ void FogStage::Initialize() {
 
 	BlendSprite_ = Sprite::Create(BlendTexture_, pos, Color);
 
+
+	
+
+
 #pragma region タイム
 
 	timer_ = std::make_unique<Timer>();
