@@ -42,7 +42,7 @@ void RainStage::Initialize() {
 #pragma region 障害物
 
 	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("woodenBox", true));
+	BoxModel_ = (Model::CreateFromOBJ("colorCorn", true));
 	// ボックスのCSVファイル読み込み
 	LoadBoxPopData();
 
