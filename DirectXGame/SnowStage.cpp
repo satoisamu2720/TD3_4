@@ -101,7 +101,9 @@ void SnowStage::Initialize() {
 
 	for (int i = 0; i < 10; i++) {
 		worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
-		worldTransformSnow_->UpdateMatrix();
+		snowFlag[i] = false;
+
+		//worldTransformSnow_->UpdateMatrix();
 	}
 
 #pragma endregion
@@ -116,9 +118,10 @@ void SnowStage::Update() {
 #pragma region 雪の更新処理
 
 	for (int i = 0; i < 10; i++) {
-		if (snowFlag == false) {
+		if (snowFlag[i] == false) {
 			snowFlag[i] = true;
 			worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
+			worldTransformSnow_[i].translation_.z = player_->GetWorldPosition().z;
 		}
 
 		if (snowFlag[i] == true) {
@@ -126,7 +129,7 @@ void SnowStage::Update() {
 		}
 
 		if (worldTransformSnow_->translation_.y >= 720) {
-		
+			snowFlag[i] = false;
 		}
 
 	}
@@ -331,6 +334,10 @@ void SnowStage::Update() {
 	UpdateGuardRailPopCommands();
 
 #pragma endregion
+
+	for (int i = 0; i < 10; i++) {
+		worldTransformSnow_->UpdateMatrix();
+	}
 
 	Time();
 	Goal();

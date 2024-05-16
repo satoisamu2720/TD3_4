@@ -260,6 +260,6 @@ private:
 	WorldTransform worldTransformSnow_[10];
 	std::unique_ptr<Model> modelSnow_[10];
 	Vector3 snowPosition_[10] = {120, 260, 468, 679, 800, 899, 930, 1100, 1200};
-	bool snowFlag[10] = false;
+	bool snowFlag[10];
 
 };
