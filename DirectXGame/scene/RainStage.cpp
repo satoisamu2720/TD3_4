@@ -86,6 +86,8 @@ void RainStage::Initialize() {
 
 #pragma endregion
 
+
+
 #pragma region カメラ
 	// レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();
@@ -94,6 +96,19 @@ void RainStage::Initialize() {
 	// 追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->SetViewProjection(&railCamera_->GetViewProjection());
+
+#pragma endregion
+
+	#pragma region 雨
+
+	// 雨初期化
+
+	modelRaindrop_ = Model::CreateFromOBJ("raindrop", true);
+
+	// プレイヤー初期化
+	rain_ = std::make_unique<Rain>();
+	rain_->Initialize(modelRaindrop_);
+	rain_->SetTarget(&railCamera_->GetWorldTransform());
 
 #pragma endregion
 
@@ -141,6 +156,8 @@ void RainStage::Update() {
 	}
 
 	ground_->Update();
+
+	rain_->Update();
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		Reset();
@@ -474,6 +491,8 @@ void RainStage::Draw() { // コマンドリストの取得
 		goalSkydome_->Draw(viewProjection_);
 	}
 	// ground_->Draw(viewProjection_);
+
+	rain_->Draw(viewProjection_);
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Draw(viewProjection_);

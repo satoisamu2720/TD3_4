@@ -118,6 +118,7 @@
     <ClCompile Include="Obstacle\box\Box.cpp" />
     <ClCompile Include="Obstacle\garbageCan\GarbageCan.cpp" />
     <ClCompile Include="player\Player.cpp" />
+    <ClCompile Include="rain\Rain.cpp" />
     <ClCompile Include="scene\ClearScene.cpp" />
     <ClCompile Include="scene\GameManager.cpp" />
     <ClCompile Include="scene\GameOverScene.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Obstacle\box\Box.h" />
     <ClInclude Include="Obstacle\garbageCan\GarbageCan.h" />
     <ClInclude Include="player\Player.h" />
+    <ClInclude Include="rain\Rain.h" />
     <ClInclude Include="scene\ClearScene.h" />
     <ClInclude Include="scene\GameManager.h" />
     <ClInclude Include="scene\GameOverScene.h" />
