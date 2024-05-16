@@ -112,6 +112,7 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Easings.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
+    <ClCompile Include="FogStage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />
     <ClCompile Include="Obstacle\box\Box.cpp" />

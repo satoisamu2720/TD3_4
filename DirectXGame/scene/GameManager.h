@@ -7,6 +7,7 @@
 #include "scene/TitleScene.h"
 #include "scene/SunnyStage.h"
 #include "scene/RainStage.h"
+#include "scene/FogStage.h"
 #include <memory>
 
 class GameManager {
