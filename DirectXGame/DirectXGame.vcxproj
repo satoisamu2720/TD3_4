@@ -129,6 +129,7 @@
     <ClCompile Include="scene\SelectScene.cpp" />
     <ClCompile Include="scene\SunnyStage.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
+    <ClCompile Include="stage\cloud\Cloud.cpp" />
     <ClCompile Include="stage\ground\Ground.cpp" />
     <ClCompile Include="stage\guardRail\GuardRail.cpp" />
     <ClCompile Include="stage\skydome\Skydome.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="scene\SelectScene.h" />
     <ClInclude Include="scene\SunnyStage.h" />
     <ClInclude Include="scene\TitleScene.h" />
+    <ClInclude Include="stage\cloud\Cloud.h" />
     <ClInclude Include="stage\ground\Ground.h" />
     <ClInclude Include="stage\guardRail\GuardRail.h" />
     <ClInclude Include="stage\skydome\Skydome.h" />

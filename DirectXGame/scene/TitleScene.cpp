@@ -7,6 +7,14 @@ void TitleScene::Initialize() {
 
 	worldTransform_.Initialize();
 
+	viewProjection_.Initialize();
+
+	modelSkydome_.reset(Model::CreateFromOBJ("Sky", true));
+
+	// スカイドームの生成と初期化
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});
+
 	// 背景スプライト
 	titleTexHandle_ = TextureManager::Load("title.png");
 	titleSprite_ =
@@ -42,7 +50,7 @@ void TitleScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
-	titleSprite_->Draw();
+	//titleSprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -57,6 +65,7 @@ void TitleScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

@@ -7,6 +7,7 @@
 #include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "stage/skydome/Skydome.h"
 #include "IScene.h"
 
 class TitleScene : public IScene {
@@ -24,6 +25,16 @@ private:
 	Audio* audio_ = nullptr;
 
 	WorldTransform worldTransform_;
+
+	WorldTransform worldTransformSky_;
+
+	ViewProjection viewProjection_;
+
+	// Skydomeの3Dモデル
+	std::unique_ptr<Model> modelSkydome_;
+
+	// スカイドーム
+	std::unique_ptr<Skydome> skydome_;
 
 	//// サウンド
 	// uint32_t bgmHandle_;
