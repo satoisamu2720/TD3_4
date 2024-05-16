@@ -161,7 +161,6 @@
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="Easings.h" />
     <ClInclude Include="camera\railCamera\RailCamera.h" />
-    <ClInclude Include="FogStage.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />

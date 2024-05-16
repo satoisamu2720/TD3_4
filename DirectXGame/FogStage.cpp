@@ -1,4 +1,4 @@
-﻿#include "FogStage.h"
+﻿#include "scene/Fogstage.h"
 
 void FogStage::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -6,7 +6,19 @@ void FogStage::Initialize() {
 	input_ = Input::GetInstance();
 	light_ = LightGroup::Create();
 
-	texHandle_ = TextureManager::Load("Box/Tex.png");
+	pos = {0, -300};
+
+	Vector2 scale = {1180, 600};
+	Vector4 Color = {1, 1, 1, 0.9f};
+
+	fogTexture_ = TextureManager::Load("th.png");
+	// BlendTexture_ = TextureManager::Load("Blend.png");
+
+	fogsprite_ = Sprite::Create(fogTexture_, pos, Color);
+
+	// fogsprite_->SetSize(scale);
+
+	BlendSprite_ = Sprite::Create(BlendTexture_, pos, Color);
 
 #pragma region タイム
 
@@ -222,6 +234,20 @@ void FogStage::Update() {
 
 #pragma endregion
 
+	/*pos.x = Pos_.translation_.x;
+	pos.y = Pos_.translation_.y;*/
+
+	/*if (Pos_.translation_.x<=4500.0f)
+	{
+	    Pos_.translation_.x += 10.0f;
+	}
+	else
+	{
+	    Pos_.translation_.x -= 2.0f;
+	}
+
+	Pos_.UpdateMatrix();*/
+
 #pragma region プレイヤーと加速装置の当たり判定
 	// 加速装置
 
@@ -374,6 +400,8 @@ void FogStage::Draw() { // コマンドリストの取得
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
+	// BlendSprite_->Draw();
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -419,6 +447,12 @@ void FogStage::Draw() { // コマンドリストの取得
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
+	///
+	///
+	Sprite::BlendMode::kNone;
+
+	fogsprite_->Draw();
+
 	DrawTime();
 	/// </summary>
 
