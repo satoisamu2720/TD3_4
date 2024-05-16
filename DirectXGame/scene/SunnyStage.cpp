@@ -299,7 +299,7 @@ void SunnyStage::Update() {
 			return false;
 		});
 
-		UpdateGuardRailPopCommands();
+		UpdatePopCommands();
 
 #pragma endregion
 

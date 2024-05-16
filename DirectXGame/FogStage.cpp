@@ -134,9 +134,9 @@ void FogStage::Update() {
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 		goalSkydome_->Update();
 	}
-	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 		guardRail_->Update();
-	}
+	}*/
 
 	ground_->Update();
 
@@ -342,13 +342,13 @@ void FogStage::Update() {
 
 	UpdateGoalSkydomePopCommands();
 
-	guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
+	/*guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
 		if (item->IsDead()) {
 			item.release();
 			return true;
 		}
 		return false;
-	});
+	});*/
 
 	UpdateGuardRailPopCommands();
 
@@ -834,10 +834,10 @@ void FogStage::UpdateGuardRailPopCommands() {
 }
 
 void FogStage::GuardRailGenerate(Vector3 position) {
-	// アイテムの生成と初期化処理
-	GuardRail* guardRail_ = new GuardRail();
-	guardRail_->Initialize(modelGuardRail_, position);
-	guardRails_.push_back(static_cast<std::unique_ptr<GuardRail>>(guardRail_));
+	//// アイテムの生成と初期化処理
+	//GuardRail* guardRail_ = new GuardRail();
+	//guardRail_->Initialize(modelGuardRail_, position);
+	//guardRails_.push_back(static_cast<std::unique_ptr<GuardRail>>(guardRail_));
 }
 
 #pragma endregion
