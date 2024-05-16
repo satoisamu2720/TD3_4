@@ -111,6 +111,7 @@ void SunnyStage::Update() {
 	timer_->Update();
 	player_->SetStart(start);
 	player_->Update();
+	player_->SunnyUpdate();
 		for (const std::unique_ptr<Box>& box_ : boxs_) {
 			box_->Update();
 		}
@@ -126,7 +127,7 @@ void SunnyStage::Update() {
 		for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 			goalSkydome_->Update();
 		}
-		for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+	    for (const std::unique_ptr<TrafficLight>& guardRail_ : trafficLight_) {
 			guardRail_->Update();
 		}
 
@@ -290,7 +291,7 @@ void SunnyStage::Update() {
 
 		UpdateGoalSkydomePopCommands();
 
-		guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
+		trafficLight_.remove_if([](std::unique_ptr<TrafficLight>& item) {
 			if (item->IsDead()) {
 				item.release();
 				return true;
@@ -778,13 +779,13 @@ void SunnyStage::GoalSkydomeGenerate(Vector3 position) {
 
 void SunnyStage::LoadGuardRailPopData() {
 
-	guardRailPopCommands.clear();
+	trafficLightPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/GuardRailPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
-	guardRailPopCommands << file.rdbuf();
+	trafficLightPopCommands << file.rdbuf();
 
 	// ファイルを閉じる
 	file.close();
@@ -794,7 +795,7 @@ void SunnyStage::UpdateGuardRailPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
-	while (getline(guardRailPopCommands, line)) {
+	while (getline(trafficLightPopCommands, line)) {
 		std::istringstream line_stream(line);
 
 		std::string word;
@@ -822,16 +823,16 @@ void SunnyStage::UpdateGuardRailPopCommands() {
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			GuardRailGenerate({x, y, z});
+			trafficLight({x, y, z});
 		}
 	}
 }
 
-void SunnyStage::GuardRailGenerate(Vector3 position) {
+void SunnyStage::trafficLight(Vector3 position) {
 	// アイテムの生成と初期化処理
-	GuardRail* guardRail_ = new GuardRail();
-	guardRail_->Initialize(modelGuardRail_, position);
-	guardRails_.push_back(static_cast<std::unique_ptr<GuardRail>>(guardRail_));
+	TrafficLight* trafficLight = new TrafficLight();
+	trafficLight->Initialize(modelGuardRail_, position);
+	trafficLight_.push_back(static_cast<std::unique_ptr<TrafficLight>>(trafficLight));
 }
 
 #pragma endregion
@@ -864,7 +865,7 @@ void SunnyStage::Goal() {
 		startSkydomes_.clear();
 		middleSkydomes_.clear();
 		goalSkydomes_.clear();
-		guardRails_.clear();
+		trafficLight_.clear();
 		goalTimer = 0;
 		goalTimerFlag = false;
 

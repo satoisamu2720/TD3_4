@@ -1,6 +1,6 @@
 #include "GuardRail.h"
 
-void GuardRail::Initialize(Model* model, Vector3 position) {
+void TrafficLight::Initialize(Model* model, Vector3 position) {
 	assert(model);
 	model_ = model;
 	worldTransform_.Initialize();
@@ -9,6 +9,6 @@ void GuardRail::Initialize(Model* model, Vector3 position) {
 	worldTransform_.UpdateMatrix();
 }
 
-void GuardRail::Update() {}
+void TrafficLight::Update() {}
 
-void GuardRail::Draw(ViewProjection& view) { model_->Draw(worldTransform_, view); }
+void TrafficLight::Draw(ViewProjection& view) { model_->Draw(worldTransform_, view); }

@@ -114,8 +114,8 @@ public:
 	// ガードレールの発生コマンドの更新
 	void UpdateGuardRailPopCommands();
 
-	/// ガードレールの生成
-	void GuardRailGenerate(Vector3 position);
+	///　信号機の生成
+	void trafficLight(Vector3 position);
 #pragma endregion
 
 private:
@@ -187,9 +187,9 @@ private:
 	std::stringstream goalSkydomePopCommands;
 
 	//ガードレール
-	std::list<std::unique_ptr<GuardRail>> guardRails_;
+	std::list<std::unique_ptr<TrafficLight>> trafficLight_;
 	//発生コマンド
-	std::stringstream guardRailPopCommands;
+	std::stringstream trafficLightPopCommands;
 
 
 
