@@ -29,8 +29,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
-
-class SnowStage : public IScene{
+class SnowStage : public IScene {
 
 	void Initialize() override;
 
@@ -259,7 +258,6 @@ private:
 	// 雪の処理
 	WorldTransform worldTransformSnow_[10];
 	std::unique_ptr<Model> modelSnow_[10];
-	Vector3 snowPosition_[10] = {120, 260, 468, 679, 800, 899, 930, 1100, 1200};
+	float snowPosition_[10] = {0, 2, 4, 6, 8, 9, 10, 11, 13};
 	bool snowFlag[10];
-
 };

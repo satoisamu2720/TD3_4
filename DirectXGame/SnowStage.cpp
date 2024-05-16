@@ -95,15 +95,14 @@ void SnowStage::Initialize() {
 
 	for (int i = 0; i < 10; i++) {
 		worldTransformSnow_[i].Initialize();
+		modelSnow_[i].reset(Model::CreateFromOBJ("cube", true));
 	}
 
-	modelSnow_->reset(Model::CreateFromOBJ("woodenBox", true));
-
 	for (int i = 0; i < 10; i++) {
-		worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
+		// worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
 		snowFlag[i] = false;
 
-		//worldTransformSnow_->UpdateMatrix();
+		// worldTransformSnow_->UpdateMatrix();
 	}
 
 #pragma endregion
@@ -120,18 +119,18 @@ void SnowStage::Update() {
 	for (int i = 0; i < 10; i++) {
 		if (snowFlag[i] == false) {
 			snowFlag[i] = true;
-			worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
-			worldTransformSnow_[i].translation_.z = player_->GetWorldPosition().z;
+			worldTransformSnow_[i].translation_.x = snowPosition_[i];
+			worldTransformSnow_[i].translation_.y = player_->GetWorldPosition().y + 20;
+			worldTransformSnow_[i].translation_.z = player_->GetWorldPosition().z + 40.0f;
 		}
 
 		if (snowFlag[i] == true) {
-			worldTransformSnow_->translation_.y += 0.5;
+			worldTransformSnow_[i].translation_.y -= 0.5;
 		}
 
-		if (worldTransformSnow_->translation_.y >= 720) {
+		if (worldTransformSnow_[i].translation_.y <= 0) {
 			snowFlag[i] = false;
 		}
-
 	}
 
 #pragma endregion
@@ -335,12 +334,12 @@ void SnowStage::Update() {
 
 #pragma endregion
 
-	for (int i = 0; i < 10; i++) {
-		worldTransformSnow_->UpdateMatrix();
-	}
-
 	Time();
 	Goal();
+
+	for (int i = 0; i < 10; i++) {
+		worldTransformSnow_[i].UpdateMatrix();
+	}
 
 #ifdef _DEBUG
 
@@ -360,7 +359,7 @@ void SnowStage::Update() {
 		railCamera_->SetPos({0, 4, 0});
 	}
 	ImGui::Begin("stage");
-	ImGui::Text("SunnyStage");
+	ImGui::Text("SnowStage");
 	ImGui::Checkbox("Game Start", &start);
 	ImGui::End();
 

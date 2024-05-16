@@ -136,8 +136,8 @@ void SelectScene::Update() {
 	}
 	if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
 		Sleep(1 * 300);
-		stageCount_ = 0;
 		sceneNo = stageNo_[stageCount_];
+		stageCount_ = 0;
 	}
 
 	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
