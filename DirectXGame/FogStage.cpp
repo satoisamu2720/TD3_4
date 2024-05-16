@@ -88,8 +88,8 @@ void FogStage::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
-	// ガードレール
-	modelGuardRail_ = Model::CreateFromOBJ("guardRail", true);
+	// 信号機
+	modelTrafficLight_ = Model::CreateFromOBJ("sinngou", true);
 
 	LoadGuardRailPopData();
 
@@ -780,17 +780,17 @@ void FogStage::GoalSkydomeGenerate(Vector3 position) {
 
 #pragma endregion
 
-#pragma region ガードレール CSV
+#pragma region 信号機 CSV
 
 void FogStage::LoadGuardRailPopData() {
 
-	guardRailPopCommands.clear();
+	TrafficLightPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/GuardRailPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
-	guardRailPopCommands << file.rdbuf();
+	TrafficLightPopCommands << file.rdbuf();
 
 	// ファイルを閉じる
 	file.close();
@@ -799,8 +799,8 @@ void FogStage::LoadGuardRailPopData() {
 void FogStage::UpdateGuardRailPopCommands() {
 	std::string line;
 
-	 //コマンド実行ループ
-	while (getline(guardRailPopCommands, line)) {
+	// コマンド実行ループ
+	while (getline(TrafficLightPopCommands, line)) {
 		std::istringstream line_stream(line);
 
 		std::string word;
@@ -828,16 +828,16 @@ void FogStage::UpdateGuardRailPopCommands() {
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			GuardRailGenerate({x, y, z});
+			trafficLight({x, y, z});
 		}
 	}
 }
 
-void FogStage::GuardRailGenerate(Vector3 position) {
-	//// アイテムの生成と初期化処理
-	//GuardRail* guardRail_ = new GuardRail();
-	//guardRail_->Initialize(modelGuardRail_, position);
-	//guardRails_.push_back(static_cast<std::unique_ptr<GuardRail>>(guardRail_));
+void FogStage::trafficLight(Vector3 position) {
+	// アイテムの生成と初期化処理
+	TrafficLight* trafficLight = new TrafficLight();
+	trafficLight->Initialize(modelTrafficLight_, position);
+	trafficLight_.push_back(static_cast<std::unique_ptr<TrafficLight>>(trafficLight));
 }
 
 #pragma endregion
@@ -862,7 +862,7 @@ void FogStage::Goal() {
 		startSkydomes_.clear();
 		middleSkydomes_.clear();
 		goalSkydomes_.clear();
-		guardRails_.clear();
+		trafficLight_.clear();
 		goalTimer = 0;
 		goalTimerFlag = false;
 

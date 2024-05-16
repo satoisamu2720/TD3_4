@@ -183,7 +183,7 @@ private:
 	// ステージの発生コマンド
 	std::stringstream goalSkydomePopCommands;
 
-	// ガードレール
+	// 信号機
 	std::list<std::unique_ptr<TrafficLight>> trafficLight_;
 	// 発生コマンド
 	std::stringstream TrafficLightPopCommands;
@@ -194,7 +194,7 @@ private:
 	Model* modelGoalSkydome_ = nullptr;
 	Model* modelRaindrop_ = nullptr;
 
-	Model* modelGuardRail_ = nullptr;
+	Model* modelTrafficLight_ = nullptr;
 
 	std::unique_ptr<Ground> ground_;
 	Model* modelGround_ = nullptr;
