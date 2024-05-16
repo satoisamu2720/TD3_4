@@ -79,8 +79,8 @@ void RainStage::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
-	// ガードレール
-	modelGuardRail_ = Model::CreateFromOBJ("sinngou", true);
+	// 信号機
+	modelTrafficLight_ = Model::CreateFromOBJ("sinngou", true);
 
 	LoadGuardRailPopData();
 
@@ -836,7 +836,7 @@ void RainStage::GoalSkydomeGenerate(Vector3 position) {
 
 #pragma endregion
 
-#pragma region ガードレール CSV
+#pragma region 信号機 CSV
 
 void RainStage::LoadGuardRailPopData() {
 
@@ -892,7 +892,7 @@ void RainStage::UpdateGuardRailPopCommands() {
 void RainStage::trafficLight(Vector3 position) {
 	// アイテムの生成と初期化処理
 	TrafficLight* trafficLight = new TrafficLight();
-	trafficLight->Initialize(modelGuardRail_, position);
+	trafficLight->Initialize(modelTrafficLight_, position);
 	trafficLight_.push_back(static_cast<std::unique_ptr<TrafficLight>>(trafficLight));
 }
 

@@ -102,14 +102,14 @@ public:
 	/// ゴール背景の生成
 	void GoalSkydomeGenerate(Vector3 position);
 
-	// ガードレールの発生データを読み込み
+	// 信号機の発生データを読み込み
 	void LoadGuardRailPopData();
 
-	// ガードレールの発生コマンドの更新
+	// 信号機の発生コマンドの更新
 	void UpdateGuardRailPopCommands();
 
-	/// ガードレールの生成
-	void GuardRailGenerate(Vector3 position);
+	/// 信号機の生成
+	void trafficLight(Vector3 position);
 #pragma endregion
 
 private:
@@ -174,17 +174,17 @@ private:
 	// ステージの発生コマンド
 	std::stringstream goalSkydomePopCommands;
 
-	// ガードレール
-	std::list<std::unique_ptr<GuardRail>> guardRails_;
+	// 信号機
+	std::list<std::unique_ptr<TrafficLight>> trafficLight_;
 	// 発生コマンド
-	std::stringstream guardRailPopCommands;
+	std::stringstream TrafficLightPopCommands;
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
 	Model* modelMiddleSkydome_ = nullptr;
 	Model* modelGoalSkydome_ = nullptr;
 
-	Model* modelGuardRail_ = nullptr;
+	Model* modelTrafficLight_ = nullptr;
 
 	std::unique_ptr<Ground> ground_;
 	Model* modelGround_ = nullptr;
