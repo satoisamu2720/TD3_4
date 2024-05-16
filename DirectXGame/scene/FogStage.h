@@ -175,9 +175,9 @@ private:
 	std::stringstream goalSkydomePopCommands;
 
 	// ガードレール
-	std::list<std::unique_ptr<GuardRail>> guardRails_;
+	//std::list<std::unique_ptr<//GuardRail>> guardRails_;
 	// 発生コマンド
-	std::stringstream guardRailPopCommands;
+	//std::stringstream guardRailPopCommands;
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;

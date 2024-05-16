@@ -799,7 +799,7 @@ void FogStage::LoadGuardRailPopData() {
 void FogStage::UpdateGuardRailPopCommands() {
 	std::string line;
 
-	// コマンド実行ループ
+	 //コマンド実行ループ
 	while (getline(guardRailPopCommands, line)) {
 		std::istringstream line_stream(line);
 
