@@ -39,6 +39,9 @@ void SelectScene::Initialize() {
 
 	snowModel_.reset(Model::CreateFromOBJ("cube", true));
 
+	snowHatModel_
+	    .reset(Model::CreateFromOBJ("snow")
+
 	fogModel_.reset(Model::CreateFromOBJ("cube", true));
 
 #pragma endregion

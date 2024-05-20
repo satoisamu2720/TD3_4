@@ -51,6 +51,7 @@ private:
 	std::unique_ptr<Model> rainModel_;
 	// 雪
 	std::unique_ptr<Model> snowModel_;
+	std::unique_ptr<Model> snowHatModel_;
 	// 霧
 	std::unique_ptr<Model> fogModel_;
 
