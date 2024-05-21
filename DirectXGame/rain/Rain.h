@@ -18,6 +18,7 @@ class Rain  {
 
 	void Update();
 
+
 	void SetWindFlag(bool windFlag) { windFlag_ = windFlag; }
 
 	void Draw(ViewProjection& viewProjection);

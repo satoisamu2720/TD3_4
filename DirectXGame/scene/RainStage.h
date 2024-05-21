@@ -253,6 +253,9 @@ private:
 	// 天候
 	float weather = 1;
 
+	//風
+	bool wind = false;
+
 		// ゲームスタート
 	bool start;
 	bool gameStart;

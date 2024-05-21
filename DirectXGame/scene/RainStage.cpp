@@ -130,6 +130,10 @@ void RainStage::Update() {
 		player_->SetStart(start);
 		player_->SetWeather(weather);
 		
+		player_->SetWind(wind);
+
+		rain_->SetWindFlag(wind);
+
 	    if (start) {
 		player_->ThunderstormUpdate();
 	    }
@@ -196,6 +200,11 @@ void RainStage::Update() {
 		timer_->SetTime(0, 30);
 		railCamera_->SetPos({0, 4, 0});
 	}
+
+	ImGui::Begin("Wind");
+	
+	ImGui::Checkbox("wind", &wind);
+	ImGui::End();
 
 	ImGui::Begin("weather");
 	ImGui::InputFloat("weather", &weather, 1.0f);
@@ -535,7 +544,7 @@ void RainStage::Time() {
 void RainStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/BoxPop.csv");
+	file.open("Resources/CSV/RainBoxPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー

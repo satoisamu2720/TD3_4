@@ -81,7 +81,6 @@ void Rain::Update() {
 	ImGui::DragFloat3("Position0", &worldTransform_[0].translation_.x, 0.1f);
 	ImGui::DragFloat3("Position1", &worldTransform_[1].translation_.x, 0.1f);
 	ImGui::DragFloat3("Position2", &worldTransform_[2].translation_.x, 0.1f);
-	ImGui::Checkbox("wind", &windFlag_);
 	ImGui::End();
 #endif
 }
