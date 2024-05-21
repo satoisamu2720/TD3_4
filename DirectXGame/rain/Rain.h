@@ -18,7 +18,7 @@ class Rain  {
 
 	void Update();
 
-	
+	void SetWindFlag(bool windFlag) { windFlag_ = windFlag; }
 
 	void Draw(ViewProjection& viewProjection);
 
@@ -35,7 +35,7 @@ class Rain  {
 
 	Model* model_ = nullptr;
 
-	
+	bool windFlag_ = false;
 
 	Input* input_ = nullptr;
 
