@@ -69,8 +69,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// メッセージ処理
 		if (win->ProcessMessage()) {
 			break;
-		}
-
+		};
 		gameManager->Check();
 
 		// ImGui受付開始

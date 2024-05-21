@@ -162,6 +162,8 @@ void FogStage::Update() {
 
 #pragma endregion
 
+
+
 #pragma region カメラセット
 	railCamera_->Update();
 	viewProjection_.matView = railCamera_->GetViewProjection().matView;
