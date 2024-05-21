@@ -42,7 +42,7 @@ void RainStage::Initialize() {
 #pragma region 障害物
 
 	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("woodenBox", true));
+	BoxModel_ = (Model::CreateFromOBJ("colorCorn", true));
 	// ボックスのCSVファイル読み込み
 	LoadBoxPopData();
 
@@ -606,7 +606,7 @@ void RainStage::BoxGenerate(Vector3 position) {
 void RainStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/AcceleratorPop.csv");
+	file.open("Resources/CSV/RainAcceleratorPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
