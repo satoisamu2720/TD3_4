@@ -29,6 +29,8 @@ private:
 
 	WorldTransform worldTransformSky_;
 
+	WorldTransform worldTransformTitle_;
+
 	ViewProjection viewProjection_;
 
 	// Skydomeの3Dモデル
@@ -42,6 +44,8 @@ private:
 
 	// 雲
 	std::unique_ptr<Cloud> cloud_;
+
+	std::unique_ptr<Model> modelTitle_;
 
 	//// サウンド
 	// uint32_t bgmHandle_;
@@ -57,4 +61,6 @@ private:
 
 	bool selectSwitchFlag = false;
 	float selectSwitchTimer = 120;
+
+	
 };

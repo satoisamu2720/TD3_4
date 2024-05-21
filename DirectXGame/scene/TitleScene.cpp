@@ -9,6 +9,10 @@ void TitleScene::Initialize() {
 
 	viewProjection_.Initialize();
 
+	worldTransformTitle_.Initialize();
+
+	worldTransformTitle_.scale_ = {10, 10, 10};
+
 	modelSkydome_.reset(Model::CreateFromOBJ("Sky", true));
 
 	// スカイドームの生成と初期化
@@ -16,6 +20,9 @@ void TitleScene::Initialize() {
 	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});
 
 	modelCloud_.reset(Model::CreateFromOBJ("cloud", true));
+
+	modelTitle_.reset(Model::CreateFromOBJ("title", true));
+	
 
 	// 雲の生成と初期化
 	cloud_ = std::make_unique<Cloud>();
@@ -46,7 +53,8 @@ void TitleScene::Update() {
 		selectSwitchTimer--;
 	}
 	if (selectSwitchTimer <= 0) {
-		selectSwitchTimer = 0;
+		selectSwitchTimer = 60;
+		selectSwitchFlag = false;
 		cloud_->SetMoveFlag(false);
 		sceneNo = SELECT;
 	}
@@ -82,6 +90,7 @@ void TitleScene::Draw() {
 	/// </summary>
 	cloud_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
+	modelTitle_->Draw(worldTransformTitle_, viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

@@ -871,7 +871,7 @@ void SunnyStage::Goal() {
 
 
 		if (timer_->GetTimeSecond() > 0) {
-			timer_->SetTime(0, 30);
+			timer_->SetTime(0, 30); 
 			timer_->SetTimerFlag(false);
 			railCamera_->SetPos({0, 4, 0});
 			railCamera_->SetStart(false);

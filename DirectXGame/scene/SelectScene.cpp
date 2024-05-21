@@ -46,7 +46,7 @@ void SelectScene::Initialize() {
 
 	snowModel_.reset(Model::CreateFromOBJ("cube", true));
 
-	fogModel_.reset(Model::CreateFromOBJ("cube", true));
+	fogModel_.reset(Model::CreateFromOBJ("fog", true));
 
 #pragma endregion
 
@@ -81,7 +81,7 @@ void SelectScene::Update() {
 		selectSwitchTimer--;
 	}
 	if (selectSwitchTimer <= 0) {
-		selectSwitchTimer = 0;
+		selectSwitchTimer = 60;
 		cloud_->SetMoveFlag(false);
 	}
 	cloud_->Update();
@@ -189,6 +189,7 @@ void SelectScene::Update() {
 
 	ImGui::Text("Speed%d", target_);
 
+
 	ImGui::Text("degreeSunny %f", degree[SUNNY]);
 
 	ImGui::Text("degreeRain %f", degree[RAIN]);
@@ -196,9 +197,12 @@ void SelectScene::Update() {
 	ImGui::Text("degreeSnow %f", degree[SNOW]);
 
 	ImGui::Text("degreeFog %f", degree[FOG]);
+	
 
 	ImGui::SliderFloat3("3DPosition", position, -40.0f, 360.0f);
 
+	ImGui::Text("selectSwitchTimer %f", selectSwitchTimer);
+	ImGui::Checkbox("selectSwitchFlag", &selectSwitchFlag);
 
 	ImGui::End();
 
