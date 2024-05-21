@@ -1,7 +1,10 @@
-#pragma once
+ï»¿#pragma once
+#include <cassert>
+#include "Model.h"
+#include "WorldTransform.h"
 class Cloud {
 public:
-	void Initialize(Model* model, Vector3 position);
+	void Initialize(Model* model,bool flag);
 
 	void Update();
 
@@ -9,11 +12,20 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	bool GetMoveFlag() { return moveFlag; }
+	void SetMoveFlag(bool flag) {  moveFlag = flag; }
+
 	Vector3 GetWorldPosition();
 
 public:
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_[4];
 	Model* model_ = nullptr;
-	// ƒfƒXƒtƒ‰ƒO
+	float moveSpeed = 0.5;
+	// ãƒ‡ã‚¹ãƒ•ãƒ©ã‚°
 	bool isDead_ = false;
+
+	bool selectFlag = false;
+
+	bool moveFlag = false;
+
 };

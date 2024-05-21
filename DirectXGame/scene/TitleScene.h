@@ -8,6 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "stage/skydome/Skydome.h"
+#include "stage/cloud/Cloud.h"
 #include "IScene.h"
 
 class TitleScene : public IScene {
@@ -36,6 +37,12 @@ private:
 	// スカイドーム
 	std::unique_ptr<Skydome> skydome_;
 
+	// 雲の3Dモデル
+	std::unique_ptr<Model> modelCloud_;
+
+	// 雲
+	std::unique_ptr<Cloud> cloud_;
+
 	//// サウンド
 	// uint32_t bgmHandle_;
 	// uint32_t playBGM_;
@@ -47,4 +54,7 @@ private:
 	Sprite* titleSprite_ = nullptr;
 
 	Vector2 position_;
+
+	bool selectSwitchFlag = false;
+	float selectSwitchTimer = 120;
 };

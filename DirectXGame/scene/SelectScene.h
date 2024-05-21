@@ -9,6 +9,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "stage/skydome/Skydome.h"
+#include "stage/cloud/Cloud.h"
 #include <memory>
 
 enum Weather {
@@ -60,12 +61,21 @@ private:
 	// スカイドーム
 	std::unique_ptr<Skydome> skydome_;
 
+	// 雲の3Dモデル
+	std::unique_ptr<Model> modelCloud_;
+
+	// 雲
+	std::unique_ptr<Cloud> cloud_;
+
 	// 　矢印を押したときの番号
 	int stageCount_ = 0;
 
 	// 左右のキーを押したときのフラグ
 	bool leftFlag_ = false;
 	bool rightFlag_ = false;
+
+	bool selectSwitchFlag = true;
+	float selectSwitchTimer = 120;
 
 	// 回転の処理
 	float degree[4];

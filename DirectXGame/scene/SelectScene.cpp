@@ -26,6 +26,13 @@ void SelectScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_.get(), {0,0,0});
 
+
+	modelCloud_.reset(Model::CreateFromOBJ("cube", true));
+
+	// 雲の生成と初期化
+	cloud_ = std::make_unique<Cloud>();
+	cloud_->Initialize(modelCloud_.get(), true);
+
 	// 背景スプライト
 	//titleTexHandle_ = TextureManager::Load("sky.png");
 	//Sprite_ =
@@ -68,6 +75,16 @@ void SelectScene::Initialize() {
 }
 
 void SelectScene::Update() {
+
+	if (selectSwitchFlag) {
+		cloud_->SetMoveFlag(true);
+		selectSwitchTimer--;
+	}
+	if (selectSwitchTimer <= 0) {
+		selectSwitchTimer = 0;
+		cloud_->SetMoveFlag(false);
+	}
+	cloud_->Update();
 
 	XINPUT_STATE joyState;
 
@@ -216,6 +233,8 @@ void SelectScene::Draw() {
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
+
+	cloud_->Draw(viewProjection_);
 
 	sunModel_->Draw(worldTransformSunny_, viewProjection_);
 

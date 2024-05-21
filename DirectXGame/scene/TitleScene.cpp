@@ -15,6 +15,12 @@ void TitleScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});
 
+	modelCloud_.reset(Model::CreateFromOBJ("cube", true));
+
+	// 雲の生成と初期化
+	cloud_ = std::make_unique<Cloud>();
+	cloud_->Initialize(modelCloud_.get(),false);
+
 	// 背景スプライト
 	titleTexHandle_ = TextureManager::Load("title.png");
 	titleSprite_ =
@@ -33,9 +39,18 @@ void TitleScene::Update() {
 	}
 
 	if (input_->TriggerKey(DIK_SPACE)) {
+		cloud_->SetMoveFlag(true);
+		selectSwitchFlag = true;
+	} 
+	if (selectSwitchFlag) {
+		selectSwitchTimer--;
+	}
+	if (selectSwitchTimer <= 0) {
+		selectSwitchTimer = 0;
+		cloud_->SetMoveFlag(false);
 		sceneNo = SELECT;
 	}
-
+	cloud_->Update();
 }
 
 void TitleScene::Draw() {
@@ -65,6 +80,7 @@ void TitleScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	cloud_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
