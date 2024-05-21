@@ -27,7 +27,7 @@ void SelectScene::Initialize() {
 	skydome_->Initialize(modelSkydome_.get(), {0,0,0});
 
 
-	modelCloud_.reset(Model::CreateFromOBJ("cube", true));
+	modelCloud_.reset(Model::CreateFromOBJ("cloud", true));
 
 	// 雲の生成と初期化
 	cloud_ = std::make_unique<Cloud>();
@@ -234,7 +234,6 @@ void SelectScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 
-	cloud_->Draw(viewProjection_);
 
 	sunModel_->Draw(worldTransformSunny_, viewProjection_);
 
@@ -244,6 +243,7 @@ void SelectScene::Draw() {
 
 	fogModel_->Draw(worldTransformFog_, viewProjection_);
 
+	cloud_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 
 	/// <summary>

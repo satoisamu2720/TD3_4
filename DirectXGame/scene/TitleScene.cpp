@@ -15,7 +15,7 @@ void TitleScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});
 
-	modelCloud_.reset(Model::CreateFromOBJ("cube", true));
+	modelCloud_.reset(Model::CreateFromOBJ("cloud", true));
 
 	// 雲の生成と初期化
 	cloud_ = std::make_unique<Cloud>();
