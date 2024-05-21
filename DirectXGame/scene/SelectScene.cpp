@@ -35,12 +35,9 @@ void SelectScene::Initialize() {
 
 	sunModel_.reset(Model::CreateFromOBJ("sunMark", true));
 
-	rainModel_.reset(Model::CreateFromOBJ("cube", true));
+	rainModel_.reset(Model::CreateFromOBJ("rain", true));
 
-	snowModel_.reset(Model::CreateFromOBJ("cube", true));
-
-	snowHatModel_
-	    .reset(Model::CreateFromOBJ("snow")
+	snowModel_.reset(Model::CreateFromOBJ("Snowman", true));
 
 	fogModel_.reset(Model::CreateFromOBJ("cube", true));
 
@@ -66,7 +63,14 @@ void SelectScene::Initialize() {
 
 	rotf[FOG] = DirectX::XMConvertToRadians(degree[FOG]);
 
-	// worldTransformSunny_.rotation_.y = ;
+	worldTransformSunny_.scale_ = {2, 2, 2};
+
+	worldTransformRain_.scale_ = {2, 2, 2};
+
+	worldTransformSnow_.scale_ = {2, 2, 2};
+
+	worldTransformFog_.scale_ = {2, 2, 2};
+
 }
 
 void SelectScene::Update() {
