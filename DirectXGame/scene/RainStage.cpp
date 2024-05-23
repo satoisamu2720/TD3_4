@@ -99,13 +99,14 @@ void RainStage::Initialize() {
 
 #pragma endregion
 
-	#pragma region 雨
+#pragma region 雨
 
-	// 雨初期化
+	
+	// 雨モデル
 
 	modelRaindrop_ = Model::CreateFromOBJ("raindrop", true);
 
-	// プレイヤー初期化
+	// 雨初期化
 	rain_ = std::make_unique<Rain>();
 	rain_->Initialize(modelRaindrop_);
 	rain_->SetTarget(&railCamera_->GetWorldTransform());
