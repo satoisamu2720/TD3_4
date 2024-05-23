@@ -39,6 +39,8 @@ class SnowStage : public IScene {
 
 	void Time();
 
+	void SnowSropGimmick();
+
 	// タイム
 	void DrawTime();
 
@@ -257,12 +259,9 @@ private:
 
 	// 雪の処理
 	WorldTransform worldTransformSnow_[10];
-	std::unique_ptr<Model> modelSnow_[10];
-	// 雪の移動サイクル(x)
-	const uint16_t period;
+	std::unique_ptr<Model> modelSnow_;
 
-	// サイクルでの加算値
-	const float step;
+	float snowDropParameter_[20];
 
 	float snowPosition_[10] = {0, 2, 4, 6, 8, 9, 10, 11, 13};
 	bool snowFlag[10];

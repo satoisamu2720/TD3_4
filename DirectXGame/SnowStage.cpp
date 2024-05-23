@@ -95,7 +95,7 @@ void SnowStage::Initialize() {
 
 	for (int i = 0; i < 10; i++) {
 		worldTransformSnow_[i].Initialize();
-		modelSnow_[i].reset(Model::CreateFromOBJ("snow", true));
+		modelSnow_.reset(Model::CreateFromOBJ("snow", true));
 	}
 
 	for (int i = 0; i < 10; i++) {
@@ -116,7 +116,7 @@ void SnowStage::Update() {
 
 #pragma region 雪の更新処理
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 20; i++) {
 		if (snowFlag[i] == false) {
 			snowFlag[i] = true;
 			worldTransformSnow_[i].translation_.x = snowPosition_[i];
@@ -125,11 +125,9 @@ void SnowStage::Update() {
 		}
 
 		if (snowFlag[i] == true) {
-
-			worldTransformSnow_[i].translation_.y -= 0.5;
+			SnowSropGimmick();
+			worldTransformSnow_[i].translation_.y -= 0.1f;
 		}
-
-		
 
 		if (worldTransformSnow_[i].translation_.y <= 0) {
 			snowFlag[i] = false;
@@ -340,7 +338,7 @@ void SnowStage::Update() {
 	Time();
 	Goal();
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 20; i++) {
 		worldTransformSnow_[i].UpdateMatrix();
 	}
 
@@ -428,8 +426,8 @@ void SnowStage::Draw() {
 		box_->Draw(viewProjection_);
 	}
 
-	for (int i = 0; i < 10; i++) {
-		modelSnow_[i]->Draw(worldTransformSnow_[i], viewProjection_);
+	for (int i = 0; i < 20; i++) {
+		modelSnow_->Draw(worldTransformSnow_[i], viewProjection_);
 	}
 
 	// 加速装置
@@ -461,6 +459,31 @@ void SnowStage::Time() {
 	if (timer >= 30) {
 		timer = 0;
 		timerFlag = false;
+	}
+}
+
+void SnowStage::SnowSropGimmick() {
+
+	// 雪の移動サイクル(フレームレート)
+	const uint16_t period = 180;
+
+	// サイクルでの加算値
+	const float step = {2.0f * 3.14f / period};
+
+	// 雪が落ちる時の振幅
+	const float amplitude = 2.5f;
+
+	for (int i = 0; i < 20; i++) {
+		// パラメータを1ステップ文加算
+		snowDropParameter_[i] += step;
+
+		// 2πを超えたら0に戻す
+		snowDropParameter_[i] = {std::fmod(snowDropParameter_[i], 2.0f * 3.14f)};
+
+		
+
+		// 振幅を座標に反映
+		worldTransformSnow_[i].translation_.x = std::sin(snowDropParameter_[i]) * amplitude;
 	}
 }
 
