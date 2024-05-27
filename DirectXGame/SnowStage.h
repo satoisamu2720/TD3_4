@@ -258,11 +258,12 @@ private:
 	float goalTimer = 0;
 
 	// 雪の処理
-	WorldTransform worldTransformSnow_[10];
+	WorldTransform worldTransformSnow_[20];
 	std::unique_ptr<Model> modelSnow_;
 
 	float snowDropParameter_[20];
 
-	float snowPosition_[10] = {0, 2, 4, 6, 8, 9, 10, 11, 13};
-	bool snowFlag[10];
+	float snowPosition_[20] = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
+	                           10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+	bool snowFlag[20];
 };

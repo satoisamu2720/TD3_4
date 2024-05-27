@@ -62,7 +62,7 @@ private:
 	std::unique_ptr<Skydome> skydome_;
 
 	// 　矢印を押したときの番号
-	int stageCount_ = 0;
+	int stageCount_ = 2;
 
 	// 左右のキーを押したときのフラグ
 	bool leftFlag_ = false;

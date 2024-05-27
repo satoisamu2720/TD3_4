@@ -93,16 +93,10 @@ void SnowStage::Initialize() {
 
 #pragma region 雪の初期化
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 20; i++) {
 		worldTransformSnow_[i].Initialize();
 		modelSnow_.reset(Model::CreateFromOBJ("snow", true));
-	}
-
-	for (int i = 0; i < 10; i++) {
-		// worldTransformSnow_[i].translation_.x = snowPosition_[i].x;
 		snowFlag[i] = false;
-
-		// worldTransformSnow_->UpdateMatrix();
 	}
 
 #pragma endregion
@@ -473,14 +467,13 @@ void SnowStage::SnowSropGimmick() {
 	// 雪が落ちる時の振幅
 	const float amplitude = 2.5f;
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 10; i++) {
+
 		// パラメータを1ステップ文加算
 		snowDropParameter_[i] += step;
 
 		// 2πを超えたら0に戻す
 		snowDropParameter_[i] = {std::fmod(snowDropParameter_[i], 2.0f * 3.14f)};
-
-		
 
 		// 振幅を座標に反映
 		worldTransformSnow_[i].translation_.x = std::sin(snowDropParameter_[i]) * amplitude;
