@@ -67,7 +67,7 @@ void RainStage::Initialize() {
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
 	//modelRaindrop_= Model::CreateFromOBJ()
 
-	//LoadMiddleSkydomePopData();
+	LoadMiddleSkydomePopData();
 
 	LoadStartSkydomePopData();
 
