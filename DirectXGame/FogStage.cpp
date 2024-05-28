@@ -1,27 +1,38 @@
 ﻿#include "scene/Fogstage.h"
 
+//float easeOutCirc(float x)
+//{
+//	return sqrt(1 - pow(x - 1, 2));
+//}
+
+
 void FogStage::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
-	audio_ = Audio::GetInstance();
+    audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	light_ = LightGroup::Create();
 
-	pos = {0, -300};
 
-	Vector2 scale = {1180, 600};
-	Vector4 Color = {1, 1, 1, 0.9f};
+	//pos = {0, -300};
+
+	Pos_.translation_ = {0, -300};
+
+    scale = {1180, 600};
+	
+	fogColor = {1.0f, 1.0f, 1.0f, 0.55f};
+	//fogspeed.w = 2.0f; 
+	
+
 
 	fogTexture_ = TextureManager::Load("th.png");
 	// BlendTexture_ = TextureManager::Load("Blend.png");
 
-	fogsprite_ = Sprite::Create(fogTexture_, pos, Color);
+	fogsprite_ = Sprite::Create(fogTexture_, {Pos_.translation_.x,Pos_.translation_.y}, fogColor);
 
 	// fogsprite_->SetSize(scale);
 
-	BlendSprite_ = Sprite::Create(BlendTexture_, pos, Color);
+	//BlendSprite_ = Sprite::Create(BlendTexture_, pos, Color);
 
-
-	
 
 
 #pragma region タイム
@@ -54,6 +65,10 @@ void FogStage::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
 #pragma endregion
+
+	//pos.x = start + (end - start) * (frame /endFrame);
+
+	
 
 #pragma region 障害物
 
@@ -119,6 +134,16 @@ void FogStage::Update() {
 
 	player_->Update();
 
+	/*if (fogColor.w >= 1.0f)
+	{
+		fogColor.w += 0.5f;
+	}*/
+	
+	fogColor.w++;
+
+	Pos_.translation_.x -= 60.0f;
+	//Pos_.UpdateMatrix();
+
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
 	}
@@ -173,24 +198,30 @@ void FogStage::Update() {
 
 #ifdef _DEBUG
 
-	ImGui::Begin("stage");
-	ImGui::Text("SunnyStage");
-	ImGui::Checkbox("Game Start", &start);
-	ImGui::End();
+	//ImGui::Begin("stage");
+	//ImGui::Text("SunnyStage");
+	//ImGui::Checkbox("Game Start", &start);
+	//ImGui::End();
 
-	ImGui::Begin("Collision ");
-	ImGui::InputFloat("PlayerFlontZSize_", &FlontZHit_, 0.1f);
-	ImGui::InputFloat("PlayerBackZSize_", &BackZHit_, 0.1f);
-	ImGui::InputFloat("PlayerRightXSize_", &RightXHit_, 0.1f);
-	ImGui::InputFloat("PlayerLeftXSize_", &LeftXHit_, 0.1f);
-	ImGui::End();
+	//ImGui::Begin("Collision ");
+	//ImGui::InputFloat("PlayerFlontZSize_", &FlontZHit_, 0.1f);
+	//ImGui::InputFloat("PlayerBackZSize_", &BackZHit_, 0.1f);
+	//ImGui::InputFloat("PlayerRightXSize_", &RightXHit_, 0.1f);
+	//ImGui::InputFloat("PlayerLeftXSize_", &LeftXHit_, 0.1f);
+	//ImGui::End();
 
-	ImGui::Begin("Clear ");
-	ImGui::Checkbox("clearFlag", &goalTimerFlag);
-	ImGui::InputFloat("clearTimer", &goalTimer, 0.1f);
-	ImGui::End();
+	//
+
+	//ImGui::Begin("Clear ");
+	//ImGui::Checkbox("clearFlag", &goalTimerFlag);
+	//ImGui::InputFloat("clearTimer", &goalTimer, 0.1f);
+	//ImGui::End();
 
 #endif
+
+	ImGui::Begin("fog");
+	ImGui::InputFloat("Color", &fogColor.w);
+	ImGui::End();
 
 	// 当たり判定
 
@@ -237,6 +268,9 @@ void FogStage::Update() {
 			}
 		}
 	}
+
+	
+
 
 #pragma endregion
 
@@ -358,6 +392,7 @@ void FogStage::Update() {
 
 	Time();
 	Goal();
+
 }
 
 #pragma region タイム
@@ -406,6 +441,7 @@ void FogStage::Draw() { // コマンドリストの取得
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
+	
 	// BlendSprite_->Draw();
 
 	// スプライト描画後処理
@@ -455,11 +491,16 @@ void FogStage::Draw() { // コマンドリストの取得
 	/// ここに前景スプライトの描画処理を追加できる
 	///
 	///
-	Sprite::BlendMode::kNone;
+	//Sprite::BlendMode::kNone;
 
 	fogsprite_->Draw();
 
+	
+	
+	
 	DrawTime();
+
+
 	/// </summary>
 
 	// スプライト描画後処理

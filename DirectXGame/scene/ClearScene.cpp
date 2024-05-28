@@ -21,7 +21,7 @@ void ClearScene::Update() {
 	}
 
 	if (input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = TITLE;
+		sceneNo = SELECT;
 	}
 #ifdef _DEBUG
 	ImGui::Begin("stageNum");
