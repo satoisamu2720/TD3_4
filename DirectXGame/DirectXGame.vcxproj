@@ -170,6 +170,7 @@
     <ClInclude Include="Obstacle\box\Box.h" />
     <ClInclude Include="Obstacle\garbageCan\GarbageCan.h" />
     <ClInclude Include="player\Player.h" />
+    <ClInclude Include="RandomEngine.h" />
     <ClInclude Include="scene\ClearScene.h" />
     <ClInclude Include="scene\GameManager.h" />
     <ClInclude Include="scene\GameOverScene.h" />
