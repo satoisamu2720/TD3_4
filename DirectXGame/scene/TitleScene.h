@@ -20,6 +20,7 @@ public:
 
 	void Draw() override;
 
+
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -52,7 +53,7 @@ private:
 	// uint32_t playBGM_;
 	// bool isBGM_;
 
-	uint32_t buttonSound_;
+	
 
 	uint32_t titleTexHandle_ = 0;
 	Sprite* titleSprite_ = nullptr;
@@ -63,4 +64,10 @@ private:
 	float selectSwitchTimer = 120;
 
 	
+	//サウンド再生フラグ
+
+	//ボタンサウンド
+	uint32_t cloudSound_;
+	
+
 };

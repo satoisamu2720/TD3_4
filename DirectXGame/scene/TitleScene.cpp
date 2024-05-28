@@ -5,6 +5,8 @@ void TitleScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");
+
 	worldTransform_.Initialize();
 
 	viewProjection_.Initialize();
@@ -35,6 +37,7 @@ void TitleScene::Initialize() {
 }
 
 void TitleScene::Update() {
+	
 
 	// ゲームパッドの状態を得る変数
 	XINPUT_STATE joyState;
@@ -48,10 +51,12 @@ void TitleScene::Update() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 		cloud_->SetMoveFlag(true);
 		selectSwitchFlag = true;
+		Audio::GetInstance()->Audio::PlayWave(cloudSound_, false, 1.0f);
 	} 
 	if (selectSwitchFlag) {
 		selectSwitchTimer--;
 	}
+	
 	if (selectSwitchTimer <= 0) {
 		selectSwitchTimer = 60;
 		selectSwitchFlag = false;
@@ -109,4 +114,6 @@ void TitleScene::Draw() {
 
 #pragma endregion
 }
+
+
 

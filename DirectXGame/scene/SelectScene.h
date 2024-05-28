@@ -29,6 +29,7 @@ public:
 
 	void Draw() override;
 
+
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -89,4 +90,14 @@ private:
 
 	// ステージナンバー
 	int stageNo_[4] = {SUNNYSTAGE, RAINSTAGE, SNOWSTAGE, FOGSTAGE};
+
+	
+	// 読み込みサウンド
+	uint32_t cloudSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+
+	//サウンドフラグ
+	bool setFlag_ = false;
+	
 };

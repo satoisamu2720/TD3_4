@@ -32,6 +32,7 @@ void SelectScene::Initialize() {
 	// 雲の生成と初期化
 	cloud_ = std::make_unique<Cloud>();
 	cloud_->Initialize(modelCloud_.get(), true);
+	selectSwitchTimer = 120;
 
 	// 背景スプライト
 	//titleTexHandle_ = TextureManager::Load("sky.png");
@@ -72,6 +73,11 @@ void SelectScene::Initialize() {
 
 	//worldTransformSunny_.rotation_.y = ;
 
+	//サウンド
+	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");//雲
+	moveSound_ = Audio::GetInstance()->LoadWave("Sound/button06.mp3"); // ADボタン
+	decisionSound_ = Audio::GetInstance()->LoadWave("Sound/button01.mp3"); // 決定ボタン
+
 }
 
 void SelectScene::Update() {
@@ -81,8 +87,10 @@ void SelectScene::Update() {
 		selectSwitchTimer--;
 	}
 	if (selectSwitchTimer <= 0) {
-		selectSwitchTimer = 60;
 		cloud_->SetMoveFlag(false);
+	}
+	if (selectSwitchTimer == 119) {
+		Audio::GetInstance()->Audio::PlayWave(cloudSound_, false, 1.0f);
 	}
 	cloud_->Update();
 
@@ -103,14 +111,19 @@ void SelectScene::Update() {
 		    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false ) {
 			stageCount_++;
 			leftFlag_ = true;
+		    setFlag_ = false;
+		    Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
 		}
 
 		if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
 		    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false ) {
 			stageCount_--;
 			rightFlag_ = true;
-		}
+		    setFlag_ = false;
+		    Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
+	    }
 
+	   
 		if (stageCount_ > 3) {
 			stageCount_ = 0;
 		} else if (stageCount_ < 0) {
@@ -151,11 +164,14 @@ void SelectScene::Update() {
 
 	if (input_->TriggerKey(DIK_SPACE) && leftFlag_ == false && rightFlag_ == false) {
 		sceneNo = stageNo_[stageCount_];
+		
+		Audio::GetInstance()->Audio::PlayWave(decisionSound_, false, 1.0f);
 	}
-		if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
+		
+	if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
 			Sleep(1 * 300);
 			sceneNo = stageNo_[stageCount_];
-		}
+	}
 
 
 	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
@@ -170,6 +186,8 @@ void SelectScene::Update() {
 	}
 	worldTransformFog_.translation_.x = -cosf(rotf[FOG]) * 20.0f;
 	worldTransformFog_.translation_.z = -sinf(rotf[FOG]) * 20.0f;
+
+	
 #ifdef _DEBUG
 
 
@@ -271,3 +289,4 @@ void SelectScene::Draw() {
 
 #pragma endregion
 }
+
