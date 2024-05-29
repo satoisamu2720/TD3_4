@@ -43,7 +43,7 @@ void SnowStage::Initialize() {
 #pragma region 障害物
 
 	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("woodenBox", true));
+	BoxModel_ = (Model::CreateFromOBJ("snowMan", true));
 	// ボックスのCSVファイル読み込み
 	LoadBoxPopData();
 
@@ -572,7 +572,7 @@ void SnowStage::Goal() {
 void SnowStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/BoxPop.csv");
+	file.open("Resources/CSV/snowMan.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
