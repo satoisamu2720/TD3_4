@@ -19,11 +19,11 @@ void FogStage::Initialize() {
 
     scale = {1180, 600};
 	
-	fogColor = {1.0f, 1.0f, 1.0f, 0.2f};
+	fogColor = {1.0f, 1.0f, 1.0f, 0.05f};
 	//fogspeed.w = 2.0f; 
 
 
-	fogTexture_ = TextureManager::Load("th.png");
+	fogTexture_ = TextureManager::Load("fog/fog.png");
 	// BlendTexture_ = TextureManager::Load("Blend.png");
 
 	fogsprite_ =
@@ -148,7 +148,7 @@ void FogStage::Update() {
 	}
 	
 
-	pos.x -= 0.1f;
+	pos.x -= 0.3f;
 	//Pos_.UpdateMatrix();
 	fogsprite_->SetColor(fogColor);
 	fogsprite_->SetPosition(pos);
