@@ -28,6 +28,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "math.h"
 
 class  FogStage  : public IScene {
 
@@ -262,5 +263,11 @@ private:
 	Vector2 pos;
 
 	WorldTransform Pos_ = {};
+
+	Vector2 scale = {};
+	Vector4 fogColor = {};
+	Vector4 fogspeed{};
+
+	WorldTransform ColorTransform_ = {};
 };
 
