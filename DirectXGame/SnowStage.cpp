@@ -48,7 +48,7 @@ void SnowStage::Initialize() {
 	LoadBoxPopData();
 
 	// 加速装置モデル読み込み
-	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));
+	acceleratorModel_ = (Model::CreateFromOBJ("snowPool", true));
 	// 加速装置のCSVファイル読み込み
 	LoadAcceleratorPopData();
 
@@ -174,7 +174,7 @@ void SnowStage::Update() {
 
 	if (timer_->GetStartTime() <= 0 && start == false) {
 		start = true;
-		// railCamera_->SetStart(start);
+		//railCamera_->SetStart(start);
 		timer_->SetTimerFlag(true);
 	}
 
