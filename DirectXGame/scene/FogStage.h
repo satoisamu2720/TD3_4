@@ -30,6 +30,8 @@
 #include "SpotLight.h"
 #include "math.h"
 
+
+
 class  FogStage  : public IScene {
 
 public:
@@ -228,7 +230,12 @@ private:
 	float weather = 0;
 
 	// ゲームスタート
+
 	bool start;
+	bool gameStart;
+	int startTimer = 3 * 60;
+	Sprite* spriteStartTime_[2] = {};
+	Vector2 testPosTimer = {570.0f, 170.0f};
 
 	bool timerFlag = false;
 	float timer = 0;
@@ -269,5 +276,7 @@ private:
 	Vector4 fogspeed{};
 
 	WorldTransform ColorTransform_ = {};
+
+
 };
 

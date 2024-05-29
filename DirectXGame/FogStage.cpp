@@ -1,4 +1,4 @@
-﻿#include "scene/Fogstage.h"
+﻿#include "Fogstage.h"
 
 //float easeOutCirc(float x)
 //{
@@ -42,11 +42,14 @@ void FogStage::Initialize() {
 
 	textureHandleNumber_ = TextureManager::Load("number.png");
 
+	
 	for (int i = 0; i < 2; i++) {
-		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 26, 10});
-		// spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {60.0f + i * 26, 10});
+		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {10.0f + i * 46, 20});
+		spriteStartTime_[i] =
+		    Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
-	timer_->SetTime(0, 30);
+	timer_->SetTime(0, 15);
+	timer_->SetStartTimer(4);
 
 #pragma endregion
 
@@ -150,6 +153,13 @@ void FogStage::Update() {
 	fogsprite_->SetColor(fogColor);
 	fogsprite_->SetPosition(pos);
 
+
+	timer_->SetStartTimerFlag(true);
+
+	timer_->Update();
+	player_->SetStart(start);
+
+
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
 	}
@@ -171,6 +181,11 @@ void FogStage::Update() {
 
 	ground_->Update();
 
+	if (timer_->GetStartTime() <= 0 && start == false) {
+		start = true;
+		railCamera_->SetStart(start);
+		timer_->SetTimerFlag(true);
+	}
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		Reset();
@@ -403,18 +418,17 @@ void FogStage::Update() {
 }
 
 #pragma region タイム
-
 void FogStage::DrawTime() {
 
-	////分数
-	// int eachMathNumber[2] = {};
-	// int mathNumber = timer_->GetTimeMath();
-	// int mathKeta = 10;
-	// for (int i = 0; i < 2; i++) {
-	//	eachMathNumber[i] = mathNumber / mathKeta;
-	//	mathNumber = mathNumber % mathKeta;
-	//	mathKeta = mathKeta / 10;
-	// }
+	// ゲームスタートタイマー秒数
+	int eachMathNumber[2] = {};
+	int mathNumber = timer_->GetStartTime();
+	int mathKeta = 10;
+	for (int i = 0; i < 2; i++) {
+		eachMathNumber[i] = mathNumber / mathKeta;
+		mathNumber = mathNumber % mathKeta;
+		mathKeta = mathKeta / 10;
+	}
 	// 秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
@@ -426,17 +440,24 @@ void FogStage::DrawTime() {
 	}
 
 	for (int i = 0; i < 2; i++) {
-		spriteSecondTime_[i]->SetSize({32, 64});
+		// 残り時間描画
+		spriteSecondTime_[i]->SetSize({64, 128});
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 
-		/*spriteMathTime_[i]->SetSize({32, 64});
-		spriteMathTime_[i]->SetTextureRect({32.0f * eachMathNumber[i], 0}, {32, 64});
-		spriteMathTime_[i]->Draw();*/
+		// スタート秒数描画
+		spriteStartTime_[1]->SetSize({128, 256});
+		spriteStartTime_[1]->SetPosition(testPosTimer);
+		spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
+		if (start == false) {
+			spriteStartTime_[1]->Draw();
+		}
 	}
 }
 
 #pragma endregion
+
+
 
 void FogStage::Draw() { // コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
