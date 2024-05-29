@@ -21,13 +21,14 @@ void FogStage::Initialize() {
 	
 	fogColor = {1.0f, 1.0f, 1.0f, 0.55f};
 	//fogspeed.w = 2.0f; 
-	
 
 
 	fogTexture_ = TextureManager::Load("th.png");
 	// BlendTexture_ = TextureManager::Load("Blend.png");
 
-	fogsprite_ = Sprite::Create(fogTexture_, {Pos_.translation_.x,Pos_.translation_.y}, fogColor);
+	fogsprite_ =
+	    Sprite::Create(fogTexture_, {Pos_.translation_.x, Pos_.translation_.y}, 
+			{fogColor.x,fogColor.y,fogColor.z,fogColor.w});
 
 	// fogsprite_->SetSize(scale);
 

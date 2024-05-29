@@ -267,5 +267,7 @@ private:
 	Vector2 scale = {};
 	Vector4 fogColor = {};
 	Vector4 fogspeed{};
+
+	WorldTransform ColorTransform_ = {};
 };
 
