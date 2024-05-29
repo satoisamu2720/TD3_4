@@ -24,7 +24,7 @@ void SelectScene::Initialize() {
 
 	// スカイドームの生成と初期化
 	skydome_ = std::make_unique<Skydome>();
-	skydome_->Initialize(modelSkydome_.get(), {0,0,0});
+	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});
 
 
 	modelCloud_.reset(Model::CreateFromOBJ("cloud", true));
@@ -35,17 +35,17 @@ void SelectScene::Initialize() {
 	selectSwitchTimer = 120;
 
 	// 背景スプライト
-	//titleTexHandle_ = TextureManager::Load("sky.png");
-	//Sprite_ =
+	// titleTexHandle_ = TextureManager::Load("sky.png");
+	// Sprite_ =
 	//    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 
 #pragma region モデル
 
 	sunModel_.reset(Model::CreateFromOBJ("sunMark", true));
 
-	rainModel_.reset(Model::CreateFromOBJ("cube", true));
+	rainModel_.reset(Model::CreateFromOBJ("rain", true));
 
-	snowModel_.reset(Model::CreateFromOBJ("cube", true));
+	snowModel_.reset(Model::CreateFromOBJ("Snowman", true));
 
 	fogModel_.reset(Model::CreateFromOBJ("fog", true));
 
@@ -71,7 +71,13 @@ void SelectScene::Initialize() {
 
 	rotf[FOG] = DirectX::XMConvertToRadians(degree[FOG]);
 
-	//worldTransformSunny_.rotation_.y = ;
+	worldTransformSunny_.scale_ = {2, 2, 2};
+
+	worldTransformRain_.scale_ = {2, 2, 2};
+
+	worldTransformSnow_.scale_ = {2, 2, 2};
+
+	worldTransformFog_.scale_ = {2, 2, 2};
 
 	//サウンド
 	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");//雲
@@ -130,24 +136,24 @@ void SelectScene::Update() {
 			stageCount_ = 3;
 		}
 
-		if (leftFlag_ == true && rightFlag_ == false) {
-			target_++;
+	if (leftFlag_ == true && rightFlag_ == false) {
+		target_++;
 
-			if (target_ >= 90) {
-				leftFlag_ = false;
-				target_ = 0;
-			}
-
-			for (int i = 0; i < 4; i++) {
-				if (target_ != 90) {
-					degree[i] -= 1;
-					rotf[i] = DirectX::XMConvertToRadians(degree[i]);
-				}
-			}
+		if (target_ >= 90) {
+			leftFlag_ = false;
+			target_ = 0;
 		}
 
-		if (rightFlag_ == true && leftFlag_ == false) {
-			target_++;
+		for (int i = 0; i < 4; i++) {
+			if (target_ != 90) {
+				degree[i] -= 1;
+				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
+			}
+		}
+	}
+
+	if (rightFlag_ == true && leftFlag_ == false) {
+		target_++;
 
 		if (target_ >= 90) {
 			rightFlag_ = false;
@@ -167,12 +173,11 @@ void SelectScene::Update() {
 		
 		Audio::GetInstance()->Audio::PlayWave(decisionSound_, false, 1.0f);
 	}
-		
 	if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
-			Sleep(1 * 300);
-			sceneNo = stageNo_[stageCount_];
+		Sleep(1 * 300);
+		sceneNo = stageNo_[stageCount_];
+		stageCount_ = 0;
 	}
-
 
 	worldTransformSunny_.translation_.x = -cosf(rotf[SUNNY]) * 20.0f;
 	worldTransformSunny_.translation_.z = -sinf(rotf[SUNNY]) * 20.0f;
@@ -182,14 +187,12 @@ void SelectScene::Update() {
 
 	worldTransformSnow_.translation_.x = -cosf(rotf[SNOW]) * 20.0f;
 	worldTransformSnow_.translation_.z = -sinf(rotf[SNOW]) * 20.0f;
-	if (input_->TriggerKey(DIK_TAB)) {
-	}
+
 	worldTransformFog_.translation_.x = -cosf(rotf[FOG]) * 20.0f;
 	worldTransformFog_.translation_.z = -sinf(rotf[FOG]) * 20.0f;
 
 	
 #ifdef _DEBUG
-
 
 	ImGui::Begin("stageNum");
 
@@ -225,7 +228,7 @@ void SelectScene::Update() {
 	ImGui::End();
 
 #endif
-	//worldTransformSunny_.translation_ = {position[0], position[1], position[2]};
+	// worldTransformSunny_.translation_ = {position[0], position[1], position[2]};
 	worldTransformSunny_.UpdateMatrix();
 	worldTransformRain_.UpdateMatrix();
 	worldTransformSnow_.UpdateMatrix();
@@ -240,7 +243,7 @@ void SelectScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	//Sprite_->Draw();
+	// Sprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる

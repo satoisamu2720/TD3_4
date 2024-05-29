@@ -53,6 +53,7 @@ private:
 	std::unique_ptr<Model> rainModel_;
 	// 雪
 	std::unique_ptr<Model> snowModel_;
+	std::unique_ptr<Model> snowHatModel_;
 	// 霧
 	std::unique_ptr<Model> fogModel_;
 
@@ -69,7 +70,7 @@ private:
 	std::unique_ptr<Cloud> cloud_;
 
 	// 　矢印を押したときの番号
-	int stageCount_ = 0;
+	int stageCount_ = 2;
 
 	// 左右のキーを押したときのフラグ
 	bool leftFlag_ = false;
