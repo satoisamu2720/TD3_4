@@ -13,13 +13,13 @@ void FogStage::Initialize() {
 	light_ = LightGroup::Create();
 
 
-	//pos = {0, -300};
+	pos = {0, -300};
 
-	Pos_.translation_ = {0, -300};
+	//Pos_.translation_ = {0, -300};
 
     scale = {1180, 600};
 	
-	fogColor = {1.0f, 1.0f, 1.0f, 0.55f};
+	fogColor = {1.0f, 1.0f, 1.0f, 0.05f};
 	//fogspeed.w = 2.0f; 
 
 
@@ -27,7 +27,7 @@ void FogStage::Initialize() {
 	// BlendTexture_ = TextureManager::Load("Blend.png");
 
 	fogsprite_ =
-	    Sprite::Create(fogTexture_, {Pos_.translation_.x, Pos_.translation_.y}, 
+	    Sprite::Create(fogTexture_,pos, 
 			{fogColor.x,fogColor.y,fogColor.z,fogColor.w});
 
 	// fogsprite_->SetSize(scale);
@@ -140,10 +140,15 @@ void FogStage::Update() {
 		fogColor.w += 0.5f;
 	}*/
 	
-	fogColor.w++;
+	if (fogColor.w <= 0.85f) {
+	fogColor.w += 0.005f;
+	}
+	
 
-	Pos_.translation_.x -= 60.0f;
+	pos.x -= 0.1f;
 	//Pos_.UpdateMatrix();
+	fogsprite_->SetColor(fogColor);
+	fogsprite_->SetPosition(pos);
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
@@ -165,6 +170,7 @@ void FogStage::Update() {
 	}*/
 
 	ground_->Update();
+
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		Reset();
