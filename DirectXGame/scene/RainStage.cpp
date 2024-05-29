@@ -67,7 +67,7 @@ void RainStage::Initialize() {
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
 	//modelRaindrop_= Model::CreateFromOBJ()
 
-	//LoadMiddleSkydomePopData();
+	LoadMiddleSkydomePopData();
 
 	LoadStartSkydomePopData();
 
@@ -99,13 +99,14 @@ void RainStage::Initialize() {
 
 #pragma endregion
 
-	#pragma region 雨
+#pragma region 雨
 
-	// 雨初期化
+	
+	// 雨モデル
 
 	modelRaindrop_ = Model::CreateFromOBJ("raindrop", true);
 
-	// プレイヤー初期化
+	// 雨初期化
 	rain_ = std::make_unique<Rain>();
 	rain_->Initialize(modelRaindrop_);
 	rain_->SetTarget(&railCamera_->GetWorldTransform());
@@ -130,6 +131,10 @@ void RainStage::Update() {
 		player_->SetStart(start);
 		player_->SetWeather(weather);
 		
+		player_->SetWind(wind);
+
+		rain_->SetWindFlag(wind);
+
 	    if (start) {
 		player_->ThunderstormUpdate();
 	    }
@@ -196,6 +201,11 @@ void RainStage::Update() {
 		timer_->SetTime(0, 30);
 		railCamera_->SetPos({0, 4, 0});
 	}
+
+	ImGui::Begin("Wind");
+	
+	ImGui::Checkbox("wind", &wind);
+	ImGui::End();
 
 	ImGui::Begin("weather");
 	ImGui::InputFloat("weather", &weather, 1.0f);
@@ -535,7 +545,7 @@ void RainStage::Time() {
 void RainStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/BoxPop.csv");
+	file.open("Resources/CSV/RainBoxPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -597,7 +607,7 @@ void RainStage::BoxGenerate(Vector3 position) {
 void RainStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/AcceleratorPop.csv");
+	file.open("Resources/CSV/RainAcceleratorPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー

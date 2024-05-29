@@ -42,31 +42,36 @@ void Rain::Update() {
 
 
 		worldTransform_[i].translation_.y -= 3.0f;
-		worldTransform_[i].translation_.x += 5.0f;
+		if (windFlag_ == false) {
+			worldTransform_[i].translation_.x += 5.0f;
+		} else if (windFlag_ != false) {
+			worldTransform_[i].translation_.x -= 5.0f;
+		}
 
-		  if (worldTransform_[i].translation_.y <= 0) {
-		
-			  if (i % 2 == 0) {
-				  fastTransform_[i].translation_.z = 20.0f + (i * 40);
-			  	  worldTransform_[i].translation_.y = 150.0f - (i * 10);
-				  worldTransform_[i].translation_.x = -50.0f - (i * 10);
-			  } else
-				if(i % 2 != 0)  
-			  {
-				  fastTransform_[i].translation_.z = 0.0f + (i * 14);
-				  worldTransform_[i].translation_.y = 120.0f + (i * 4);
-				  worldTransform_[i].translation_.x = -50.0f - (i * 20);
-			  }
+		if (worldTransform_[i].translation_.y <= 0) {
 
+			if (i % 2 == 0) {
+				fastTransform_[i].translation_.z = 20.0f + (i * 40);
+				worldTransform_[i].translation_.y = 150.0f - (i * 10);
+				if (windFlag_ == false) {
+					worldTransform_[i].translation_.x = -50.0f - (i * 10);
+				} else if (windFlag_ != false) {
+					worldTransform_[i].translation_.x = 50.0f + (i * 10);
+				}
 
-		 
-
-
-		  }
-		 
-		
+			} else if (i % 2 != 0) {
+				fastTransform_[i].translation_.z = 0.0f + (i * 14);
+				worldTransform_[i].translation_.y = 120.0f + (i * 4);
+				if (windFlag_ == false) {
+					worldTransform_[i].translation_.x = -50.0f - (i * 20);
+				} else if (windFlag_ != false) {
+					worldTransform_[i].translation_.x = 50.0f + (i * 20);
+				}
+			}
+		}
 
 	}
+
 	for (int i = 0; i < 15; i++) {
 		worldTransform_[i].UpdateMatrix();
 	
