@@ -70,7 +70,7 @@ private:
 	std::unique_ptr<Cloud> cloud_;
 
 	// 　矢印を押したときの番号
-	int stageCount_ = 2;
+	int stageCount_ = 0;
 
 	// 左右のキーを押したときのフラグ
 	bool leftFlag_ = false;

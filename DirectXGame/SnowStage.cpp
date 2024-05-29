@@ -162,7 +162,7 @@ void SnowStage::Update() {
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 		goalSkydome_->Update();
 	}
-	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+	for (const std::unique_ptr<TrafficLight>& guardRail_ : guardRails_) {
 		guardRail_->Update();
 	}
 
@@ -174,7 +174,7 @@ void SnowStage::Update() {
 
 	if (timer_->GetStartTime() <= 0 && start == false) {
 		start = true;
-		// railCamera_->SetStart(start);
+		railCamera_->SetStart(start);
 		timer_->SetTimerFlag(true);
 	}
 
@@ -326,7 +326,7 @@ void SnowStage::Update() {
 
 	UpdateGoalSkydomePopCommands();
 
-	guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
+	guardRails_.remove_if([](std::unique_ptr<TrafficLight>& item) {
 		if (item->IsDead()) {
 			item.release();
 			return true;
@@ -905,7 +905,7 @@ void SnowStage::UpdateGuardRailPopCommands() {
 
 void SnowStage::GuardRailGenerate(Vector3 position) {
 	// アイテムの生成と初期化処理
-	GuardRail* guardRail_ = new GuardRail();
+	TrafficLight* guardRail_ = new TrafficLight();
 	guardRail_->Initialize(modelGuardRail_, position);
-	guardRails_.push_back(static_cast<std::unique_ptr<GuardRail>>(guardRail_));
+	guardRails_.push_back(static_cast<std::unique_ptr<TrafficLight>>(guardRail_));
 }

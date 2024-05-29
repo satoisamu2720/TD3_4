@@ -77,7 +77,7 @@ void SelectScene::Initialize() {
 
 	worldTransformSnow_.scale_ = {2, 2, 2};
 
-	worldTransformFog_.scale_ = {2, 2, 2};
+	worldTransformFog_.scale_ = {1, 1, 1};
 
 	//サウンド
 	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");//雲
