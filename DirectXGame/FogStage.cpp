@@ -19,7 +19,7 @@ void FogStage::Initialize() {
 
     scale = {1180, 600};
 	
-	fogColor = {1.0f, 1.0f, 1.0f, 0.05f};
+	fogColor = {1.0f, 1.0f, 1.0f, 0.2f};
 	//fogspeed.w = 2.0f; 
 
 
