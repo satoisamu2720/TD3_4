@@ -74,6 +74,20 @@ class SnowStage : public IScene {
 
 #pragma endregion
 
+#pragma region 減速パネルCSV関数
+
+	// 減速パネルの発生データを読み込み
+	void LoadDownPanelPopData();
+
+	// 減速パネルの発生コマンドの更新
+	void UpdateDownPanelPopCommands();
+
+	/// 減速パネルの生成
+	void DownPanelGenerate(Vector3 position);
+
+
+#pragma endregion
+
 #pragma region 背景CSV関数
 
 	// 開始背景の発生データを読み込み
@@ -144,6 +158,10 @@ private:
 	std::stringstream acceleratorPopCommands;
 	// モデル
 	Model* acceleratorModel_ = nullptr;
+
+	std::stringstream DownPanelPopCommands;
+
+	Model* DownPanel_ = nullptr;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;

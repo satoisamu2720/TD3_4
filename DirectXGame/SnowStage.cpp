@@ -572,7 +572,7 @@ void SnowStage::Goal() {
 void SnowStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/snowMan.csv");
+	file.open("Resources/CSV/SnowManPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -680,6 +680,19 @@ void SnowStage::AcceleratorGenerate(Vector3 position) {
 	Accelerator* accelerator_ = new Accelerator();
 	accelerator_->Initialize(acceleratorModel_, position);
 	accelerators_.push_back(static_cast<std::unique_ptr<Accelerator>>(accelerator_));
+}
+
+void SnowStage::LoadDownPanelPopData() {
+	DownPanelPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/AcceleratorPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	acceleratorPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
 }
 
 void SnowStage::LoadStartSkydomePopData() {
