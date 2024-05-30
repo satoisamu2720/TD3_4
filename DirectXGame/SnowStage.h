@@ -3,12 +3,14 @@
 #include "AxisIndicator.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "DownPanel.h"
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "MT.h"
 #include "Model.h"
 #include "Obstacle/accelerator/Accelerator.h"
 #include "Obstacle/box/Box.h"
+#include "SnowPool.h"
 #include "Sprite.h"
 #include "TextureManager.h"
 #include "ViewProjection.h"
@@ -20,7 +22,6 @@
 #include "stage/guardRail/GuardRail.h"
 #include "stage/skydome/Skydome.h"
 #include "timer.h"
-#include "DownPanel.h"
 #include <cassert>
 #include <fstream>
 #include <memory>
@@ -86,6 +87,18 @@ class SnowStage : public IScene {
 	/// 減速パネルの生成
 	void DownPanelGenerate(Vector3 position);
 
+#pragma endregion
+
+#pragma region 雪積もりCSV関数
+
+	// 減速パネルの発生データを読み込み
+	void LoadSnowPoolPopData();
+
+	// 減速パネルの発生コマンドの更新
+	void UpdateSnowPoolPopCommands();
+
+	/// 減速パネルの生成
+	void SnowPoolGenerate(Vector3 position);
 
 #pragma endregion
 
@@ -144,7 +157,11 @@ private:
 	std::unique_ptr<Model> modelPlayerBack_;
 	std::list<Player*> players_;
 
-	// 障害物
+	// 雪の画像
+	uint32_t snowTexture_;
+	uint32_t BlendTexture_;
+	Sprite* snowsprite_;
+	Sprite* BlendSprite_;
 
 	// ボックス
 	std::list<std::unique_ptr<Box>> boxs_;
@@ -162,10 +179,13 @@ private:
 
 	// ダウンパネル
 	std::stringstream downPanelPopCommands;
-
 	Model* downPanelModel_ = nullptr;
-
 	std::list<std::unique_ptr<DownPanel>> downPanels_;
+
+	// 雪積もり
+	std::stringstream snowPoolPopCommands;
+	Model* snowPoolModel_ = nullptr;
+	std::list<std::unique_ptr<SnowPool>> snowPools_;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
@@ -245,6 +265,18 @@ private:
 	float goalBackZ_;
 	float goalRightX_;
 	float goalLeftX_;
+
+	// ダウンパネルの当たり判定
+	float downPanelFlontZ_;
+	float downPanelBackZ_;
+	float downPanelRightX_;
+	float downPanelLeftX_;
+
+	// 雪積もり
+	float snowPoolFlontZ_;
+	float snowPoolBackZ_;
+	float snowPoolRightX_;
+	float snowPoolLeftX_;
 
 	// 天候
 	float weather = 0;

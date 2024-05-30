@@ -61,6 +61,7 @@ void SnowStage::Initialize() {
 	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
 	downPanelModel_ = Model::CreateFromOBJ("snowPool", true);
+	snowPoolModel_ = Model::CreateFromOBJ("snowPool", true);
 
 	LoadMiddleSkydomePopData();
 
@@ -69,6 +70,8 @@ void SnowStage::Initialize() {
 	LoadGoalSkydomePopData();
 
 	LoadDownPanelPopData();
+
+	LoadSnowPoolPopData();
 
 	// ステージ地面モデル読み込み
 	modelGround_ = Model::CreateFromOBJ("ground", true);
@@ -171,7 +174,10 @@ void SnowStage::Update() {
 
 	for (const std::unique_ptr<DownPanel>& downPanel_ : downPanels_) {
 		downPanel_->Update();
+	}
 
+	for (const std::unique_ptr<SnowPool>& snowPool_ : snowPools_) {
+		snowPool_->Update();
 	}
 
 	ground_->Update();
@@ -182,7 +188,7 @@ void SnowStage::Update() {
 
 	if (timer_->GetStartTime() <= 0 && start == false) {
 		start = true;
-		//railCamera_->SetStart(start);
+		// railCamera_->SetStart(start);
 		timer_->SetTimerFlag(true);
 	}
 
@@ -261,6 +267,43 @@ void SnowStage::Update() {
 
 #pragma endregion
 
+#pragma region プレイヤーとダウンパネルの当たり判定
+
+	for (const std::unique_ptr<DownPanel>& downPanel_ : downPanels_) {
+
+		downPanelBackZ_ = downPanel_->GetWorldPosition().z - 1.0f;
+		downPanelFlontZ_ = downPanel_->GetWorldPosition().z + 1.0f;
+		downPanelLeftX_ = downPanel_->GetWorldPosition().x - 5.0f;
+		downPanelRightX_ = downPanel_->GetWorldPosition().x + 5.0f;
+
+		if ((PlayerLeftX_ < downPanelRightX_ && PlayerRightX_ > downPanelLeftX_) &&
+		    (downPanelFlontZ_ > PlayerBackZ_ && downPanelBackZ_ < PlayerFlontZ_)) {
+
+			player_->SetThunderHit(true);
+			downPanel_->OnCollision();
+			// player_->SetPosition({0.0f, 0.0f, -50.0f});
+		}
+	}
+#pragma endregion
+
+#pragma region プレイヤーとダウンパネルの当たり判定
+
+	for (const std::unique_ptr<SnowPool>& snowPool_ : snowPools_) {
+
+		snowPoolBackZ_ = snowPool_->GetWorldPosition().z - 1.0f;
+		snowPoolFlontZ_ = snowPool_->GetWorldPosition().z + 1.0f;
+		snowPoolLeftX_ = snowPool_->GetWorldPosition().x - 5.0f;
+		snowPoolRightX_ = snowPool_->GetWorldPosition().x + 5.0f;
+
+		if ((PlayerLeftX_ < snowPoolRightX_ && PlayerRightX_ > snowPoolLeftX_) &&
+		    (snowPoolFlontZ_ > PlayerBackZ_ && snowPoolBackZ_ < PlayerFlontZ_)) {
+
+			snowPool_->OnCollision();
+			// player_->SetPosition({0.0f, 0.0f, -50.0f});
+		}
+	}
+#pragma endregion
+
 #pragma region プレイヤーとゴールの当たり判定
 
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
@@ -299,12 +342,33 @@ void SnowStage::Update() {
 		return false;
 	});
 
+	// デスフラグの立った敵を削除
+	downPanels_.remove_if([](std::unique_ptr<DownPanel>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
+	// デスフラグの立った敵を削除
+	snowPools_.remove_if([](std::unique_ptr<SnowPool>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
 	// 加速装置のCSVファイルの更新処理
 	UpdateAcceleratorPopCommands();
 
-	//　ダウンパネルのCSVファイルの更新処理
+	// ダウンパネルのCSVファイルの更新処理
 	UpdateDownPanelPopCommands();
 
+	// 雪積もりのCSVファイルの更新処理
+
+	UpdateSnowPoolPopCommands();
 	// デスフラグの立った敵を削除
 	middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
 		if (item->IsDead()) {
@@ -448,10 +512,14 @@ void SnowStage::Draw() {
 		downPanel_->Draw(viewProjection_);
 	}
 
-	// 加速装置
-	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-		accelerator_->Draw(viewProjection_);
+	for (const std::unique_ptr<SnowPool>& snowPool_ : snowPools_) {
+		snowPool_->Draw(viewProjection_);
 	}
+
+	// 加速装置
+	//for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+	//	//accelerator_->Draw(viewProjection_);
+	//}
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 	    guardRail_->Draw(viewProjection_);
 	}*/
@@ -748,11 +816,66 @@ void SnowStage::UpdateDownPanelPopCommands() {
 }
 
 void SnowStage::DownPanelGenerate(Vector3 position) {
-	//アイテムの生成と初期化処理 
+	// アイテムの生成と初期化処理
 	DownPanel* downPanel = new DownPanel();
 	downPanel->Initialize(downPanelModel_, position);
-	downPanels_.push_back(
-	    static_cast<std::unique_ptr<DownPanel>>(downPanel));
+	downPanels_.push_back(static_cast<std::unique_ptr<DownPanel>>(downPanel));
+}
+
+void SnowStage::LoadSnowPoolPopData() {
+	downPanelPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/SnowPoolPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	snowPoolPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SnowStage::UpdateSnowPoolPopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(snowPoolPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			SnowPoolGenerate({x, y, z});
+		}
+	}
+}
+
+void SnowStage::SnowPoolGenerate(Vector3 position) { // アイテムの生成と初期化処理
+	SnowPool* snowPool = new SnowPool();
+	snowPool->Initialize(snowPoolModel_, position);
+	snowPools_.push_back(static_cast<std::unique_ptr<SnowPool>>(snowPool));
 }
 
 void SnowStage::LoadStartSkydomePopData() {

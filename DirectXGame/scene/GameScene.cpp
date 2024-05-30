@@ -223,6 +223,7 @@ void GameScene::Update() {
 
 #pragma endregion
 
+
 	Time();
 	
 }

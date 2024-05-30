@@ -7,12 +7,13 @@ void DownPanel::Initialize(Model* model, Vector3 position) {
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-
 }
 
 void DownPanel::Update() { worldTransform_.UpdateMatrix(); }
 
 void DownPanel::Draw(ViewProjection& view) { model_->Draw(worldTransform_, view); }
+
+void DownPanel::OnCollision() { isDead_ = true; }
 
 Vector3 DownPanel::GetWorldPosition() {
 	Vector3 worldPos;

@@ -14,6 +14,7 @@
 #include "stage/ground/Ground.h"
 #include "Obstacle/box/Box.h"
 #include "Obstacle/accelerator/Accelerator.h"
+#include "DownPanel.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -113,8 +114,6 @@ private:
 	float SpeedBackZ_;
 	float SpeedRightX_;
 	float SpeedLeftX_;
-
-	
 
 	float weather = 0;
 

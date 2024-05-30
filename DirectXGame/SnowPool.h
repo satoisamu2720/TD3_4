@@ -15,8 +15,7 @@
 #include <stdio.h>
 #include <optional>
 #include "MT.h"
-class DownPanel {
-
+class SnowPool {
 private:
 	WorldTransform worldTransform_;
 
@@ -40,5 +39,4 @@ public:
 	bool IsDead() const { return isDead_; }
 
 	Vector3 GetWorldPosition();
-
 };
