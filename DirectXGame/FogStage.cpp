@@ -143,8 +143,9 @@ void FogStage::Update() {
 		fogColor.w += 0.5f;
 	}*/
 	
-	if (fogColor.w <= 0.85f) {
-	fogColor.w += 0.005f;
+	if (fogColor.w <= 0.85f) 
+	{
+		fogColor.w += 0.005f;
 	}
 	
 
@@ -550,7 +551,7 @@ void FogStage::Time() {
 void FogStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/BoxPop.csv");
+	file.open("Resources/CSV/FogBoxPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -612,7 +613,7 @@ void FogStage::BoxGenerate(Vector3 position) {
 void FogStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/AcceleratorPop.csv");
+	file.open("Resources/CSV/FogAcceleratorPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
