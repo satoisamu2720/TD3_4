@@ -1,40 +1,20 @@
 ﻿#include "Fogstage.h"
 
-//float easeOutCirc(float x)
-//{
-//	return sqrt(1 - pow(x - 1, 2));
-//}
-
-
 void FogStage::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
-    audio_ = Audio::GetInstance();
+	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
 	light_ = LightGroup::Create();
 
-
 	pos = {0, -300};
 
-	//Pos_.translation_ = {0, -300};
+	scale = {1180, 600};
 
-    scale = {1180, 600};
-	
 	fogColor = {1.0f, 1.0f, 1.0f, 0.05f};
-	//fogspeed.w = 2.0f; 
-
 
 	fogTexture_ = TextureManager::Load("fog/fog.png");
-	// BlendTexture_ = TextureManager::Load("Blend.png");
 
-	fogsprite_ =
-	    Sprite::Create(fogTexture_,pos, 
-			{fogColor.x,fogColor.y,fogColor.z,fogColor.w});
-
-	// fogsprite_->SetSize(scale);
-
-	//BlendSprite_ = Sprite::Create(BlendTexture_, pos, Color);
-
-
+	fogsprite_ = Sprite::Create(fogTexture_, pos, {fogColor.x, fogColor.y, fogColor.z, fogColor.w});
 
 #pragma region タイム
 
@@ -42,7 +22,6 @@ void FogStage::Initialize() {
 
 	textureHandleNumber_ = TextureManager::Load("number.png");
 
-	
 	for (int i = 0; i < 2; i++) {
 		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {10.0f + i * 46, 20});
 		spriteStartTime_[i] =
@@ -69,10 +48,6 @@ void FogStage::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
 #pragma endregion
-
-	//pos.x = start + (end - start) * (frame /endFrame);
-
-	
 
 #pragma region 障害物
 
@@ -138,28 +113,19 @@ void FogStage::Update() {
 
 	player_->Update();
 
-	/*if (fogColor.w >= 1.0f)
-	{
-		fogColor.w += 0.5f;
-	}*/
-	
-	if (fogColor.w <= 0.85f) 
-	{
+	if (fogColor.w <= 0.85f) {
 		fogColor.w += 0.005f;
 	}
-	
 
 	pos.x -= 0.3f;
-	//Pos_.UpdateMatrix();
+	// Pos_.UpdateMatrix();
 	fogsprite_->SetColor(fogColor);
 	fogsprite_->SetPosition(pos);
-
 
 	timer_->SetStartTimerFlag(true);
 
 	timer_->Update();
 	player_->SetStart(start);
-
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
@@ -176,9 +142,6 @@ void FogStage::Update() {
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 		goalSkydome_->Update();
 	}
-	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
-		guardRail_->Update();
-	}*/
 
 	ground_->Update();
 
@@ -210,41 +173,12 @@ void FogStage::Update() {
 
 #pragma endregion
 
-
-
 #pragma region カメラセット
 	railCamera_->Update();
 	viewProjection_.matView = railCamera_->GetViewProjection().matView;
 	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 	viewProjection_.TransferMatrix();
 #pragma endregion
-
-#ifdef _DEBUG
-
-	//ImGui::Begin("stage");
-	//ImGui::Text("SunnyStage");
-	//ImGui::Checkbox("Game Start", &start);
-	//ImGui::End();
-
-	//ImGui::Begin("Collision ");
-	//ImGui::InputFloat("PlayerFlontZSize_", &FlontZHit_, 0.1f);
-	//ImGui::InputFloat("PlayerBackZSize_", &BackZHit_, 0.1f);
-	//ImGui::InputFloat("PlayerRightXSize_", &RightXHit_, 0.1f);
-	//ImGui::InputFloat("PlayerLeftXSize_", &LeftXHit_, 0.1f);
-	//ImGui::End();
-
-	//
-
-	//ImGui::Begin("Clear ");
-	//ImGui::Checkbox("clearFlag", &goalTimerFlag);
-	//ImGui::InputFloat("clearTimer", &goalTimer, 0.1f);
-	//ImGui::End();
-
-#endif
-
-	ImGui::Begin("fog");
-	ImGui::InputFloat("Color", &fogColor.w);
-	ImGui::End();
 
 	// 当たり判定
 
@@ -292,24 +226,7 @@ void FogStage::Update() {
 		}
 	}
 
-	
-
-
 #pragma endregion
-
-	/*pos.x = Pos_.translation_.x;
-	pos.y = Pos_.translation_.y;*/
-
-	/*if (Pos_.translation_.x<=4500.0f)
-	{
-	    Pos_.translation_.x += 10.0f;
-	}
-	else
-	{
-	    Pos_.translation_.x -= 2.0f;
-	}
-
-	Pos_.UpdateMatrix();*/
 
 #pragma region プレイヤーと加速装置の当たり判定
 	// 加速装置
@@ -401,21 +318,12 @@ void FogStage::Update() {
 
 	UpdateGoalSkydomePopCommands();
 
-	/*guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});*/
-
 	UpdateGuardRailPopCommands();
 
 #pragma endregion
 
 	Time();
 	Goal();
-
 }
 
 #pragma region タイム
@@ -458,8 +366,6 @@ void FogStage::DrawTime() {
 
 #pragma endregion
 
-
-
 void FogStage::Draw() { // コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
@@ -470,7 +376,6 @@ void FogStage::Draw() { // コマンドリストの取得
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
-	
 	// BlendSprite_->Draw();
 
 	// スプライト描画後処理
@@ -507,9 +412,6 @@ void FogStage::Draw() { // コマンドリストの取得
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Draw(viewProjection_);
 	}
-	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
-	    guardRail_->Draw(viewProjection_);
-	}*/
 
 	Model::PostDraw();
 
@@ -520,15 +422,11 @@ void FogStage::Draw() { // コマンドリストの取得
 	/// ここに前景スプライトの描画処理を追加できる
 	///
 	///
-	//Sprite::BlendMode::kNone;
+	// Sprite::BlendMode::kNone;
 
 	fogsprite_->Draw();
 
-	
-	
-	
 	DrawTime();
-
 
 	/// </summary>
 
