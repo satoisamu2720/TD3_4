@@ -76,9 +76,8 @@ void SunnyStage::Initialize() {
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
 	//ガードレール
-	modelGuardRail_ = Model::CreateFromOBJ("guardRail", true);
 
-	LoadGuardRailPopData();
+	//LoadGuardRailPopData();
 
 	
 
@@ -152,7 +151,7 @@ void SunnyStage::Update() {
 			guardRail_->Update();
 		}
 
-		ground_->Update();
+		//ground_->Update();
 
 		if (input_->TriggerKey(DIK_SPACE)) {
 			Reset();

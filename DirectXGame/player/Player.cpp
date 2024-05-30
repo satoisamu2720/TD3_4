@@ -104,9 +104,16 @@ void Player::Update() {
 			 }
 		} 
 			
-
-			
-
+		if (worldTransform_.rotation_.y >= bestRotation) {
+			worldTransform_.rotation_.y = 0.0f;
+		}
+		if (worldTransform_.translation_.x >= 13) {
+			worldTransform_.translation_.x = 13;
+		}
+		if (worldTransform_.translation_.x <= -13) {
+			worldTransform_.translation_.x = -13;
+		}
+		
 		
 		//worldTransformFront_.rotation_.x += 0.01f;
 
