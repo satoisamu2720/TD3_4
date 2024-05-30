@@ -94,6 +94,8 @@ public:
 	void SetRand(float setRand) { setRand_ = setRand; }
 	void SetThunderHit(bool thunderHit) { thunderHit_ = thunderHit; }
 
+	void SetWind(bool setRand) { setRand_ = setRand; }
+
 	void SetPosition(float position_) { position.z = position_; }
 
 	void SetStart(bool start) { gameStart = start; }
@@ -131,8 +133,8 @@ private:
 	//雷雨
 	bool thunderHit_ = false;
 	float wind = 0.0f;
-	float windLeft =  0.05f;
-	float windRight = -0.05f;
+	float windLeft =  -0.05f;
+	float windRight = 0.05f;
 	float setRand_ = 1;
 	float thunderHitRootParameter_ = 0.0f;
 

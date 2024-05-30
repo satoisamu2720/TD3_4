@@ -74,6 +74,8 @@ void GameScene::Initialize() {
 
   #pragma endregion 
 
+
+
   #pragma region カメラ
 	//レールカメラ初期化
 	railCamera_ = std::make_unique<RailCamera>();

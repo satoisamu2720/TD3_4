@@ -26,6 +26,14 @@ void SelectScene::Initialize() {
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});
 
+
+	modelCloud_.reset(Model::CreateFromOBJ("cloud", true));
+
+	// 雲の生成と初期化
+	cloud_ = std::make_unique<Cloud>();
+	cloud_->Initialize(modelCloud_.get(), true);
+	selectSwitchTimer = 120;
+
 	// 背景スプライト
 	// titleTexHandle_ = TextureManager::Load("sky.png");
 	// Sprite_ =
@@ -39,7 +47,7 @@ void SelectScene::Initialize() {
 
 	snowModel_.reset(Model::CreateFromOBJ("Snowman", true));
 
-	fogModel_.reset(Model::CreateFromOBJ("cube", true));
+	fogModel_.reset(Model::CreateFromOBJ("fog", true));
 
 #pragma endregion
 
@@ -69,42 +77,87 @@ void SelectScene::Initialize() {
 
 	worldTransformSnow_.scale_ = {2, 2, 2};
 
-	worldTransformFog_.scale_ = {2, 2, 2};
+	worldTransformFog_.scale_ = {1, 1, 1};
 
+	
+	//サウンド
+
+	BGM_ = Audio::GetInstance()->LoadWave("Sound/BGM.mp3");
+	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");//雲
+	moveSound_ = Audio::GetInstance()->LoadWave("Sound/button06.mp3"); // ADボタン
+	decisionSound_ = Audio::GetInstance()->LoadWave("Sound/button01.mp3"); // 決定ボタン
+	summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3");     // 晴BGM
+	gameOverSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameOver.mp3");
+	gameClearSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameClear.mp3");
+
+	//Audio::GetInstance()->Audio::PauseWave(BGM_);
 }
 
 void SelectScene::Update() {
+
+	Audio::GetInstance()->Audio::ResumeWave(BGM_);
+
+	if (stageCount_ == 0 && summerON) {
+		//Audio::GetInstance()->Audio::PlayWave(summerSound_, true, 1.0f);
+		summerON = false;
+	}
+
+	if (selectSwitchFlag) {
+		cloud_->SetMoveFlag(true);
+		selectSwitchTimer--;
+	}
+	if (selectSwitchTimer <= 0) {
+		cloud_->SetMoveFlag(false);
+	}
+	
+	if (selectSwitchTimer == 119) {
+		
+		Audio::GetInstance()->Audio::PlayWave(cloudSound_, false, 1.0f);
+	}
+	cloud_->Update();
 
 	XINPUT_STATE joyState;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if (joyState.Gamepad.sThumbLX < -100 && leftFlag_ == false && rightFlag_ == false) {
-			stageCount_++;
+			stageCount_--;
 			leftFlag_ = true;
+			Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
 		}
 
 		if (joyState.Gamepad.sThumbLX > 100 && leftFlag_ == false && rightFlag_ == false) {
-			stageCount_--;
+			stageCount_++;
 			rightFlag_ = true;
+			Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
 		}
 	}
-	if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
-	    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false) {
-		stageCount_++;
-		leftFlag_ = true;
-	}
+		if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||
+		    input_->TriggerKey(DIK_A) && leftFlag_ == false && rightFlag_ == false ) {
+			stageCount_--;
+			leftFlag_ = true;
+		    setFlag_ = false;
+		    Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
+		}
 
-	if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
-	    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false) {
-		stageCount_--;
-		rightFlag_ = true;
-	}
+		if (input_->TriggerKey(DIK_RIGHT) && leftFlag_ == false && rightFlag_ == false ||
+		    input_->TriggerKey(DIK_D) && leftFlag_ == false && rightFlag_ == false ) {
+			stageCount_++;
+			rightFlag_ = true;
+		    setFlag_ = false;
+		    Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
+	    }
 
-	if (stageCount_ > 3) {
-		stageCount_ = 0;
-	} else if (stageCount_ < 0) {
-		stageCount_ = 3;
-	}
+		if (stageCount_ != 0) {
+		   // Audio::GetInstance()->Audio::PauseWave(summerSound_);
+	    } else {
+		    //Audio::GetInstance()->Audio::ResumeWave(summerSound_);
+	    }
+	   
+		if (stageCount_ > 3) {
+			stageCount_ = 0;
+		} else if (stageCount_ < 0) {
+			stageCount_ = 3;
+		}
 
 	if (leftFlag_ == true && rightFlag_ == false) {
 		target_++;
@@ -116,7 +169,7 @@ void SelectScene::Update() {
 
 		for (int i = 0; i < 4; i++) {
 			if (target_ != 90) {
-				degree[i] -= 1;
+				degree[i] += 1;
 				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
 			}
 		}
@@ -132,7 +185,7 @@ void SelectScene::Update() {
 
 		for (int i = 0; i < 4; i++) {
 			if (target_ != 90) {
-				degree[i] += 1;
+				degree[i] -= 1;
 				rotf[i] = DirectX::XMConvertToRadians(degree[i]);
 			}
 		}
@@ -140,6 +193,14 @@ void SelectScene::Update() {
 
 	if (input_->TriggerKey(DIK_SPACE) && leftFlag_ == false && rightFlag_ == false) {
 		sceneNo = stageNo_[stageCount_];
+		
+		Audio::GetInstance()->Audio::PlayWave(decisionSound_, false, 1.0f);
+		
+	}
+	if (input_->TriggerKey(DIK_H)) {
+		
+		 Audio::GetInstance()->Audio::PauseWave(summerSound_);
+
 	}
 	if (input_->TriggerKey(DIK_SPACE) || joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
 		Sleep(1 * 300);
@@ -159,6 +220,7 @@ void SelectScene::Update() {
 	worldTransformFog_.translation_.x = -cosf(rotf[FOG]) * 20.0f;
 	worldTransformFog_.translation_.z = -sinf(rotf[FOG]) * 20.0f;
 
+	
 #ifdef _DEBUG
 
 	ImGui::Begin("stageNum");
@@ -177,6 +239,8 @@ void SelectScene::Update() {
 
 	ImGui::Text("Speed%d", target_);
 
+	ImGui::Text("%d", summerSound_);
+		
 	ImGui::Text("degreeSunny %f", degree[SUNNY]);
 
 	ImGui::Text("degreeRain %f", degree[RAIN]);
@@ -184,8 +248,12 @@ void SelectScene::Update() {
 	ImGui::Text("degreeSnow %f", degree[SNOW]);
 
 	ImGui::Text("degreeFog %f", degree[FOG]);
+	
 
 	ImGui::SliderFloat3("3DPosition", position, -40.0f, 360.0f);
+
+	ImGui::Text("selectSwitchTimer %f", selectSwitchTimer);
+	ImGui::Checkbox("selectSwitchFlag", &selectSwitchFlag);
 
 	ImGui::End();
 
@@ -221,6 +289,7 @@ void SelectScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 
+
 	sunModel_->Draw(worldTransformSunny_, viewProjection_);
 
 	rainModel_->Draw(worldTransformRain_, viewProjection_);
@@ -229,6 +298,7 @@ void SelectScene::Draw() {
 
 	fogModel_->Draw(worldTransformFog_, viewProjection_);
 
+	cloud_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 
 	/// <summary>
@@ -252,3 +322,4 @@ void SelectScene::Draw() {
 
 #pragma endregion
 }
+

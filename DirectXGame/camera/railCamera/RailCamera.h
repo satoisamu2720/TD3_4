@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Audio.h"
 #include "ImGuiManager.h"
 #include "MT.h"
 #include "ViewProjection.h"
@@ -44,6 +45,7 @@ private:
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	Audio* audio_ = nullptr;
 
 	bool start = false;
 
@@ -53,6 +55,18 @@ private:
 	float isSpeedDownTime = 30.0f;
 	float isSpeedUpTime = 0.0f;
 
+	// 読み込みサウンド
+	uint32_t BGM_;
+	uint32_t cloudSound_;
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+	uint32_t summerSound_;
+	uint32_t CarSound_;
+
+	// サウンドフラグ
+	bool setFlag_ = false;
 	
 };
 

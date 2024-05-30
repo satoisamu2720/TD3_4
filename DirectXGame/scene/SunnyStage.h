@@ -114,8 +114,8 @@ public:
 	// ガードレールの発生コマンドの更新
 	void UpdateGuardRailPopCommands();
 
-	/// ガードレールの生成
-	void GuardRailGenerate(Vector3 position);
+	///　信号機の生成
+	void trafficLight(Vector3 position);
 #pragma endregion
 
 private:
@@ -187,11 +187,11 @@ private:
 	std::stringstream goalSkydomePopCommands;
 
 	//ガードレール
-	std::list<std::unique_ptr<GuardRail>> guardRails_;
+	std::list<std::unique_ptr<TrafficLight>> trafficLight_;
 	//発生コマンド
-	std::stringstream guardRailPopCommands;
+	std::stringstream trafficLightPopCommands;
 
-
+	
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
@@ -272,4 +272,17 @@ private:
 	//ゴールフラグ
 	bool goalTimerFlag = false;
 	float goalTimer = 0;
+
+	// 読み込みサウンド
+	uint32_t BGM_;
+	uint32_t cloudSound_;
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+	uint32_t summerSound_;
+	uint32_t CarSound_;
+
+	// サウンドフラグ
+	bool setFlag_ = false;
 };

@@ -42,7 +42,7 @@ void RainStage::Initialize() {
 #pragma region 障害物
 
 	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("woodenBox", true));
+	BoxModel_ = (Model::CreateFromOBJ("colorCorn", true));
 	// ボックスのCSVファイル読み込み
 	LoadBoxPopData();
 
@@ -67,7 +67,7 @@ void RainStage::Initialize() {
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
 	//modelRaindrop_= Model::CreateFromOBJ()
 
-	//LoadMiddleSkydomePopData();
+	LoadMiddleSkydomePopData();
 
 	LoadStartSkydomePopData();
 
@@ -79,12 +79,14 @@ void RainStage::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
-	// ガードレール
-	modelGuardRail_ = Model::CreateFromOBJ("sinngou", true);
+	// 信号機
+	modelTrafficLight_ = Model::CreateFromOBJ("sinngou", true);
 
 	LoadGuardRailPopData();
 
 #pragma endregion
+
+
 
 #pragma region カメラ
 	// レールカメラ初期化
@@ -94,6 +96,20 @@ void RainStage::Initialize() {
 	// 追従対象をプレイヤーに
 	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->SetViewProjection(&railCamera_->GetViewProjection());
+
+#pragma endregion
+
+#pragma region 雨
+
+	
+	// 雨モデル
+
+	modelRaindrop_ = Model::CreateFromOBJ("raindrop", true);
+
+	// 雨初期化
+	rain_ = std::make_unique<Rain>();
+	rain_->Initialize(modelRaindrop_);
+	rain_->SetTarget(&railCamera_->GetWorldTransform());
 
 #pragma endregion
 
@@ -115,6 +131,10 @@ void RainStage::Update() {
 		player_->SetStart(start);
 		player_->SetWeather(weather);
 		
+		player_->SetWind(wind);
+
+		rain_->SetWindFlag(wind);
+
 	    if (start) {
 		player_->ThunderstormUpdate();
 	    }
@@ -136,11 +156,13 @@ void RainStage::Update() {
 	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 		goalSkydome_->Update();
 	}
-	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+	for (const std::unique_ptr<TrafficLight>& guardRail_ : trafficLight_) {
 		guardRail_->Update();
 	}
 
 	ground_->Update();
+
+	rain_->Update();
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		Reset();
@@ -179,6 +201,11 @@ void RainStage::Update() {
 		timer_->SetTime(0, 30);
 		railCamera_->SetPos({0, 4, 0});
 	}
+
+	ImGui::Begin("Wind");
+	
+	ImGui::Checkbox("wind", &wind);
+	ImGui::End();
 
 	ImGui::Begin("weather");
 	ImGui::InputFloat("weather", &weather, 1.0f);
@@ -380,7 +407,7 @@ void RainStage::Update() {
 
 	UpdateGoalSkydomePopCommands();
 
-	guardRails_.remove_if([](std::unique_ptr<GuardRail>& item) {
+	trafficLight_.remove_if([](std::unique_ptr<TrafficLight>& item) {
 		if (item->IsDead()) {
 			item.release();
 			return true;
@@ -475,6 +502,8 @@ void RainStage::Draw() { // コマンドリストの取得
 	}
 	// ground_->Draw(viewProjection_);
 
+	rain_->Draw(viewProjection_);
+
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Draw(viewProjection_);
 	}
@@ -483,7 +512,7 @@ void RainStage::Draw() { // コマンドリストの取得
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Draw(viewProjection_);
 	}
-	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
+	for (const std::unique_ptr<TrafficLight>& guardRail_ : trafficLight_) {
 	    guardRail_->Draw(viewProjection_);
 	}
 
@@ -516,7 +545,7 @@ void RainStage::Time() {
 void RainStage::LoadBoxPopData() {
 	boxPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/BoxPop.csv");
+	file.open("Resources/CSV/RainBoxPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -578,7 +607,7 @@ void RainStage::BoxGenerate(Vector3 position) {
 void RainStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/AcceleratorPop.csv");
+	file.open("Resources/CSV/RainAcceleratorPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -817,17 +846,17 @@ void RainStage::GoalSkydomeGenerate(Vector3 position) {
 
 #pragma endregion
 
-#pragma region ガードレール CSV
+#pragma region 信号機 CSV
 
 void RainStage::LoadGuardRailPopData() {
 
-	guardRailPopCommands.clear();
+	TrafficLightPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/GuardRailPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
-	guardRailPopCommands << file.rdbuf();
+	TrafficLightPopCommands << file.rdbuf();
 
 	// ファイルを閉じる
 	file.close();
@@ -837,7 +866,7 @@ void RainStage::UpdateGuardRailPopCommands() {
 	std::string line;
 
 	// コマンド実行ループ
-	while (getline(guardRailPopCommands, line)) {
+	while (getline(TrafficLightPopCommands, line)) {
 		std::istringstream line_stream(line);
 
 		std::string word;
@@ -865,16 +894,16 @@ void RainStage::UpdateGuardRailPopCommands() {
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			GuardRailGenerate({x, y, z});
+			trafficLight({x, y, z});
 		}
 	}
 }
 
-void RainStage::GuardRailGenerate(Vector3 position) {
+void RainStage::trafficLight(Vector3 position) {
 	// アイテムの生成と初期化処理
-	GuardRail* guardRail_ = new GuardRail();
-	guardRail_->Initialize(modelGuardRail_, position);
-	guardRails_.push_back(static_cast<std::unique_ptr<GuardRail>>(guardRail_));
+	TrafficLight* trafficLight = new TrafficLight();
+	trafficLight->Initialize(modelTrafficLight_, position);
+	trafficLight_.push_back(static_cast<std::unique_ptr<TrafficLight>>(trafficLight));
 }
 
 #pragma endregion
@@ -906,7 +935,7 @@ void RainStage::Goal() {
 		startSkydomes_.clear();
 		middleSkydomes_.clear();
 		goalSkydomes_.clear();
-		guardRails_.clear();
+		trafficLight_.clear();
 		goalTimer = 0;
 		goalTimerFlag = false;
 

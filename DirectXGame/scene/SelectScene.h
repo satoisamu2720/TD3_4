@@ -9,6 +9,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "stage/skydome/Skydome.h"
+#include "stage/cloud/Cloud.h"
 #include <memory>
 
 enum Weather {
@@ -27,6 +28,7 @@ public:
 	void Update() override;
 
 	void Draw() override;
+
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;
@@ -61,12 +63,21 @@ private:
 	// スカイドーム
 	std::unique_ptr<Skydome> skydome_;
 
+	// 雲の3Dモデル
+	std::unique_ptr<Model> modelCloud_;
+
+	// 雲
+	std::unique_ptr<Cloud> cloud_;
+
 	// 　矢印を押したときの番号
-	int stageCount_ = 2;
+	int stageCount_ = 0;
 
 	// 左右のキーを押したときのフラグ
 	bool leftFlag_ = false;
 	bool rightFlag_ = false;
+
+	bool selectSwitchFlag = true;
+	float selectSwitchTimer = 120;
 
 	// 回転の処理
 	float degree[4];
@@ -80,4 +91,19 @@ private:
 
 	// ステージナンバー
 	int stageNo_[4] = {SUNNYSTAGE, RAINSTAGE, SNOWSTAGE, FOGSTAGE};
+
+	
+	// 読み込みサウンド
+	uint32_t BGM_;
+	uint32_t cloudSound_;
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+	uint32_t summerSound_;
+
+	//サウンドフラグ
+	bool setFlag_ = false;
+	bool summerON = true;
+	
 };

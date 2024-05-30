@@ -24,6 +24,8 @@
 #include <cassert>
 #include <fstream>
 #include <memory>
+#include "rain/Rain.h"
+
 
 #include "CircleShadow.h"
 #include "DirectionalLight.h"
@@ -110,7 +112,7 @@ public:
 	void UpdateGuardRailPopCommands();
 
 	/// ガードレールの生成
-	void GuardRailGenerate(Vector3 position);
+	void trafficLight(Vector3 position);
 #pragma endregion
 
 private:
@@ -181,10 +183,10 @@ private:
 	// ステージの発生コマンド
 	std::stringstream goalSkydomePopCommands;
 
-	// ガードレール
-	std::list<std::unique_ptr<GuardRail>> guardRails_;
+	// 信号機
+	std::list<std::unique_ptr<TrafficLight>> trafficLight_;
 	// 発生コマンド
-	std::stringstream guardRailPopCommands;
+	std::stringstream TrafficLightPopCommands;
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
@@ -192,13 +194,17 @@ private:
 	Model* modelGoalSkydome_ = nullptr;
 	Model* modelRaindrop_ = nullptr;
 
-	Model* modelGuardRail_ = nullptr;
+	Model* modelTrafficLight_ = nullptr;
 
 	std::unique_ptr<Ground> ground_;
 	Model* modelGround_ = nullptr;
 
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
+
+	//雨
+	 std::unique_ptr<Rain> rain_;
+
 
 	
 	// 確認用あたり判定
@@ -246,6 +252,9 @@ private:
 
 	// 天候
 	float weather = 1;
+
+	//風
+	bool wind = false;
 
 		// ゲームスタート
 	bool start;

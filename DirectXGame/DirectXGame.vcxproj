@@ -113,11 +113,13 @@
     <ClCompile Include="DownPanel.cpp" />
     <ClCompile Include="Easings.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
+    <ClCompile Include="FogStage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />
     <ClCompile Include="Obstacle\box\Box.cpp" />
     <ClCompile Include="Obstacle\garbageCan\GarbageCan.cpp" />
     <ClCompile Include="player\Player.cpp" />
+    <ClCompile Include="rain\Rain.cpp" />
     <ClCompile Include="scene\ClearScene.cpp" />
     <ClCompile Include="scene\GameManager.cpp" />
     <ClCompile Include="scene\GameOverScene.cpp" />
@@ -129,6 +131,7 @@
     <ClCompile Include="scene\SunnyStage.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
     <ClCompile Include="SnowPool.cpp" />
+    <ClCompile Include="stage\cloud\Cloud.cpp" />
     <ClCompile Include="SnowStage.cpp" />
     <ClCompile Include="stage\ground\Ground.cpp" />
     <ClCompile Include="stage\guardRail\GuardRail.cpp" />
@@ -174,6 +177,7 @@
     <ClInclude Include="Obstacle\garbageCan\GarbageCan.h" />
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="RandomEngine.h" />
+    <ClInclude Include="rain\Rain.h" />
     <ClInclude Include="scene\ClearScene.h" />
     <ClInclude Include="scene\GameManager.h" />
     <ClInclude Include="scene\GameOverScene.h" />
@@ -184,6 +188,7 @@
     <ClInclude Include="scene\SelectScene.h" />
     <ClInclude Include="scene\SunnyStage.h" />
     <ClInclude Include="scene\TitleScene.h" />
+    <ClInclude Include="stage\cloud\Cloud.h" />
     <ClInclude Include="SnowPool.h" />
     <ClInclude Include="SnowStage.h" />
     <ClInclude Include="stage\ground\Ground.h" />
