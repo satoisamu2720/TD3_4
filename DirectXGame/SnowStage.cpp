@@ -726,7 +726,7 @@ void SnowStage::BoxGenerate(Vector3 position) { // アイテムの生成と初�
 void SnowStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/AcceleratorPop.csv");
+	file.open("Resources/CSV/snowAcceleratorPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
