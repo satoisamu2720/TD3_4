@@ -22,8 +22,10 @@ void TitleScene::Initialize() {
 
 	worldTransformTitle_.Initialize();
 
-	worldTransformCredit_[0].Initialize();
+	worldTransformA_.Initialize();
+
 	worldTransformCredit_[1].Initialize();
+	worldTransformCredit_[0].Initialize();
 
 	worldTransformCredit_[0].translation_ = {0, -18, 0};
 	worldTransformCredit_[1].translation_ = {15, -18, 0};
@@ -42,6 +44,8 @@ void TitleScene::Initialize() {
 	
 	modelCredit_[0].reset(Model::CreateFromOBJ("credit", true));
 	modelCredit_[1].reset(Model::CreateFromOBJ("credit2", true));
+
+	modelAButton_.reset(Model::CreateFromOBJ("AButton", true));
 
 	// 雲の生成と初期化
 	cloud_ = std::make_unique<Cloud>();
@@ -97,6 +101,7 @@ void TitleScene::Update() {
 	worldTransformCredit_[0].UpdateMatrix();
 	worldTransformCredit_[1].UpdateMatrix();
 	worldTransformTitle_.UpdateMatrix();
+	worldTransformA_.UpdateMatrix();
 }
 
 void TitleScene::Draw() {
@@ -131,6 +136,7 @@ void TitleScene::Draw() {
 	modelTitle_->Draw(worldTransformTitle_, viewProjection_);
 	modelCredit_[0]->Draw(worldTransformCredit_[0], viewProjection_);
 	modelCredit_[1]->Draw(worldTransformCredit_[1], viewProjection_);
+	modelAButton_->Draw()
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

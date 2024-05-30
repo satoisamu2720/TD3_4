@@ -37,6 +37,8 @@ private:
 
 	WorldTransform worldTransformCredit_[2];
 
+	WorldTransform worldTransformA_;
+
 	ViewProjection viewProjection_;
 
 	// Skydomeの3Dモデル
@@ -54,6 +56,10 @@ private:
 	std::unique_ptr<Model> modelTitle_;
 
 	std::unique_ptr<Model> modelCredit_[2];
+	
+	std::unique_ptr<Model> modelAButton_;
+
+
 	//// サウンド
 	// uint32_t bgmHandle_;
 	// uint32_t playBGM_;
