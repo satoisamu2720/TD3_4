@@ -8,6 +8,13 @@ void SnowStage::Initialize() {
 
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
+	snowTexture_ = TextureManager::Load("White.png");
+	snowSprite_ = Sprite::Create(snowTexture_, {0, 0});
+
+	snowColor_.w = 1.0f;
+
+	
+
 #pragma region タイム
 
 	timer_ = std::make_unique<Timer>();
@@ -113,6 +120,8 @@ void SnowStage::Initialize() {
 }
 
 void SnowStage::Update() {
+
+	snowSprite_->SetColor(snowColor_);
 
 #pragma region 雪の更新処理
 
@@ -470,6 +479,8 @@ void SnowStage::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
+	
+
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
@@ -528,6 +539,8 @@ void SnowStage::Draw() {
 
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
+
+	snowSprite_->Draw();
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる

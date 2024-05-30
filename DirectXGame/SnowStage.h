@@ -159,9 +159,9 @@ private:
 
 	// 雪の画像
 	uint32_t snowTexture_;
-	uint32_t BlendTexture_;
-	Sprite* snowsprite_;
-	Sprite* BlendSprite_;
+	Sprite* snowSprite_;
+	Vector4 snowColor_ = {0, 0, 0, 0.7f};
+	
 
 	// ボックス
 	std::list<std::unique_ptr<Box>> boxs_;
