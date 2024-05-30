@@ -20,6 +20,9 @@ public:
 
 	void Draw() override;
 
+	
+	
+
 
 private:
 	DirectXCommon* dxCommon_ = nullptr;
@@ -31,6 +34,8 @@ private:
 	WorldTransform worldTransformSky_;
 
 	WorldTransform worldTransformTitle_;
+
+	WorldTransform worldTransformCredit_[2];
 
 	ViewProjection viewProjection_;
 
@@ -48,6 +53,7 @@ private:
 
 	std::unique_ptr<Model> modelTitle_;
 
+	std::unique_ptr<Model> modelCredit_[2];
 	//// サウンド
 	// uint32_t bgmHandle_;
 	// uint32_t playBGM_;
@@ -66,8 +72,13 @@ private:
 	
 	//サウンド再生フラグ
 
-	//ボタンサウンド
+	// 読み込みサウンド
+	uint32_t BGM_;
 	uint32_t cloudSound_;
-	
-
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+	uint32_t summerSound_;
+	bool on = true;
 };

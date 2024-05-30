@@ -191,7 +191,7 @@ private:
 	//発生コマンド
 	std::stringstream trafficLightPopCommands;
 
-
+	
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
@@ -272,4 +272,17 @@ private:
 	//ゴールフラグ
 	bool goalTimerFlag = false;
 	float goalTimer = 0;
+
+	// 読み込みサウンド
+	uint32_t BGM_;
+	uint32_t cloudSound_;
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+	uint32_t summerSound_;
+	uint32_t CarSound_;
+
+	// サウンドフラグ
+	bool setFlag_ = false;
 };

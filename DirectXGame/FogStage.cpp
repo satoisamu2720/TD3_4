@@ -134,8 +134,7 @@ void FogStage::Update() {
 
 #pragma region 更新処理
 
-	timer_->Update();
-
+	
 	player_->Update();
 
 	/*if (fogColor.w >= 1.0f)

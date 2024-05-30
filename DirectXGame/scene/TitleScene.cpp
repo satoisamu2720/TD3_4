@@ -5,7 +5,16 @@ void TitleScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");
+	// サウンド
+
+	BGM_ = Audio::GetInstance()->LoadWave("Sound/BGM.mp3");
+	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");       // 雲
+	moveSound_ = Audio::GetInstance()->LoadWave("Sound/button06.mp3");     // ADボタン
+	decisionSound_ = Audio::GetInstance()->LoadWave("Sound/button01.mp3"); // 決定ボタン
+	summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3");     // 晴BGM
+	gameOverSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameOver.mp3");
+	gameClearSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameClear.mp3");
+
 
 	worldTransform_.Initialize();
 
@@ -13,7 +22,13 @@ void TitleScene::Initialize() {
 
 	worldTransformTitle_.Initialize();
 
-	worldTransformTitle_.scale_ = {10, 10, 10};
+	worldTransformCredit_[0].Initialize();
+	worldTransformCredit_[1].Initialize();
+
+	worldTransformCredit_[0].translation_ = {0, -18, 0};
+	worldTransformCredit_[1].translation_ = {15, -18, 0};
+
+	worldTransformTitle_.scale_ = {2, 2, 2};
 
 	modelSkydome_.reset(Model::CreateFromOBJ("Sky", true));
 
@@ -25,6 +40,8 @@ void TitleScene::Initialize() {
 
 	modelTitle_.reset(Model::CreateFromOBJ("title", true));
 	
+	modelCredit_[0].reset(Model::CreateFromOBJ("credit", true));
+	modelCredit_[1].reset(Model::CreateFromOBJ("credit2", true));
 
 	// 雲の生成と初期化
 	cloud_ = std::make_unique<Cloud>();
@@ -34,10 +51,17 @@ void TitleScene::Initialize() {
 	titleTexHandle_ = TextureManager::Load("title.png");
 	titleSprite_ =
 	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
+
+	
 }
 
 void TitleScene::Update() {
-	
+	if (on) {
+	Audio::GetInstance()->Audio::PlayWave(BGM_, true, 1.0f);
+		on = false;
+	} else {
+		
+	}
 
 	// ゲームパッドの状態を得る変数
 	XINPUT_STATE joyState;
@@ -45,6 +69,7 @@ void TitleScene::Update() {
 		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
 			Sleep(1 * 300);
 			sceneNo = SELECT;
+			
 		}
 	}
 
@@ -52,6 +77,7 @@ void TitleScene::Update() {
 		cloud_->SetMoveFlag(true);
 		selectSwitchFlag = true;
 		Audio::GetInstance()->Audio::PlayWave(cloudSound_, false, 1.0f);
+		
 	} 
 	if (selectSwitchFlag) {
 		selectSwitchTimer--;
@@ -64,6 +90,10 @@ void TitleScene::Update() {
 		sceneNo = SELECT;
 	}
 	cloud_->Update();
+
+	worldTransformCredit_[0].UpdateMatrix();
+	worldTransformCredit_[1].UpdateMatrix();
+	worldTransformTitle_.UpdateMatrix();
 }
 
 void TitleScene::Draw() {
@@ -96,6 +126,8 @@ void TitleScene::Draw() {
 	cloud_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 	modelTitle_->Draw(worldTransformTitle_, viewProjection_);
+	modelCredit_[0]->Draw(worldTransformCredit_[0], viewProjection_);
+	modelCredit_[1]->Draw(worldTransformCredit_[1], viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

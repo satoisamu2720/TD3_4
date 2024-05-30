@@ -36,4 +36,12 @@ private:
 	uint32_t texHandle_ = 0;
 	Sprite* sprite_ = nullptr;
 
+	// 読み込みサウンド
+	uint32_t BGM_;
+	uint32_t cloudSound_;
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+	uint32_t summerSound_;
 };

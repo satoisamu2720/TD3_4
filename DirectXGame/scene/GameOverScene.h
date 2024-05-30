@@ -8,6 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "IScene.h"
+#include "TitleScene.h"
 
 class GameOverScene : public IScene {
 
@@ -18,10 +19,14 @@ public:
 
 	void Draw() override;
 
+	
+
 private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+
+	TitleScene* title_ = nullptr;
 
 	WorldTransform worldTransform_;
 
@@ -34,4 +39,16 @@ private:
 
 	uint32_t texHandle_ = 0;
 	Sprite* sprite_ = nullptr;
+
+
+	// 読み込みサウンド
+	uint32_t BGM_;
+	uint32_t cloudSound_;
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
+	uint32_t decisionSound_;
+	uint32_t moveSound_;
+	uint32_t summerSound_;
+	uint32_t CarSound_;
+
 };

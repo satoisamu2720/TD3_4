@@ -94,11 +94,16 @@ private:
 
 	
 	// 読み込みサウンド
+	uint32_t BGM_;
 	uint32_t cloudSound_;
+	uint32_t gameOverSound_;
+	uint32_t gameClearSound_;
 	uint32_t decisionSound_;
 	uint32_t moveSound_;
+	uint32_t summerSound_;
 
 	//サウンドフラグ
 	bool setFlag_ = false;
+	bool summerON = true;
 	
 };

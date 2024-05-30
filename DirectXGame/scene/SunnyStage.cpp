@@ -98,6 +98,27 @@ void SunnyStage::Initialize() {
 	viewProjection_.farZ = 200.0f;
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+
+	
+
+	
+	//summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3"); // 晴BGM
+
+	//Audio::GetInstance()->Audio::PlayWave(summerSound_, true, 0.5f);
+	//  サウンド
+
+	BGM_ = Audio::GetInstance()->LoadWave("Sound/BGM.mp3");
+	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");       // 雲
+	moveSound_ = Audio::GetInstance()->LoadWave("Sound/button06.mp3");     // ADボタン
+	decisionSound_ = Audio::GetInstance()->LoadWave("Sound/button01.mp3"); // 決定ボタン
+	summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3");     // 晴BGM
+	gameOverSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameOver.mp3");
+	gameClearSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameClear.mp3");
+	CarSound_ = Audio::GetInstance()->LoadWave("Sound/Car.mp3"); // 車走行
+
+
+
+	Audio::GetInstance()->Audio::PauseWave(summerSound_);
 }
 
 void SunnyStage::Update() {
@@ -137,10 +158,16 @@ void SunnyStage::Update() {
 			Reset();
 		}
 
+		if (timer_->GetStartTime() == 3) {
+			
+	    }
+		
+
 		if (timer_->GetStartTime() <= 0 && start == false) {
 			start = true;
 			railCamera_->SetStart(start);
-			timer_->SetTimerFlag(true);
+		    timer_->SetTimerFlag(true);
+		    //Audio::GetInstance()->Audio::PlayWave(CarSound_, true, 1.0f);
 		}
 
 #pragma endregion
@@ -868,21 +895,28 @@ void SunnyStage::Goal() {
 		trafficLight_.clear();
 		goalTimer = 0;
 		goalTimerFlag = false;
+		start = false;
 
+		railCamera_->SetStart(false);
 
 		if (timer_->GetTimeSecond() > 0) {
+
+			//Audio::GetInstance()->Audio::StopWave(summerSound_);
+			//Audio::GetInstance()->Audio::StopWave(CarSound_);
+			
 			timer_->SetTime(0, 30); 
 			timer_->SetTimerFlag(false);
 			railCamera_->SetPos({0, 4, 0});
-			railCamera_->SetStart(false);
-			start = false;
+			
 			sceneNo = CLEAR;
 		} else {
+			//Audio::GetInstance()->Audio::StopWave(summerSound_);
+			//Audio::GetInstance()->Audio::StopWave(CarSound_);
+
 			timer_->SetTime(0, 30);
 			timer_->SetTimerFlag(false);
 			railCamera_->SetPos({0, 4, 0});
-			railCamera_->SetStart(false);
-			start = false;
+			
 			sceneNo = END;
 		}
 	}
