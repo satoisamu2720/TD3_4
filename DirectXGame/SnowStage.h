@@ -165,7 +165,7 @@ private:
 
 	Model* downPanelModel_ = nullptr;
 
-	std::list<std::unique_ptr<DownPanel>> downPanel_;
+	std::list<std::unique_ptr<DownPanel>> downPanels_;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;

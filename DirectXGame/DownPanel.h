@@ -4,7 +4,15 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
+#include "ImGuiManager.h"
+#include "Model.h"
+#include "Input.h"
+#include "math.h"
+#include "WorldTransform.h"
+#include "ViewProjection.h"
 #include <cassert>
+#include <list>
+#include <stdio.h>
 #include <optional>
 #include "MT.h"
 class DownPanel {

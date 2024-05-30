@@ -6,6 +6,7 @@ void DownPanel::Initialize(Model* model, Vector3 position) {
 	model_ = model;
 
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = position;
 
 }
 

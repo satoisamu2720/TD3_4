@@ -48,7 +48,7 @@ void SnowStage::Initialize() {
 	LoadBoxPopData();
 
 	// 加速装置モデル読み込み
-	acceleratorModel_ = (Model::CreateFromOBJ("snowPool", true));
+	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));
 	// 加速装置のCSVファイル読み込み
 	LoadAcceleratorPopData();
 
@@ -60,12 +60,15 @@ void SnowStage::Initialize() {
 	modelStartSkydome_ = Model::CreateFromOBJ("StartSkydome", true);
 	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
 	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
+	downPanelModel_ = Model::CreateFromOBJ("snowPool", true);
 
 	LoadMiddleSkydomePopData();
 
 	LoadStartSkydomePopData();
 
 	LoadGoalSkydomePopData();
+
+	LoadDownPanelPopData();
 
 	// ステージ地面モデル読み込み
 	modelGround_ = Model::CreateFromOBJ("ground", true);
@@ -164,6 +167,11 @@ void SnowStage::Update() {
 	}
 	for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 		guardRail_->Update();
+	}
+
+	for (const std::unique_ptr<DownPanel>& downPanel_ : downPanels_) {
+		downPanel_->Update();
+
 	}
 
 	ground_->Update();
@@ -293,6 +301,9 @@ void SnowStage::Update() {
 
 	// 加速装置のCSVファイルの更新処理
 	UpdateAcceleratorPopCommands();
+
+	//　ダウンパネルのCSVファイルの更新処理
+	UpdateDownPanelPopCommands();
 
 	// デスフラグの立った敵を削除
 	middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
@@ -431,6 +442,10 @@ void SnowStage::Draw() {
 
 	for (int i = 0; i < 15; i++) {
 		modelSnow_->Draw(worldTransformSnow_[i], viewProjection_);
+	}
+
+	for (const std::unique_ptr<DownPanel>& downPanel_ : downPanels_) {
+		downPanel_->Draw(viewProjection_);
 	}
 
 	// 加速装置
@@ -685,11 +700,11 @@ void SnowStage::AcceleratorGenerate(Vector3 position) {
 void SnowStage::LoadDownPanelPopData() {
 	downPanelPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/DownPnalPop.csv");
+	file.open("Resources/CSV/DownPanelPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
-	acceleratorPopCommands << file.rdbuf();
+	downPanelPopCommands << file.rdbuf();
 
 	// ファイルを閉じる
 	file.close();
@@ -727,7 +742,7 @@ void SnowStage::UpdateDownPanelPopCommands() {
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			AcceleratorGenerate({x, y, z});
+			DownPanelGenerate({x, y, z});
 		}
 	}
 }
@@ -736,8 +751,8 @@ void SnowStage::DownPanelGenerate(Vector3 position) {
 	//アイテムの生成と初期化処理 
 	DownPanel* downPanel = new DownPanel();
 	downPanel->Initialize(downPanelModel_, position);
-	startSkydomes_.push_back(
-	    static_cast<std::unique_ptr<DownPanel>>(downPanel_));
+	downPanels_.push_back(
+	    static_cast<std::unique_ptr<DownPanel>>(downPanel));
 }
 
 void SnowStage::LoadStartSkydomePopData() {
