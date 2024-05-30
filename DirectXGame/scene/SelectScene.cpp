@@ -122,11 +122,13 @@ void SelectScene::Update() {
 		if (joyState.Gamepad.sThumbLX < -100 && leftFlag_ == false && rightFlag_ == false) {
 			stageCount_--;
 			leftFlag_ = true;
+			Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
 		}
 
 		if (joyState.Gamepad.sThumbLX > 100 && leftFlag_ == false && rightFlag_ == false) {
 			stageCount_++;
 			rightFlag_ = true;
+			Audio::GetInstance()->Audio::PlayWave(moveSound_, false, 1.0f);
 		}
 	}
 		if (input_->TriggerKey(DIK_LEFT) && leftFlag_ == false && rightFlag_ == false ||

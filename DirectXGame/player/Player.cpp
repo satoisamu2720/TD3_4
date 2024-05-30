@@ -74,7 +74,7 @@ void Player::Update() {
 				if (notRotate == false) {
 					LeftMove();
 				}
-			} else if ( joyState.Gamepad.sThumbLX > 100) {
+			}else if ( joyState.Gamepad.sThumbLX > 100) {
 				move_.x += kCharacterSpeed;
 				if (notRotate == false) {
 					RightMove();
@@ -86,29 +86,28 @@ void Player::Update() {
 				worldTransform_.rotation_.y -= 0.05f;
 				worldTransformFront_.rotation_.y -= 0.025f;
 			}
+			
 		} 
-			// 押した方向で移動ベクトルを変更（左右）
-			if (input_->PushKey(DIK_A)) {
-				move_.x -= kCharacterSpeed;
-				if (notRotate == false) {
-					LeftMove();
-				}
-			} else if (input_->PushKey(DIK_D)) {
-				move_.x += kCharacterSpeed;
-				if (notRotate == false) {
-					RightMove();
-				}
-			} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
-				worldTransform_.rotation_.y += 0.05f;
-				worldTransformFront_.rotation_.y += 0.025f;
-			} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
-				worldTransform_.rotation_.y -= 0.05f;
-				worldTransformFront_.rotation_.y -= 0.025f;
-			}
+		
 
-		if (worldTransform_.rotation_.y >= bestRotation) {
-			worldTransform_.rotation_.y = 0.0f;
+		// 押した方向で移動ベクトルを変更（左右）
+		if (input_->PushKey(DIK_A)) {
+			    move_.x -= kCharacterSpeed;
+			    if (notRotate == false) {
+				LeftMove();
+			    }
 		}
+		else if (input_->PushKey(DIK_D)) {
+			    move_.x += kCharacterSpeed;
+			    if (notRotate == false) {
+				RightMove();
+			 }
+		} 
+			
+
+			
+
+		
 		//worldTransformFront_.rotation_.x += 0.01f;
 
 #ifdef _DEBUG
