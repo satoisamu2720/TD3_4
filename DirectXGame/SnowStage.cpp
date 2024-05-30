@@ -8,10 +8,12 @@ void SnowStage::Initialize() {
 
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
-	snowTexture_ = TextureManager::Load("White.png");
-	snowSprite_ = Sprite::Create(snowTexture_, {0, 0});
+	snowColor_ = {1.0f, 1.0f, 1.0f, 0.5f};
 
-	snowColor_.w = 1.0f;
+	snowTexture_ = TextureManager::Load("White.png");
+	snowSprite_ = Sprite::Create(snowTexture_, {0, 0}, {snowColor_.x,snowColor_.y,snowColor_.z,snowColor_.w});
+
+
 
 	
 
@@ -64,9 +66,9 @@ void SnowStage::Initialize() {
 #pragma region ステージ
 	// ステージ外モデル読み込み
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
-	modelStartSkydome_ = Model::CreateFromOBJ("StartSkydome", true);
-	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
-	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
+	modelStartSkydome_ = Model::CreateFromOBJ("snowStartlSkydome", true);
+	modelMiddleSkydome_ = Model::CreateFromOBJ("snowMiddleSkydome", true);
+	modelGoalSkydome_ = Model::CreateFromOBJ("snowGoalSkydome", true);
 	downPanelModel_ = Model::CreateFromOBJ("snowPool", true);
 	snowPoolModel_ = Model::CreateFromOBJ("snowPool", true);
 
@@ -87,7 +89,7 @@ void SnowStage::Initialize() {
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
 	// ガードレール
-	modelGuardRail_ = Model::CreateFromOBJ("guardRail", true);
+	//modelGuardRail_ = Model::CreateFromOBJ("guardRail", true);
 
 	LoadGuardRailPopData();
 
@@ -418,7 +420,7 @@ void SnowStage::Update() {
 		return false;
 	});
 
-	UpdateGuardRailPopCommands();
+	//UpdateGuardRailPopCommands();
 
 #pragma endregion
 
@@ -540,13 +542,13 @@ void SnowStage::Draw() {
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	snowSprite_->Draw();
+
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	DrawTime();
 	/// </summary>
-
+	snowSprite_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 }
