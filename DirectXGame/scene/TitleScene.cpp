@@ -24,6 +24,10 @@ void TitleScene::Initialize() {
 
 	worldTransformA_.Initialize();
 
+	worldTransformA_.translation_ = {0, -10, 0};
+
+	worldTransformA_.scale_ = {4, 4, 4};
+
 	worldTransformCredit_[1].Initialize();
 	worldTransformCredit_[0].Initialize();
 
@@ -136,7 +140,7 @@ void TitleScene::Draw() {
 	modelTitle_->Draw(worldTransformTitle_, viewProjection_);
 	modelCredit_[0]->Draw(worldTransformCredit_[0], viewProjection_);
 	modelCredit_[1]->Draw(worldTransformCredit_[1], viewProjection_);
-	modelAButton_->Draw()
+	modelAButton_->Draw(worldTransformA_, viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
