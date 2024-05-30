@@ -12,6 +12,7 @@
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	WinApp* win = nullptr;
+	
 	DirectXCommon* dxCommon = nullptr;
 	// 汎用機能
 	Input* input = nullptr;
@@ -21,7 +22,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	GameScene* gameScene = nullptr;
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow();
+	win->CreateGameWindow(L"3141_天機");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
