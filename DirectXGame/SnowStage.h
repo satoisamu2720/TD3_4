@@ -20,6 +20,7 @@
 #include "stage/guardRail/GuardRail.h"
 #include "stage/skydome/Skydome.h"
 #include "timer.h"
+#include "DownPanel.h"
 #include <cassert>
 #include <fstream>
 #include <memory>
@@ -159,9 +160,12 @@ private:
 	// モデル
 	Model* acceleratorModel_ = nullptr;
 
-	std::stringstream DownPanelPopCommands;
+	// ダウンパネル
+	std::stringstream downPanelPopCommands;
 
-	Model* DownPanel_ = nullptr;
+	Model* downPanelModel_ = nullptr;
+
+	std::list<std::unique_ptr<DownPanel>> downPanel_;
 
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;

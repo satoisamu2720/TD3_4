@@ -683,9 +683,9 @@ void SnowStage::AcceleratorGenerate(Vector3 position) {
 }
 
 void SnowStage::LoadDownPanelPopData() {
-	DownPanelPopCommands.clear();
+	downPanelPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/AcceleratorPop.csv");
+	file.open("Resources/CSV/DownPnalPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -693,6 +693,51 @@ void SnowStage::LoadDownPanelPopData() {
 
 	// ファイルを閉じる
 	file.close();
+}
+
+void SnowStage::UpdateDownPanelPopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(downPanelPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			AcceleratorGenerate({x, y, z});
+		}
+	}
+}
+
+void SnowStage::DownPanelGenerate(Vector3 position) {
+	//アイテムの生成と初期化処理 
+	DownPanel* downPanel = new DownPanel();
+	downPanel->Initialize(downPanelModel_, position);
+	startSkydomes_.push_back(
+	    static_cast<std::unique_ptr<DownPanel>>(downPanel_));
 }
 
 void SnowStage::LoadStartSkydomePopData() {
