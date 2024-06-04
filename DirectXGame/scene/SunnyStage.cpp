@@ -153,9 +153,7 @@ void SunnyStage::Update() {
 
 		//ground_->Update();
 
-		if (input_->TriggerKey(DIK_SPACE)) {
-			Reset();
-		}
+		
 
 		if (timer_->GetStartTime() == 3) {
 			
@@ -249,8 +247,8 @@ void SunnyStage::Update() {
 		for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 			goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
 			goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
-			goalLeftX_ = goalSkydome_->GetWorldPosition().x - 10.0f;
-			goalRightX_ = goalSkydome_->GetWorldPosition().x + 10.0f;
+		    goalLeftX_ = goalSkydome_->GetWorldPosition().x - 20.0f;
+		    goalRightX_ = goalSkydome_->GetWorldPosition().x + 20.0f;
 
 			if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
 			    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
@@ -335,6 +333,10 @@ void SunnyStage::Update() {
 
 #ifdef _DEBUG
 	
+		if (input_->TriggerKey(DIK_SPACE)) {
+		    Reset();
+	    }
+
 	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
 		start = true;
 		railCamera_->SetStart(start);
