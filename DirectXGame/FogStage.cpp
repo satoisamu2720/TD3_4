@@ -68,6 +68,7 @@ void FogStage::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelStartSkydome_ = Model::CreateFromOBJ("StartSkydome", true);
 	modelMiddleSkydome_ = Model::CreateFromOBJ("MiddleSkydome", true);
+	modelGoalSkydome_ = Model::CreateFromOBJ("GoalSkydome", true);
 
 	LoadMiddleSkydomePopData();
 
