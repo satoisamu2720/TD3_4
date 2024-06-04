@@ -18,7 +18,7 @@ void RainStage::Initialize() {
 		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {0.0f + i * 46, 20});
 		spriteStartTime_[i] = Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
-	timer_->SetTime(0, 30);
+	timer_->SetTime(0, 20);
 	timer_->SetStartTimer(4);
 #pragma endregion
 

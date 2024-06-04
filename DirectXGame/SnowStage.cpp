@@ -28,7 +28,7 @@ void SnowStage::Initialize() {
 		spriteStartTime_[i] =
 		    Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
-	timer_->SetTime(0, 15);
+	timer_->SetTime(0, 20);
 	timer_->SetStartTimer(4);
 #pragma endregion
 
