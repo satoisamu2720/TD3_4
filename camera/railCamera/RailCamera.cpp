@@ -1,0 +1,114 @@
+﻿#include "RailCamera.h"
+
+void RailCamera::Initialize(const Vector3& position, const Vector3& rotation) {
+	input_ = Input::GetInstance();
+
+	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransform_.translation_ = position;
+	worldTransform_.rotation_ = rotation;
+
+	viewProjection_.Initialize();
+	viewProjection_.farZ = 5.0f;
+	
+	BGM_ = Audio::GetInstance()->LoadWave("Sound/BGM.mp3");
+	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");       // 雲
+	moveSound_ = Audio::GetInstance()->LoadWave("Sound/button06.mp3");     // ADボタン
+	decisionSound_ = Audio::GetInstance()->LoadWave("Sound/button01.mp3"); // 決定ボタン
+	summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3");     // 晴BGM
+	gameOverSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameOver.mp3");
+	gameClearSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameClear.mp3");
+	CarSound_ = Audio::GetInstance()->LoadWave("Sound/Car.mp3"); // 車走行
+
+	
+
+}
+
+void RailCamera::Update() {
+	
+	 Vector3 move_ = {0, 0, 0};
+
+	
+
+	/*if (input_->PushKey(DIK_R)) {
+		worldTransform_.translation_ = {0.0f, 4.0f, 10.0f};
+	}*/
+	
+
+
+	/// 加速関係
+
+	/*if (start == true && setFlag_ == false) {
+		Audio::GetInstance()->Audio::PlayWave(CarSound_, true, 1.0f);
+		 setFlag_ = true;
+	}
+	if (start == true) {
+		Audio::GetInstance()->Audio::ResumeWave(CarSound_);
+	}*/
+
+	if (isSpeedDown == true) {
+		move_.z -= 0.01f * isSpeedDownTime;
+	} 
+	if (start == true && isSpeedDown == false) {
+		move_.z += 1.0f;
+	}
+
+	if (isSpeedUp == true) {
+		move_.z += 0.02f * isSpeedUpTime;
+
+	}
+
+	if (isSpeedDownTime > 0.0f && isSpeedDown == true) {
+		isSpeedDownTime--;
+	} 
+	else if (isSpeedDownTime <= 0.0f) {
+		isSpeedDown = false;
+		isSpeedDownTime = 30.0f;
+	}
+
+	if (isSpeedUpTime > 0.0f && isSpeedUp == true) {
+		isSpeedUpTime--;
+	} 
+	else if (isSpeedUpTime <= 0.0f) {
+		isSpeedUp = false;
+		isSpeedUpTime = 60.0f;
+	}
+	
+	///
+
+	worldTransform_.matWorld_ = MakeAffineMatrix(
+	    {1.0f, 1.0f, 1.0f}, worldTransform_.rotation_, worldTransform_.translation_);
+
+	viewProjection_.matView = Inverse(worldTransform_.matWorld_);
+	// ベクターの加算
+	viewProjection_.translation_ = Add(worldTransform_.translation_, worldTransform_.rotation_); 
+
+	 move_ = TransformNormal(move_, MakeRotateYmatrix(worldTransform_.rotation_.y));
+	 // ベクターの加算
+	 worldTransform_.translation_ = Add(worldTransform_.translation_, move_); 
+
+#ifdef _DEBUG
+	if (input_->PushKey(DIK_UP)) {
+		move_.z += kCharacterSpeed;
+	} else if (input_->PushKey(DIK_DOWN)) {
+		move_.z -= kCharacterSpeed;
+	}
+	// 押した方向で移動ベクトルを変更（左右）
+	if (input_->PushKey(DIK_LEFT)) {
+		worldTransform_.rotation_.y -= cameraSpeed;
+	} else if (input_->PushKey(DIK_RIGHT)) {
+		worldTransform_.rotation_.y += cameraSpeed;
+	}
+
+	ImGui::Begin("Rail Camera");
+	ImGui::DragFloat3("Camera Position", &worldTransform_.translation_.x, 0.1f);
+	ImGui::DragFloat3("Camera Rotation", &worldTransform_.rotation_.x, 0.01f);
+	ImGui::DragFloat3("Camera Rotation viewProjection_", &viewProjection_.rotation_.y, 0.01f);
+	ImGui::End();
+
+	ImGui::Begin("Speed");
+	ImGui::Checkbox("SpeedUp", &isSpeedUp);
+	ImGui::Checkbox("SpeedDown", &isSpeedDown);
+	ImGui::End();
+#endif
+
+}
