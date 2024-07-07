@@ -22,7 +22,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	GameScene* gameScene = nullptr;
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow(L"3141_天機");
+	win->CreateGameWindow(L"天機");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
