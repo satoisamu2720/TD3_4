@@ -52,6 +52,24 @@
     <Filter Include="ソース ファイル\2d">
       <UniqueIdentifier>{814a0f6d-f847-4c45-856d-4688fa4c9e6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="player">
+      <UniqueIdentifier>{ba47dc4c-ddb4-4678-9139-14b73c317e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mt">
+      <UniqueIdentifier>{8becea79-8cf7-4764-87a6-f9c3f9e4b1b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="baseCharacter">
+      <UniqueIdentifier>{fdf57502-a1c5-4dc5-b4f7-2e58209cee13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{18619abd-0e5b-4804-9cb9-e9e436407306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera\followCameta">
+      <UniqueIdentifier>{9ba7290e-0596-43f0-a1f9-7705f05466d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera\railCamera">
+      <UniqueIdentifier>{986f1c21-f072-4436-8672-46f4204f7919}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -68,6 +86,24 @@
     </ClCompile>
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="player\Player.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="mt\MT.cpp">
+      <Filter>mt</Filter>
+    </ClCompile>
+    <ClCompile Include="baseCharacter\BaseCharacter.cpp">
+      <Filter>baseCharacter</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\followCameta\FollowCamera.cpp">
+      <Filter>camera\followCameta</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\railCamera\RailCamera.cpp">
+      <Filter>camera\railCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="3d\WorldTransform.EX.cpp">
+      <Filter>ヘッダー ファイル\3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +193,21 @@
     </ClInclude>
     <ClInclude Include="3d\ObjectColor.h">
       <Filter>ヘッダー ファイル\3d</Filter>
+    </ClInclude>
+    <ClInclude Include="player\Player.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="mt\MT.h">
+      <Filter>mt</Filter>
+    </ClInclude>
+    <ClInclude Include="baseCharacter\BaseCharacter.h">
+      <Filter>baseCharacter</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\followCameta\FollowCamera.h">
+      <Filter>camera\followCameta</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\railCamera\RailCamera.h">
+      <Filter>camera\railCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
