@@ -47,12 +47,10 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	MapChipFiled* mapChipFiled_ = nullptr; // ヘッダで宣言
-	ViewProjection view;
-	
-	void GenerateBlocks();
+	MapChipField* mapChipField_ = nullptr; // ヘッダで宣言
+	ViewProjection *view;
 
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	//std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	Model* model_ = nullptr;
 	
 	ObjectColor color;

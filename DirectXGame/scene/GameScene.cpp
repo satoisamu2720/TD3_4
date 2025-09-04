@@ -5,12 +5,7 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	for (auto& row : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : row) {
-			delete worldTransformBlock;
-		}
-	}
-	worldTransformBlocks_.clear();
+	
 }
 
 
@@ -19,17 +14,24 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	model_ = new Model();
-	model_->Create();
-	model_->CreateFromOBJ("cube");
-	mapChipFiled_ = new MapChipFiled(); // Initializeで生成
 
-	mapChipFiled_->LoadMapChipCsv("Resources/map.csv");//CSVファイル読み込み
-	GenerateBlocks();
-	
+	view->Initialize();
+	//model_ = new Model();
+	model_ = Model::Create();
+	model_ = Model::CreateFromOBJ("Resources/cube");
+
+	// 3. マップチップ初期化
+	mapChipField_ = new MapChipField();
+	mapChipField_->Initialize(model_, view);
+	mapChipField_->LoadMapChipCsv("Resources/map.csv"); // CSV読み込みでWorldTransformも生成
 }
 
-void GameScene::Update() {}
+void GameScene::Update() 
+{ 
+	if (mapChipField_) {
+		mapChipField_->Update();
+	}
+}
 
 void GameScene::Draw() {
 
@@ -53,15 +55,10 @@ void GameScene::Draw() {
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
+	view->TransferMatrix();
 
-	for (uint32_t i = 0; i < worldTransformBlocks_.size(); ++i) {
-		for (uint32_t j = 0; j < worldTransformBlocks_[i].size(); ++j) {
-			WorldTransform* wt = worldTransformBlocks_[i][j];
-			if (wt) {
-				// 仮にBlockModelが生成済みなら
-				model_->Draw(*wt,view);
-			}
-		}
+	if (mapChipField_) {
+		mapChipField_->Draw(); // WorldTransformを使って描画
 	}
 
 	/// <summary>
@@ -84,30 +81,6 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
-}
-
-void GameScene::GenerateBlocks() 
-{
-	uint32_t numBlockVertical = mapChipFiled_->GetNumBlockVertical();
-	uint32_t numBlockHorizontal = mapChipFiled_->GetNumBlockHorizontal();
-
-	// 二次元配列として確保
-	worldTransformBlocks_.resize(numBlockVertical);
-	for (uint32_t i = 0; i < numBlockVertical; ++i) {
-		worldTransformBlocks_[i].resize(numBlockHorizontal, nullptr);
-	}
-
-	// マップチップデータをもとにブロック生成
-	for (uint32_t i = 0; i < numBlockVertical; ++i) {
-		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
-			if (mapChipFiled_->GetMapChipTypeByIndex(j, i) == MapchipType::BLOCK) {
-				WorldTransform* worldTransform = new WorldTransform();
-				worldTransform->Initialize();
-				worldTransform->translation_ = mapChipFiled_->GetMapChipPostionByIndex(j, i);
-				worldTransformBlocks_[i][j] = worldTransform;
-			}
-		}
-	}
 }
 		
 
