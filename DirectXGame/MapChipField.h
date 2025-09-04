@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <cstdint>
 #include <vector>
 #include "WorldTransform.h"
@@ -6,8 +6,8 @@
 #include "ViewProjection.h"
 
 enum class MapchipType {
-	NONE, //��
-	BLOCK, //�u���b�N
+	NONE, //空白
+	BLOCK, //ブロック
 };
 
 
@@ -21,6 +21,10 @@ class MapChipFiled {
 
 	public:
 
+
+	MapChipFiled();
+	 ~MapChipFiled();
+
 	void Initilize();
 	void Update();
 	void Draw();
@@ -30,9 +34,13 @@ class MapChipFiled {
 	
 	Vector3 GetMapChipPostionByIndex(uint32_t xIndex, uint32_t yIndex);
 
+	// 追加：縦横のブロック数を返すゲッター
+	uint32_t GetNumBlockVertical() const { return kNumBlockVertical; }
+	uint32_t GetNumBlockHorizontal() const { return kNumBlockHorizontal; }
+
 	static inline const float kBlockWidth = 1.0f;
 	static inline const float kBlockHeight = 1.0f;
-	//�u���b�N�̌�
+	//ブロックの個数
 	static inline const uint32_t kNumBlockVertical = 20;
 	static inline const uint32_t kNumBlockHorizontal = 100;
 	MapChipData mapChipData_;
@@ -42,7 +50,6 @@ class MapChipFiled {
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection View_;
-
 	
 
 };

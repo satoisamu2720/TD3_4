@@ -8,6 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "MapChipField.h"
+#include "vector"
 
 /// <summary>
 /// ゲームシーン
@@ -46,10 +47,15 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	MapChipFiled* mapChipFiled_;
+	MapChipFiled* mapChipFiled_ = nullptr; // ヘッダで宣言
+	ViewProjection view;
 	
 	void GenerateBlocks();
 
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	Model* model_ = nullptr;
+	
+	ObjectColor color;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
