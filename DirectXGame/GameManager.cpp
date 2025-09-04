@@ -1,18 +1,18 @@
-#include "GameManager.h"
+Ôªø#include "GameManager.h"
 
 GameManager::GameManager() {
 
-	// äeÉVÅ[ÉìÇÃîzóÒ
+	// ÂêÑ„Ç∑„Éº„É≥„ÅÆÈÖçÂàó
 
-	/*sceneArr_[TITLE] = std::make_unique<TitleScene>();
-	sceneArr_[SELECT] = std::make_unique<SelectScene>();
-	sceneArr_[TEST] = std::make_unique<GameScene>();
-	sceneArr_[SUNNYSTAGE] = std::make_unique<SunnyStage>();
-	sceneArr_[RAINSTAGE] = std::make_unique<RainStage>();
-	sceneArr_[SNOWSTAGE] = std::make_unique<SnowStage>();
-	sceneArr_[FOGSTAGE] = std::make_unique<FogStage>();
+	sceneArr_[TITLE] = std::make_unique<TitleScene>();
+	//sceneArr_[SELECT] = std::make_unique<SelectScene>();
+	//sceneArr_[TEST] = std::make_unique<GameScene>();
+	//sceneArr_[SUNNYSTAGE] = std::make_unique<SunnyStage>();
+	//sceneArr_[RAINSTAGE] = std::make_unique<RainStage>();
+	//sceneArr_[SNOWSTAGE] = std::make_unique<SnowStage>();
+	//sceneArr_[FOGSTAGE] = std::make_unique<FogStage>();
 	sceneArr_[CLEAR] = std::make_unique<ClearScene>();
-	sceneArr_[END] = std::make_unique<GameOverScene>();*/
+	//sceneArr_[END] = std::make_unique<GameOverScene>();
 
 	cureentSceneNo_ = TITLE;
 }
@@ -22,7 +22,7 @@ GameManager::~GameManager() {}
 void GameManager::Check() {
 	cureentSceneNo_ = sceneArr_[cureentSceneNo_]->GetSceneNo();
 
-	// ÉVÅ[ÉìÇÃïœçXÉ`ÉFÉbÉN
+	// „Ç∑„Éº„É≥„ÅÆÂ§âÊõ¥„ÉÅ„Çß„ÉÉ„ÇØ
 	if (preSceneNo_ != cureentSceneNo_) {
 		sceneArr_[cureentSceneNo_]->Initialize();
 	}
@@ -31,27 +31,27 @@ void GameManager::Check() {
 }
 
 void GameManager::Update() {
-	// ÉVÅ[ÉìÇÃçXêVèàóù
+	// „Ç∑„Éº„É≥„ÅÆÊõ¥Êñ∞Âá¶ÁêÜ
 	sceneArr_[cureentSceneNo_]->Update();
 }
 
 void GameManager::Draw() {
-	// ÉVÅ[ÉìÇÃï`âÊèàóù
+	// „Ç∑„Éº„É≥„ÅÆÊèèÁîªÂá¶ÁêÜ
 	sceneArr_[cureentSceneNo_]->Draw();
 }
 
-// int GameManager::Run() {// ÉVÅ[ÉìÇÃÉ`ÉFÉbÉN
+// int GameManager::Run() {// „Ç∑„Éº„É≥„ÅÆ„ÉÅ„Çß„ÉÉ„ÇØ
 //	preSceneNo_ = cureentSceneNo_;
 //	cureentSceneNo_ = sceneArr_[cureentSceneNo_]->GetSceneNo();
 //
-//	// ÉVÅ[ÉìÇÃïœçXÉ`ÉFÉbÉN
+//	// „Ç∑„Éº„É≥„ÅÆÂ§âÊõ¥„ÉÅ„Çß„ÉÉ„ÇØ
 //	if (preSceneNo_ != cureentSceneNo_) {
 //		sceneArr_[cureentSceneNo_]->Initialize();
 //	}
 //
-//	// ÉVÅ[ÉìÇÃçXêVèàóù
+//	// „Ç∑„Éº„É≥„ÅÆÊõ¥Êñ∞Âá¶ÁêÜ
 //	sceneArr_[cureentSceneNo_]->Update();
 //
-//	// ÉVÅ[ÉìÇÃï`âÊèàóù
+//	// „Ç∑„Éº„É≥„ÅÆÊèèÁîªÂá¶ÁêÜ
 //	sceneArr_[cureentSceneNo_]->Draw();
 // }

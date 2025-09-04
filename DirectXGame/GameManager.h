@@ -1,5 +1,8 @@
 #pragma once
 #include "IScene.h"
+#include "ClearScene.h"
+#include "TitleScene.h"
+
 #include <memory>
 class GameManager {
 

@@ -1,5 +1,4 @@
-#pragma once
-#pragma once
+ï»¿#pragma once
 #include "Input.h"
 
 enum SceneType {
@@ -18,7 +17,7 @@ enum SceneType {
 
 class IScene {
 protected:
-	// ƒV[ƒ“”Ô†‚ğŠÇ—‚·‚é•Ï”
+	// ã‚·ãƒ¼ãƒ³ç•ªå·ã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°
 	static int sceneNo;
 
 	Input* input_ = nullptr;

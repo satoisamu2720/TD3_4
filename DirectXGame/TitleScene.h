@@ -1,5 +1,4 @@
-#pragma once
-#pragma once
+ï»¿#pragma once
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "IScene.h"
@@ -38,25 +37,25 @@ private:
 
 	ViewProjection viewProjection_;
 
-	// Skydome‚Ì3Dƒ‚ƒfƒ‹
-	std::unique_ptr<Model> modelSkydome_;
+	// Skydomeã®3Dãƒ¢ãƒ‡ãƒ«
+	//std::unique_ptr<Model> modelSkydome_;
 
-	// ƒXƒJƒCƒh[ƒ€
-	std::unique_ptr<Skydome> skydome_;
+	// ã‚¹ã‚«ã‚¤ãƒ‰ãƒ¼ãƒ 
+	//std::unique_ptr<Skydome> skydome_;
 
-	// ‰_‚Ì3Dƒ‚ƒfƒ‹
-	std::unique_ptr<Model> modelCloud_;
+	// é›²ã®3Dãƒ¢ãƒ‡ãƒ«
+	//std::unique_ptr<Model> modelCloud_;
 
-	// ‰_
-	std::unique_ptr<Cloud> cloud_;
+	// é›²
+	//std::unique_ptr<Cloud> cloud_;
 
-	std::unique_ptr<Model> modelTitle_;
+	//std::unique_ptr<Model> modelTitle_;
 
-	std::unique_ptr<Model> modelCredit_[2];
+	//std::unique_ptr<Model> modelCredit_[2];
 
-	std::unique_ptr<Model> modelAButton_;
+	//std::unique_ptr<Model> modelAButton_;
 
-	//// ƒTƒEƒ“ƒh
+	//// ã‚µã‚¦ãƒ³ãƒ‰
 	// uint32_t bgmHandle_;
 	// uint32_t playBGM_;
 	// bool isBGM_;
@@ -69,15 +68,17 @@ private:
 	bool selectSwitchFlag = false;
 	float selectSwitchTimer = 120;
 
-	// ƒTƒEƒ“ƒhÄ¶ƒtƒ‰ƒO
+	// ã‚µã‚¦ãƒ³ãƒ‰å†ç”Ÿãƒ•ãƒ©ã‚°
 
-	// “Ç‚İ‚İƒTƒEƒ“ƒh
-	uint32_t BGM_;
+		Vector4 color = {0, 0, 0, 0.9f};
+
+	// èª­ã¿è¾¼ã¿ã‚µã‚¦ãƒ³ãƒ‰
+	/*uint32_t BGM_;
 	uint32_t cloudSound_;
 	uint32_t gameOverSound_;
 	uint32_t gameClearSound_;
 	uint32_t decisionSound_;
 	uint32_t moveSound_;
 	uint32_t summerSound_;
-	bool on = true;
+	bool on = true;*/
 };
