@@ -7,6 +7,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "MapChipField.h"
 
 /// <summary>
 /// ゲームシーン
@@ -39,10 +40,15 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+	MapChipFiled* mapChipFiled_;
+	
+	void GenerateBlocks();
 
 	/// <summary>
 	/// ゲームシーン用

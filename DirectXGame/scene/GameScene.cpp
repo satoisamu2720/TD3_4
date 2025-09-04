@@ -11,6 +11,10 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	mapChipFiled_ = new MapChipFiled;
+	mapChipFiled_->LoadMapChipCsv("Resources/blocks.csv");//CSVファイル読み込み
+	GenerateBlocks();
 }
 
 void GameScene::Update() {}
@@ -58,4 +62,10 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::GenerateBlocks() 
+{
+	uint32_t numBlockVirtical = mapChipFiled_->GetNumBlockVirtical();
+	uint32_t 
 }
