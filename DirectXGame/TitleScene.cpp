@@ -3,9 +3,7 @@
 void TitleScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	audio_ = Audio::GetInstance();
-
-	
+	audio_ = Audio::GetInstance();	
 
 	// サウンド
 
@@ -85,7 +83,7 @@ void TitleScene::Update() {
 	} 
 	if (selectSwitchFlag) {
 		//selectSwitchTimer--;
-		sceneNo = CLEAR;
+		sceneNo = SELECT;
 	}
 	
 	if (selectSwitchTimer <= 0) {

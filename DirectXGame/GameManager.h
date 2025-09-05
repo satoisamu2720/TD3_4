@@ -2,6 +2,8 @@
 #include "IScene.h"
 #include "ClearScene.h"
 #include "TitleScene.h"
+#include "SelectScene.h"
+#include "GameScene.h"
 
 #include <memory>
 class GameManager {

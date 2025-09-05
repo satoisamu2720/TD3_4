@@ -70,7 +70,7 @@ private:
 
 	// サウンド再生フラグ
 
-		Vector4 color = {0, 0, 0, 0.9f};
+	Vector4 color = {0, 0, 0, 0.9f};
 
 	// 読み込みサウンド
 	/*uint32_t BGM_;

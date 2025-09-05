@@ -5,12 +5,9 @@ GameManager::GameManager() {
 	// 各シーンの配列
 
 	sceneArr_[TITLE] = std::make_unique<TitleScene>();
-	//sceneArr_[SELECT] = std::make_unique<SelectScene>();
+	sceneArr_[SELECT] = std::make_unique<SelectScene>();
 	//sceneArr_[TEST] = std::make_unique<GameScene>();
-	//sceneArr_[SUNNYSTAGE] = std::make_unique<SunnyStage>();
-	//sceneArr_[RAINSTAGE] = std::make_unique<RainStage>();
-	//sceneArr_[SNOWSTAGE] = std::make_unique<SnowStage>();
-	//sceneArr_[FOGSTAGE] = std::make_unique<FogStage>();
+	//sceneArr_[GAME] = std::make_unique<GameScene>();
 	sceneArr_[CLEAR] = std::make_unique<ClearScene>();
 	//sceneArr_[END] = std::make_unique<GameOverScene>();
 
