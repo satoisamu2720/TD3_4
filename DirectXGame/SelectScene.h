@@ -28,5 +28,6 @@ private:
 	uint32_t gameSceneTexHandle_ = 0;
 	Sprite* gameSceneSprite_ = nullptr;
 
+	int selectCount = 0;
 
 };
