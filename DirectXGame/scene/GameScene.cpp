@@ -13,7 +13,11 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+
+
+
+}
 
 void GameScene::Draw() {
 
