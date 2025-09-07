@@ -31,6 +31,12 @@ private:
 	uint32_t gameSceneTexHandle_ = 0;
 	Sprite* gameSceneSprite_ = nullptr;
 
+	uint32_t tutorialTexHandle_ = 0;
+	Sprite* tutorialSprite_ = nullptr;
+
+	uint32_t stageTexHandle_ = 0;
+	Sprite* stageSprite_ = nullptr;
+
 	int selectCount = 0;
 
 };

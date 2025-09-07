@@ -28,8 +28,6 @@ void EndScene::Draw() {
 
 	sprite_->Draw();
 
-	
-
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>

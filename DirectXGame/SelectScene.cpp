@@ -8,11 +8,18 @@ void SelectScene::Initialize() {
 	backSceneTexHandle_ = TextureManager::Load("SelectScene.png");
 	backSceneSprite_ = Sprite::Create(backSceneTexHandle_, {0, 0});
 
-	testSceneTexHandle_ = TextureManager::Load("PlayerHP2.png");
+	testSceneTexHandle_ = TextureManager::Load("Mirror.png");
 	testSceneSprite_ = Sprite::Create(testSceneTexHandle_, {320, 360});
 
-	gameSceneTexHandle_ = TextureManager::Load("PlayerHP3.png");
+	gameSceneTexHandle_ = TextureManager::Load("Mirror.png");
 	gameSceneSprite_ = Sprite::Create(gameSceneTexHandle_, {960, 360});
+
+	tutorialTexHandle_ = TextureManager::Load("tutorial.png");
+	tutorialSprite_ = Sprite::Create(tutorialTexHandle_, {100, 400});
+
+	stageTexHandle_ = TextureManager::Load("stage.png");
+	stageSprite_ = Sprite::Create(stageTexHandle_, {800, 400});
+
 }
 
 void SelectScene::Update() {
@@ -29,8 +36,7 @@ void SelectScene::Update() {
 		sceneNo = END;
 	} else if (selectCount == 1 && input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = CLEAR;
-	}	
-	
+	}
 }
 
 void SelectScene::Draw() {
@@ -72,6 +78,9 @@ void SelectScene::Draw() {
 	testSceneSprite_->Draw();
 	gameSceneSprite_->Draw();
 
+	tutorialSprite_->Draw();
+	stageSprite_->Draw();
+
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
@@ -79,5 +88,5 @@ void SelectScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
-#pragma endregion 
+#pragma endregion
 }
