@@ -40,25 +40,6 @@ void TitleScene::Initialize() {
 
 	worldTransformTitle_.scale_ = {2, 2, 2};
 
-	//modelSkydome_.reset(Model::CreateFromOBJ("Sky", true));
-
-	// スカイドームの生成と初期化
-	/*skydome_ = std::make_unique<Skydome>();
-	skydome_->Initialize(modelSkydome_.get(), {0, 0, 0});*/
-
-	//modelCloud_.reset(Model::CreateFromOBJ("cloud", true));
-
-	//modelTitle_.reset(Model::CreateFromOBJ("title", true));
-	
-	/*modelCredit_[0].reset(Model::CreateFromOBJ("credit", true));
-	modelCredit_[1].reset(Model::CreateFromOBJ("credit2", true));*/
-
-	//modelAButton_.reset(Model::CreateFromOBJ("AButton", true));
-
-	// 雲の生成と初期化
-	/*cloud_ = std::make_unique<Cloud>();
-	cloud_->Initialize(modelCloud_.get(),false);*/
-
 	// 背景スプライト
 	titleTexHandle_ = TextureManager::Load("title.png");
 	titleSprite_ =
@@ -68,36 +49,13 @@ void TitleScene::Initialize() {
 }
 
 void TitleScene::Update() {
-	//if (on) {
-	//Audio::GetInstance()->Audio::PlayWave(BGM_, true, 1.0f);
-	//	on = false;
-	//} else {
-	//	
-	//}
-
-	if (input_->TriggerKey(DIK_SPACE)) {
-		//cloud_->SetMoveFlag(true);
-		selectSwitchFlag = true;
-		//Audio::GetInstance()->Audio::PlayWave(cloudSound_, false, 1.0f);
-		
-	} 
-	if (selectSwitchFlag) {
-		//selectSwitchTimer--;
-		sceneNo = SELECT;
-	}
 	
-	if (selectSwitchTimer <= 0) {
-		/*selectSwitchTimer = 60;
-		selectSwitchFlag = false;*/
-		//cloud_->SetMoveFlag(false);
-		//sceneNo = CLEAR;
-	}
-	//cloud_->Update();
-
-	//worldTransformCredit_[0].UpdateMatrix();
-	//worldTransformCredit_[1].UpdateMatrix();
-	//worldTransformTitle_.UpdateMatrix();
-	//worldTransformA_.UpdateMatrix();
+	if (input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = SELECT;				
+	} 
+	
+	
+	
 }
 
 void TitleScene::Draw() {
@@ -129,15 +87,7 @@ void TitleScene::Draw() {
 	Model::PreDraw(commandList);
 
 	/// <summary>
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	/// </summary>
-	//cloud_->Draw(viewProjection_);
-	////skydome_->Draw(viewProjection_);
-	//modelTitle_->Draw(worldTransformTitle_, viewProjection_);
-	//modelCredit_[0]->Draw(worldTransformCredit_[0], viewProjection_);
-	//modelCredit_[1]->Draw(worldTransformCredit_[1], viewProjection_);
-	//modelAButton_->Draw(worldTransformA_, viewProjection_);
-
+	
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

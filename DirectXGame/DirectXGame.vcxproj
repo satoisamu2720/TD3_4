@@ -110,6 +110,7 @@
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="ClearScene.cpp" />
+    <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="IScene.cpp" />
     <ClCompile Include="main.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="ClearScene.h" />
+    <ClInclude Include="EndScene.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="IScene.h" />

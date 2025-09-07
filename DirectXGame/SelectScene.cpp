@@ -5,11 +5,11 @@ void SelectScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	testSceneTexHandle_ = TextureManager::Load("Title.png");
-	testSceneSprite_ = Sprite::Create(testSceneTexHandle_, {0, 0});
+	testSceneTexHandle_ = TextureManager::Load("PlayerHP2.png");
+	testSceneSprite_ = Sprite::Create(testSceneTexHandle_, {320, 360});
 
-	gameSceneTexHandle_ = TextureManager::Load("Title.png");
-	gameSceneSprite_ = Sprite::Create(gameSceneTexHandle_, {0, 0});
+	gameSceneTexHandle_ = TextureManager::Load("PlayerHP3.png");
+	gameSceneSprite_ = Sprite::Create(gameSceneTexHandle_, {960, 360});
 }
 
 void SelectScene::Update() {
@@ -22,11 +22,13 @@ void SelectScene::Update() {
 		selectCount = 1;
 	}
 
-	if (selectCount = 0 && input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = TEST;
-	} else if (selectCount = 1 && input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = GAME;
+	if (selectCount == 0 && input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = TITLE;
+	} else if (selectCount == 1 && input_->TriggerKey(DIK_SPACE)) {
+		sceneNo = CLEAR;
 	}
+
+	
 	
 }
 

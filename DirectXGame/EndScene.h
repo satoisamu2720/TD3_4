@@ -1,16 +1,14 @@
-﻿#pragma once
+#pragma once
 #include "Audio.h"
 #include "DirectXCommon.h"
+#include "IScene.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "IScene.h"
-
-class ClearScene : public IScene {
-
+class EndScene : public IScene {
 public:
 	void Initialize() override;
 
@@ -24,9 +22,8 @@ private:
 	Audio* audio_ = nullptr;
 
 	WorldTransform worldTransform_;
-	//uint32_t buttonSound_;
+	// uint32_t buttonSound_;
 
 	uint32_t texHandle_ = 0;
 	Sprite* sprite_ = nullptr;
-
 };

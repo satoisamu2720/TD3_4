@@ -5,22 +5,8 @@ void ClearScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	//texHandle_ = TextureManager::Load("gameClear.png");
+	texHandle_ = TextureManager::Load("gameClear.png");
 	sprite_ = Sprite::Create(texHandle_, {0, 0});
-
-	//Audio::GetInstance()->Audio::PauseWave(BGM_);
-
-	// サウンド
-
-	//BGM_ = Audio::GetInstance()->LoadWave("Sound/BGM.mp3");
-	//cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");       // 雲
-	//moveSound_ = Audio::GetInstance()->LoadWave("Sound/button06.mp3");     // ADボタン
-	//decisionSound_ = Audio::GetInstance()->LoadWave("Sound/button01.mp3"); // 決定ボタン
-	//summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3");     // 晴BGM
-	//gameOverSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameOver.mp3");
-	//gameClearSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameClear.mp3");
-
-	//Audio::GetInstance()->Audio::PlayWave(gameClearSound_, false, 1.0f);
 }
 
 void ClearScene::Update() {
@@ -44,6 +30,8 @@ void ClearScene::Draw() {
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
+
+	sprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
