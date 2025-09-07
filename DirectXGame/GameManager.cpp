@@ -9,7 +9,7 @@ GameManager::GameManager() {
 	//sceneArr_[TEST] = std::make_unique<GameScene>();
 	//sceneArr_[GAME] = std::make_unique<GameScene>();
 	sceneArr_[CLEAR] = std::make_unique<ClearScene>();
-	//sceneArr_[END] = std::make_unique<GameOverScene>();
+	sceneArr_[END] = std::make_unique<EndScene>();
 
 	cureentSceneNo_ = TITLE;
 }

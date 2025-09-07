@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "IScene.h"
@@ -25,5 +25,8 @@ private:
 	// uint32_t buttonSound_;
 
 	uint32_t texHandle_ = 0;
+	uint32_t buttonhandle_ = 0;
+
 	Sprite* sprite_ = nullptr;
+	Sprite* buttonSprite_ = nullptr;
 };

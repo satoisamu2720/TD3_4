@@ -22,6 +22,9 @@ private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
+	uint32_t backSceneTexHandle_ = 0;
+	Sprite* backSceneSprite_ = nullptr;
+
 	uint32_t testSceneTexHandle_ = 0;
 	Sprite* testSceneSprite_ = nullptr;
 

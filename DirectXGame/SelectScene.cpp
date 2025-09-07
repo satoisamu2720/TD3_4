@@ -5,6 +5,9 @@ void SelectScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	backSceneTexHandle_ = TextureManager::Load("SelectScene.png");
+	backSceneSprite_ = Sprite::Create(backSceneTexHandle_, {0, 0});
+
 	testSceneTexHandle_ = TextureManager::Load("PlayerHP2.png");
 	testSceneSprite_ = Sprite::Create(testSceneTexHandle_, {320, 360});
 
@@ -23,12 +26,10 @@ void SelectScene::Update() {
 	}
 
 	if (selectCount == 0 && input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = TITLE;
+		sceneNo = END;
 	} else if (selectCount == 1 && input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = CLEAR;
-	}
-
-	
+	}	
 	
 }
 
@@ -39,6 +40,8 @@ void SelectScene::Draw() {
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
+
+	backSceneSprite_->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる

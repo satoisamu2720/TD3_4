@@ -66,7 +66,7 @@ void TitleScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	titleSprite_->SetColor(color);
+	//titleSprite_->SetColor(color);
 	//Sprite::PreDraw(dxCommon_->GetCommandList(), Sprite::BlendMode::kNormal);
 	titleSprite_->Draw();
 

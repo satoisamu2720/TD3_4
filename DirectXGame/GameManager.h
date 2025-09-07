@@ -4,6 +4,7 @@
 #include "TitleScene.h"
 #include "SelectScene.h"
 #include "GameScene.h"
+#include "EndScene.h"
 
 #include <memory>
 class GameManager {
