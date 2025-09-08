@@ -18,9 +18,11 @@ class Player : public BaseCharacter {
 private:
 	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
+	WorldTransform worldTransformLight_;
 
-	Vector3 position = {0, -2.0f, 8.0f};
+	Vector3 position = {-4, 1, 0.0f};
 	Vector3 bodyPosition = {0, 0, 0};
+	Vector3 lightPosition_ = {2, 0, 0}; 
 
 public:
 	//プレイヤー初期化
@@ -36,6 +38,8 @@ public:
 	
 	Vector3 GetWorldPosition();
 
+	Vector3 GetLightWorldPosition();
+
 
 	void SetViewProjection(const ViewProjection* viewProjection) {
 		viewProjection_ = viewProjection;
@@ -46,7 +50,7 @@ public:
 	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; };
 	Vector3 GetTranslate() {return worldTransform_.translation_; };
 
-	 float GetWeather() { return weather_; }
+	 bool GetLight() { return lightFlag; }
 	 void  SetWeather(float weather) { weather_ = weather; }
 
 
@@ -64,6 +68,9 @@ private:
 	Vector3 rotMove_ = {0, 0, 0};
 
 	bool gameStart = false;
+	bool lightFlag = false;
+	int lightCount = 1;
+	float lightTimer = 0;
 	// キャラクターの移動速度
 	const float kCharacterSpeed = 0.2f;
 

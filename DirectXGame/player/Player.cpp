@@ -9,13 +9,17 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	// 初期化
 	worldTransform_.Initialize();
 	worldTransformBody_.Initialize();
+	worldTransformLight_.Initialize();
+
 
 	// 初期ポジティブ
 	worldTransform_.translation_ = position;
 	worldTransformBody_.translation_ = bodyPosition;
+	worldTransformLight_.translation_ = lightPosition_;
 
 	// 親子関係
 	worldTransformBody_.parent_ = &worldTransform_;
+	worldTransformLight_.parent_ = &worldTransform_;
 
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 
@@ -24,77 +28,86 @@ void Player::Initialize(const std::vector<Model*>& models) {
 }
 
 void Player::Update() {
-	
-		move_ = {0, 0, 0};
-		
 
-		//
-		//XINPUT_STATE joyState;
+	move_ = {0, 0, 0};
 
-		//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		//	// 押した方向で移動ベクトルを変更（左右）
-		//	if ( joyState.Gamepad.sThumbLX < -100) {
-		//		move_.x -= kCharacterSpeed;
-		//		if (notRotate == false) {
-		//			LeftMove();
-		//		}
-		//	}else if ( joyState.Gamepad.sThumbLX > 100) {
-		//		move_.x += kCharacterSpeed;
-		//		if (notRotate == false) {
-		//			RightMove();
-		//		}
-		//	} else if (worldTransform_.rotation_.y <= -0.05f && notRotate == false) {
-		//		worldTransform_.rotation_.y += 0.05f;
-		//		worldTransformFront_.rotation_.y += 0.025f;
-		//	} else if (worldTransform_.rotation_.y >= 0.05f && notRotate == false) {
-		//		worldTransform_.rotation_.y -= 0.05f;
-		//		worldTransformFront_.rotation_.y -= 0.025f;
-		//	}
-		//	
-		//} 
-		//
+	// キー入力で移動
+	if (input_->PushKey(DIK_A)) {
+		move_.x -= kCharacterSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		move_.x += kCharacterSpeed;
+	}
+	if (input_->PushKey(DIK_S)) {
+		move_.y -= kCharacterSpeed;
+	} else if (input_->PushKey(DIK_W)) {
+		move_.y += kCharacterSpeed;
+	}
+	if (input_->IsTriggerMouse(0) && !lightFlag) {
+		lightFlag = true;
+		lightCount--;
+	}
 
-		// 押した方向で移動ベクトルを変更（左右）
-		if (input_->PushKey(DIK_A)) {
-			    move_.x -= kCharacterSpeed;
-			    
-		}
-		else if (input_->PushKey(DIK_D)) {
-			    move_.x += kCharacterSpeed;
-			   
-		} 
-		if (input_->PushKey(DIK_O)) {
-		    move_.y -= kCharacterSpeed;
+	if (lightFlag) {
+		lightTimer++;
+	}
+	if (lightTimer >= 60) {
+		lightTimer = 0;
+		lightFlag = false;
+	}
 
-	    } else if (input_->PushKey(DIK_P)) {
-		    move_.y += kCharacterSpeed;
-	    } 
-			//worldTransformFront_.rotation_.x += 0.01f;
+	// --- マウス位置に応じてライト位置を決定 ---
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	ScreenToClient(GetActiveWindow(), &mousePos);
 
-#ifdef _DEBUG
-		if (input_->PushKey(DIK_W)) {
-			move_.z += kCharacterSpeed;
-		} else if (input_->PushKey(DIK_S)) {
-			move_.z -= kCharacterSpeed;
-		}
-		
-#endif
-	
+	int screenWidth = 1280; // 実際の画面幅に置き換え
+	int screenHeight = 720; // 実際の画面高さに置き換え
+
+	// 画面中心を0,0に正規化
+	float mouseX = (mousePos.x - screenWidth / 2.0f) / (screenWidth / 2.0f);
+	float mouseY = (mousePos.y - screenHeight / 2.0f) / (screenHeight / 2.0f);
+
+	// Yは上下反転（スクリーン座標の上が0のため）
+	mouseY = -mouseY;
+
+	// マウス方向ベクトルを作成
+	Vector3 lightDir = {mouseX, 0.0f, mouseY};
+
+	// 正規化
+	float len = sqrtf(lightDir.x * lightDir.x + lightDir.y * lightDir.y + lightDir.z * lightDir.z);
+	if (len > 0.0001f) {
+		lightDir.x /= len;
+		lightDir.y /= len;
+		lightDir.z /= len;
+	}
+
+	// ライトをプレイヤーから一定距離に
+	float lightDistance = 2.5f; // プレイヤーからの距離
+	lightDir.x *= lightDistance;
+	lightDir.y *= lightDistance;
+	lightDir.z *= lightDistance;
+
+	// カメラ回転補正
+	float cameraYaw = viewProjection_->rotation_.y;
+	Matrix4x4 camRotMat = MakeRotateYmatrix(cameraYaw);
+	lightDir = TransformNormal(lightDir, camRotMat);
+
+	// 最終的なライト座標
+	worldTransformLight_.translation_ = lightDir;
+
+
+	// --- 移動処理 ---
 	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));
-	    // Y軸周り角度
-	    worldTransform_.rotation_.y = std::atan2(move_.x, move_.z);
-	    // ベクターの加算
-	    worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
-	    // 行列更新
-	    worldTransform_.UpdateMatrix();
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move_);
+
+	worldTransform_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
+	worldTransformLight_.UpdateMatrix();
 
 #ifdef _DEBUG
-	if (weather_ == 0) {
+	if (!lightFlag) {
 		ImGui::Begin("Player SunnyUpdate");
-		ImGui::DragFloat3("Player Position", &worldTransform_.translation_.x, 0.1f);
-		ImGui::DragFloat3("Player Rotation", &worldTransform_.rotation_.x, 0.01f);
-		
+		ImGui::DragInt("Light Count", &lightCount, 0.1f);
 		ImGui::End();
 	}
 
@@ -108,9 +121,13 @@ void Player::Update() {
 }
 
 
+
 void Player::Draw(ViewProjection& view) {
 
 	models_[0]->Draw(worldTransformBody_, view);
+	if (lightFlag) {
+		models_[1]->Draw(worldTransformLight_, view);
+	}
 }
 
 Vector3 Player::GetWorldPosition() {
@@ -123,3 +140,12 @@ Vector3 Player::GetWorldPosition() {
 	return worldPos;
 };
 
+Vector3 Player::GetLightWorldPosition() {
+	Vector3 worldPos;
+
+	worldPos.x = worldTransformLight_.matWorld_.m[3][0];
+	worldPos.y = worldTransformLight_.matWorld_.m[3][1];
+	worldPos.z = worldTransformLight_.matWorld_.m[3][2];
+
+	return worldPos;
+};

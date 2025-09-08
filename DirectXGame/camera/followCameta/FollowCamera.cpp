@@ -28,9 +28,9 @@ void FollowCamera::Update() {
 
 		// 上下方向の微調整
 		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.translation_.x += kRotSpeed;
+			viewProjection_.translation_.y += kRotSpeed;
 		} else if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.translation_.x -= kRotSpeed;
+			viewProjection_.translation_.y -= kRotSpeed;
 		}
 
 		// Y回転を反映してオフセットを回転
