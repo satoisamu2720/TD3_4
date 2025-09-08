@@ -44,9 +44,13 @@ void SunnyStage::Initialize() {
 #pragma region 障害物
 
 	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("colorCorn", true));
+	BoxModel_ = (Model::CreateFromOBJ("cube", true));
 	// ボックスのCSVファイル読み込み
 	LoadBoxPopData();
+
+	BlockModel_ = (Model::CreateFromOBJ("block.mtl", true));
+	//CSVファイル読み込み
+	LoadInvisibleBoxPopData();
 
 	// 加速装置モデル読み込み
 	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));
@@ -135,6 +139,12 @@ void SunnyStage::Update() {
 		for (const std::unique_ptr<Box>& box_ : boxs_) {
 			box_->Update();
 		}
+
+		for (const std::unique_ptr<InvisibleBox>& Blockbox_ : InvisiBoxs_) {
+		    Blockbox_->Update();
+	    }
+
+
 		// 加速装置
 		for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 			accelerator_->Update();
@@ -198,8 +208,8 @@ void SunnyStage::Update() {
 
 	    float playerFeetY = playerPos.y; // プレイヤーの足元
 
-	    for (const std::unique_ptr<Box>& box : boxs_) {
-		    Vector3 boxPos = box->GetWorldPosition();
+	    for (const std::unique_ptr<InvisibleBox>& Inbox : InvisiBoxs_) {
+		    Vector3 boxPos = Inbox->GetWorldPosition();
 		    float boxLeftX = boxPos.x - 0.5f;  // ブロックの左端
 		    float boxRightX = boxPos.x + 0.5f; // ブロックの右端
 		    float boxTopY = boxPos.y + 0.5f;   // ブロックの上面
@@ -280,8 +290,19 @@ void SunnyStage::Update() {
 			return false;
 		});
 
+		InvisiBoxs_.remove_if([](std::unique_ptr<InvisibleBox>& item) {
+		    if (item->IsDead()) {
+			    item.release();
+			    return true;
+		    }
+		    return false;
+	    });
+
 		// ボックスのCSVファイルの更新処理
 		UpdateBoxPopCommands();
+
+		UpdateInvisibleBoxPopCommands();
+
 
 		// デスフラグの立った敵を削除
 		accelerators_.remove_if([](std::unique_ptr<Accelerator>& item) {
@@ -460,21 +481,24 @@ void SunnyStage::Draw() { // コマンドリストの取得
 
 	
 
-	for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
-		startSkydome_->Draw(viewProjection_);
-	}
-	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
-		MiddleSkydome_->Draw(viewProjection_);
-	}
-	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-		goalSkydome_->Draw(viewProjection_);
-	}
-	//ground_->Draw(viewProjection_);
+	//for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
+	//	startSkydome_->Draw(viewProjection_);
+	//}
+	//for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
+	//	MiddleSkydome_->Draw(viewProjection_);
+	//}
+	//for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+	//	goalSkydome_->Draw(viewProjection_);
+	//}
+	////ground_->Draw(viewProjection_);
 
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Draw(viewProjection_);
 	}
 
+	for (const std::unique_ptr<InvisibleBox>& Blockbox_ : InvisiBoxs_) {
+		Blockbox_->Draw(viewProjection_);
+	}
 	// 加速装置
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Draw(viewProjection_);
@@ -571,13 +595,13 @@ void SunnyStage::BoxGenerate(Vector3 position) {
 
 void SunnyStage::LoadInvisibleBoxPopData()
 {
-	boxPopCommands.clear();
+	InvisiBoxPopCommands.clear();
 	std::ifstream file;
 	file.open("Resources/CSV/InvisibleBoxPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
-	boxPopCommands << file.rdbuf();
+	InvisiBoxPopCommands << file.rdbuf();
 
 	// ファイルを閉じる
 	file.close();
@@ -588,7 +612,7 @@ void SunnyStage::UpdateInvisibleBoxPopCommands()
 	std::string line;
 
 	// コマンド実行ループ
-	while (getline(boxPopCommands, line)) {
+	while (getline(InvisiBoxPopCommands, line)) {
 		std::istringstream line_stream(line);
 
 		std::string word;
@@ -616,7 +640,7 @@ void SunnyStage::UpdateInvisibleBoxPopCommands()
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			BoxGenerate({x, y, z});
+			InvisibleBoxGenerate({x, y, z});
 		}
 	}
 }
@@ -624,9 +648,9 @@ void SunnyStage::UpdateInvisibleBoxPopCommands()
 void SunnyStage::InvisibleBoxGenerate(Vector3 position)
 {
 	// アイテムの生成と初期化処理
-	Box* box_ = new Box();
-	box_->Initialize(BoxModel_, position);
-	boxs_.push_back(static_cast<std::unique_ptr<Box>>(box_));
+	InvisibleBox* InBox_ = new InvisibleBox();
+	InBox_->Initialize(BlockModel_, position);
+	InvisiBoxs_.push_back(static_cast<std::unique_ptr<InvisibleBox>>(InBox_));
 }
 
 
@@ -946,6 +970,7 @@ void SunnyStage::trafficLight(Vector3 position) {
 
 void SunnyStage::Reset() { 
 	boxs_.clear();
+	InvisiBoxs_.clear();
 	accelerators_.clear();
 	startSkydomes_.clear();
 	middleSkydomes_.clear();

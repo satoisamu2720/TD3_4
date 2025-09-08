@@ -28,6 +28,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "InvisibleBox.h"
 
 
 class SunnyStage : public IScene {
@@ -153,12 +154,16 @@ private:
 
 	// ボックス
 	std::list<std::unique_ptr<Box>> boxs_;
+
+	std::list<std::unique_ptr<InvisibleBox>> InvisiBoxs_;
 	// ボックスの発生コマンド
 	std::stringstream boxPopCommands;
+
+	std::stringstream InvisiBoxPopCommands;
 	//モデル
 	Model* BoxModel_ = nullptr;
 
-
+	Model* BlockModel_ = nullptr;
 	
 
 	// 加速装置
