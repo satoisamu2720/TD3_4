@@ -1,4 +1,4 @@
-﻿//#pragma once
+﻿#pragma once
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "IScene.h"
@@ -72,8 +72,8 @@ private:
 
 	Vector4 color = {0, 0, 0, 0.9f};
 
-	// 読み込みサウンド
-	/*uint32_t BGM_;
+// 読み込みサウンド
+    /*uint32_t BGM_;
 	uint32_t cloudSound_;
 	uint32_t gameOverSound_;
 	uint32_t gameClearSound_;

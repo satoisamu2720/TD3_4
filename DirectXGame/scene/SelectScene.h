@@ -8,8 +8,8 @@
 #include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "stage/skydome/Skydome.h"
 #include "stage/cloud/Cloud.h"
+#include "stage/skydome/Skydome.h"
 #include <memory>
 
 class SelectScene : public IScene {
@@ -42,5 +42,4 @@ private:
 	Sprite* stageSprite_ = nullptr;
 
 	int selectCount = 0;
-	
 };

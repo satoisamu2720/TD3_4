@@ -5,13 +5,10 @@
 #include "scene/IScene.h"
 #include "scene/SelectScene.h"
 #include "scene/TitleScene.h"
-#include "scene/SunnyStage.h"
-#include "scene/RainStage.h"
-#include "SnowStage.h"
-#include "scene/FogStage.h"
 #include <memory>
 
 class GameManager {
+
 private:
 	std::unique_ptr<IScene> sceneArr_[KSCENEMAX];
 
