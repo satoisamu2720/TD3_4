@@ -20,7 +20,7 @@ private:
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformLight_;
 
-	Vector3 position = {-4, 1, 0.0f};
+	Vector3 position = {-4, 0, 0.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 lightPosition_ = {2, 0, 0}; 
 
@@ -51,12 +51,15 @@ public:
 	Vector3 GetTranslate() {return worldTransform_.translation_; };
 
 	 bool GetLight() { return lightFlag; }
+	 int GetLightCount() { return lightCount; }
+	 void SetLightCount(int LightCount) { lightCount += LightCount; }
 	 void  SetWeather(float weather) { weather_ = weather; }
 
 
 	void SetPosition(float position_) { position.z = position_; }
 
 	void SetStart(bool start) { gameStart = start; }
+	void SetMirror(bool mirror_) { mirror = mirror_; }
 
 	const WorldTransform* GetWorldTransformPtr() const { return &worldTransform_; }
 
@@ -69,6 +72,7 @@ private:
 
 	bool gameStart = false;
 	bool lightFlag = false;
+	bool mirror = false;
 	int lightCount = 1;
 	float lightTimer = 0;
 	// キャラクターの移動速度

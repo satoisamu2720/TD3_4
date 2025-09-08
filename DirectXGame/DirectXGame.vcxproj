@@ -114,7 +114,9 @@
     <ClCompile Include="DownPanel.cpp" />
     <ClCompile Include="Easings.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
+    <ClCompile Include="GoodSprit.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mirror.cpp" />
     <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />
     <ClCompile Include="Obstacle\box\Box.cpp" />
     <ClCompile Include="Obstacle\garbageCan\GarbageCan.cpp" />
@@ -165,11 +167,13 @@
     <ClInclude Include="DownPanel.h" />
     <ClInclude Include="Easings.h" />
     <ClInclude Include="camera\railCamera\RailCamera.h" />
+    <ClInclude Include="GoodSprit.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="Mirror.h" />
     <ClInclude Include="Obstacle\accelerator\Accelerator.h" />
     <ClInclude Include="Obstacle\box\Box.h" />
     <ClInclude Include="Obstacle\garbageCan\GarbageCan.h" />

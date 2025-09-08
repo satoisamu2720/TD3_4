@@ -33,12 +33,12 @@ void GameOverScene::Update() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
 			Sleep(1 * 300);
-			sceneNo = SELECT;
+			sceneNo = TITLE;
 		}
 	}
 
 	if (input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = SELECT;
+		sceneNo = TITLE;
 	}
 
 #ifdef _DEBUG

@@ -42,9 +42,11 @@ void Player::Update() {
 	} else if (input_->PushKey(DIK_W)) {
 		move_.y += kCharacterSpeed;
 	}
-	if (input_->IsTriggerMouse(0) && !lightFlag) {
-		lightFlag = true;
-		lightCount--;
+	if (!mirror && gameStart) {
+		if (input_->IsTriggerMouse(0) && !lightFlag) {
+			lightFlag = true;
+			lightCount--;
+		}
 	}
 
 	if (lightFlag) {

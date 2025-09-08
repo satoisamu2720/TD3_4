@@ -3,9 +3,11 @@
 #include "AxisIndicator.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "GoodSprit.h"
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "MT.h"
+#include "Mirror.h"
 #include "Model.h"
 #include "Obstacle/accelerator/Accelerator.h"
 #include "Obstacle/box/Box.h"
@@ -51,14 +53,40 @@ public:
 
 #pragma region 悪霊CSV関数
 
-	// ボックス発生データを読み込み
+	// 悪霊発生データを読み込み
 	void LoadEvilSpiritPopData();
 
-	// ボックスの発生コマンドの更新
+	// 悪霊の発生コマンドの更新
 	void UpdateEvilSpiritPopCommands();
 
-	/// ボックスの生成
+	/// 悪霊の生成
 	void EvilSpiritGenerate(Vector3 position);
+
+#pragma endregion
+
+#pragma region 良霊CSV関数
+
+	// 良霊発生データを読み込み
+	void LoadGoodSpiritPopData();
+
+	// 良霊の発生コマンドの更新
+	void UpdateGoodSpiritPopCommands();
+
+	/// 良霊の生成
+	void GoodSpiritGenerate(Vector3 position);
+
+#pragma endregion
+
+#pragma region 鏡CSV関数
+
+	// 鏡発生データを読み込み
+	void LoadMirrorPopData();
+
+	// 鏡の発生コマンドの更新
+	void UpdateMirrorPopCommands();
+
+	/// 鏡の生成
+	void MirrorGenerate(Vector3 position);
 
 #pragma endregion
 
@@ -147,11 +175,24 @@ private:
 
 	// 悪霊
 	std::list<std::unique_ptr<EvilSpirit>> evilSpirits_;
-	// ボックスの発生コマンド
+	// 悪霊の発生コマンド
 	std::stringstream evilSpiritPopCommands;
 	// モデル
 	Model* evilSpiritModel_ = nullptr;
 
+	// 良霊
+	std::list<std::unique_ptr<GoodSpirit>> goodSpirits_;
+	// 良霊の発生コマンド
+	std::stringstream goodSpiritPopCommands;
+	// モデル
+	Model* goodSpiritModel_ = nullptr;
+
+	// 鏡
+	std::list<std::unique_ptr<Mirror>> mirrors_;
+	// 鏡の発生コマンド
+	std::stringstream mirrorPopCommands;
+	// モデル
+	Model* mirrorModel_ = nullptr;
 
 	// ボックス
 	std::list<std::unique_ptr<Box>> boxs_;
@@ -241,6 +282,14 @@ private:
 	float lightUpY_;
 	float lightDownY_;
 
+	// 鏡の当たり判定
+	float mirrorFlontZ_;
+	float mirrorBackZ_;
+	float mirrorRightX_;
+	float mirrorLeftX_;
+	float mirrorUpY_;
+	float mirrorDownY_;
+
 	// ボックスの当たり判定
 	float BoxFlontZ_;
 	float BoxBackZ_;
@@ -256,6 +305,14 @@ private:
 	float EvilSpiritLeftX_;
 	float EvilSpiritUpY_;
 	float EvilSpiritDownY_;
+
+	// 悪例の当たり判定
+	float GoodSpiritFlontZ_;
+	float GoodSpiritBackZ_;
+	float GoodSpiritRightX_;
+	float GoodSpiritLeftX_;
+	float GoodSpiritUpY_;
+	float GoodSpiritDownY_;
 
 	// 加速装置の当たり判定
 	float SpeedFlontZ_;
@@ -276,9 +333,11 @@ private:
 	bool start;
 	bool gameStart;
 	bool onInversion;
+	bool mirrorFlag;
+	bool mirrorCollider = false;
 	int startTimer = 3 * 60;
 	Sprite* spriteStartTime_[2] = {};
-	Vector2 testPosTimer = {570.0f, 170.0f};
+	Vector2 testPosTimer = {1180.0f, 25.0f};
 
 	bool timerFlag = false;
 	float timer = 0;
@@ -302,6 +361,8 @@ private:
 	// ゴールフラグ
 	bool goalTimerFlag = false;
 	float goalTimer = 0;
+	bool allDead = false;
+	int EnemyCount = 0;
 
 	// 読み込みサウンド
 	uint32_t BGM_;
