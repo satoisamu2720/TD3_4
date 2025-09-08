@@ -220,6 +220,8 @@ private:
 	float PlayerBackZ_;
 	float PlayerRightX_;
 	float PlayerLeftX_;
+	float PlayerUpY_;
+	float PlayerDownY_;
 
 
 	// ボックスの当たり判定
@@ -227,6 +229,8 @@ private:
 	float BoxBackZ_;
 	float BoxRightX_;
 	float BoxLeftX_;
+	float BoxUpY_;
+	float BoxDownY_;
 
 	
 

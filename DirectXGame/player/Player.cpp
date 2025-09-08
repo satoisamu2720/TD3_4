@@ -63,10 +63,13 @@ void Player::Update() {
 			    move_.x += kCharacterSpeed;
 			   
 		} 
-			
-		
-		
-		//worldTransformFront_.rotation_.x += 0.01f;
+		if (input_->PushKey(DIK_O)) {
+		    move_.y -= kCharacterSpeed;
+
+	    } else if (input_->PushKey(DIK_P)) {
+		    move_.y += kCharacterSpeed;
+	    } 
+			//worldTransformFront_.rotation_.x += 0.01f;
 
 #ifdef _DEBUG
 		if (input_->PushKey(DIK_W)) {

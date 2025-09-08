@@ -26,7 +26,7 @@ void SunnyStage::Initialize() {
 
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
-	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
+	modelPlayerBody_.reset(Model::CreateFromOBJ("cube", true));
 	// 自キャラモデル配列
 	std::vector<Model*> playerModels = {
 	    modelPlayerBody_.get(),
@@ -165,10 +165,13 @@ void SunnyStage::Update() {
 
 #pragma region プレイヤーの当たり判定
 
-		PlayerBackZ_ = player_->GetWorldPosition().z - 2.4f;
-		PlayerFlontZ_ = player_->GetWorldPosition().z + 2.3f;
-		PlayerLeftX_ = player_->GetWorldPosition().x - 1.3f;
-		PlayerRightX_ = player_->GetWorldPosition().x + 1.3f;
+		PlayerBackZ_ = player_->GetWorldPosition().z - 1.0f;
+		PlayerFlontZ_ = player_->GetWorldPosition().z + 1.0f;
+		PlayerLeftX_ = player_->GetWorldPosition().x - 1.0f;
+		PlayerRightX_ = player_->GetWorldPosition().x + 1.0f;
+	    PlayerDownY_ = player_->GetWorldPosition().y - 1.0f;
+	    PlayerUpY_ = player_->GetWorldPosition().y + 1.0f;
+
 
 #pragma endregion
 
@@ -182,9 +185,12 @@ void SunnyStage::Update() {
 			BoxFlontZ_ = box->GetWorldPosition().z + 1.0f;
 			BoxLeftX_ = box->GetWorldPosition().x - 1.0f;
 			BoxRightX_ = box->GetWorldPosition().x + 1.0f;
+		    BoxDownY_ = box->GetWorldPosition().y - 1.0f;
+		    BoxUpY_ = box->GetWorldPosition().y + 1.0f;
 
 			if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
-			    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
+			    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_) &&
+				PlayerDownY_< BoxUpY_ && PlayerUpY_ > BoxDownY_) {
 
 				boxMoveFlag = true;
 
@@ -331,6 +337,8 @@ void SunnyStage::Update() {
 		followCamera_->SetPos({0, 4, 0});
 		
 	}
+
+
 	ImGui::Begin("stage");
 	ImGui::Text("SunnyStage");
 	ImGui::Checkbox("Game Start", &start);
