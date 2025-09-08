@@ -123,3 +123,5 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 const Vector3 GetBezierCurve(const Vector3 p1, const Vector3 p2, const Vector3 p3, float t);
 
 Vector3 TrianglePositionXZ(Vector3 p1, Vector3 p2);
+
+Matrix4x4 LookAt(const Vector3& eye, const Vector3& target, const Vector3& up);

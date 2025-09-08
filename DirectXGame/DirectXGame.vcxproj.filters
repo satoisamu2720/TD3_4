@@ -64,11 +64,20 @@
     <Filter Include="camera">
       <UniqueIdentifier>{18619abd-0e5b-4804-9cb9-e9e436407306}</UniqueIdentifier>
     </Filter>
-    <Filter Include="camera\followCameta">
-      <UniqueIdentifier>{9ba7290e-0596-43f0-a1f9-7705f05466d8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="camera\railCamera">
       <UniqueIdentifier>{986f1c21-f072-4436-8672-46f4204f7919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera\followCamera">
+      <UniqueIdentifier>{9ba7290e-0596-43f0-a1f9-7705f05466d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="skydome">
+      <UniqueIdentifier>{158ce17f-63f4-4df6-826c-db1d9fbb595d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="spirit">
+      <UniqueIdentifier>{69b51853-3c68-4b82-910b-2fc8cd8d7288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="spirit\evilSpirit">
+      <UniqueIdentifier>{b6d732dc-80f3-4d22-ab40-bd89a736a35d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -96,14 +105,20 @@
     <ClCompile Include="baseCharacter\BaseCharacter.cpp">
       <Filter>baseCharacter</Filter>
     </ClCompile>
-    <ClCompile Include="camera\followCameta\FollowCamera.cpp">
-      <Filter>camera\followCameta</Filter>
-    </ClCompile>
     <ClCompile Include="camera\railCamera\RailCamera.cpp">
       <Filter>camera\railCamera</Filter>
     </ClCompile>
     <ClCompile Include="3d\WorldTransform.EX.cpp">
       <Filter>ヘッダー ファイル\3d</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\followCamera\FollowCamera.cpp">
+      <Filter>camera\followCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="skydome\Skydome.cpp">
+      <Filter>skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="spirit\evilSpirit\EvilSpirit.cpp">
+      <Filter>spirit\evilSpirit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,11 +218,17 @@
     <ClInclude Include="baseCharacter\BaseCharacter.h">
       <Filter>baseCharacter</Filter>
     </ClInclude>
-    <ClInclude Include="camera\followCameta\FollowCamera.h">
-      <Filter>camera\followCameta</Filter>
-    </ClInclude>
     <ClInclude Include="camera\railCamera\RailCamera.h">
       <Filter>camera\railCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\followCamera\FollowCamera.h">
+      <Filter>camera\followCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="skydome\Skydome.h">
+      <Filter>skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="spirit\evilSpirit\EvilSpirit.h">
+      <Filter>spirit\evilSpirit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

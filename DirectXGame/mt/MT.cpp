@@ -404,3 +404,32 @@ Vector3 TrianglePositionXZ(Vector3 p1, Vector3 p2) {
 
 	return result;
 }
+Matrix4x4 LookAt(const Vector3& eye, const Vector3& target, const Vector3& up) {
+	// 1. カメラの正面方向ベクトル（ターゲット方向）
+	Vector3 zAxis = Normalize(Subtract(target, eye)); // Forward
+	// 2. カメラの右方向ベクトル
+	Vector3 xAxis = Normalize(Subtract(up, zAxis)); // Right
+	// 3. カメラの上方向ベクトル
+	Vector3 yAxis = Subtract(zAxis, xAxis); // Up
+
+	// 4. ビュー行列を作る
+	Matrix4x4 view = {}; // 単位行列で初期化
+	view.m[0][0] = xAxis.x;
+	view.m[0][1] = yAxis.x;
+	view.m[0][2] = zAxis.x;
+	view.m[0][3] = 0.0f;
+	view.m[1][0] = xAxis.y;
+	view.m[1][1] = yAxis.y;
+	view.m[1][2] = zAxis.y;
+	view.m[1][3] = 0.0f;
+	view.m[2][0] = xAxis.z;
+	view.m[2][1] = yAxis.z;
+	view.m[2][2] = zAxis.z;
+	view.m[2][3] = 0.0f;
+	view.m[3][0] = -Dot(xAxis, eye);
+	view.m[3][1] = -Dot(yAxis, eye);
+	view.m[3][2] = -Dot(zAxis, eye);
+	view.m[3][3] = 1.0f;
+
+	return view;
+}

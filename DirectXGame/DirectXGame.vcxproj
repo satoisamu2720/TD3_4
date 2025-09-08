@@ -111,12 +111,14 @@
     <ClCompile Include="baseCharacter\BaseCharacter.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
-    <ClCompile Include="camera\followCameta\FollowCamera.cpp" />
+    <ClCompile Include="camera\followCamera\FollowCamera.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mt\MT.cpp" />
     <ClCompile Include="player\Player.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="skydome\Skydome.cpp" />
+    <ClCompile Include="spirit\evilSpirit\EvilSpirit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\ImGuiManager.h" />
@@ -143,7 +145,7 @@
     <ClInclude Include="base\StringUtility.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
-    <ClInclude Include="camera\followCameta\FollowCamera.h" />
+    <ClInclude Include="camera\followCamera\FollowCamera.h" />
     <ClInclude Include="camera\railCamera\RailCamera.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Matrix4x4.h" />
@@ -153,6 +155,8 @@
     <ClInclude Include="mt\MT.h" />
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="skydome\Skydome.h" />
+    <ClInclude Include="spirit\evilSpirit\EvilSpirit.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\TerrainPS.hlsl">

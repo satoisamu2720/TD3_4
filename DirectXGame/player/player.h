@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #define _USE_MATH_DEFINES
 #include "ImGuiManager.h"
 #include "Model.h"
@@ -16,29 +16,37 @@
 class Player : public BaseCharacter {
 private:
 	WorldTransform worldTransform_;
-	Vector3 position = {0.0f, 0.0f, 0.0f};
+	Vector3 position = {0.0f, 0.0f, 8.0f};
 	Vector3 move_ = {0, 0, 0};
-	// ƒLƒƒƒ‰ƒNƒ^[‚ÌˆÚ“®‘¬“x
+	// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ç§»å‹•é€Ÿåº¦
 	const float Speed = 0.2f;
 
 	Input* input_ = nullptr;
 
 	const ViewProjection* viewProjection_ = nullptr;
 
+
 public:
-	// ƒvƒŒƒCƒ„[‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆæœŸåŒ–
 	void Initialize(const std::vector<Model*>& models);
-	// XVˆ—
+	// æ›´æ–°å‡¦ç†
 	void Update();
 
-	// ƒvƒŒƒCƒ„[•`‰æ
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æç”»
 	void Draw(ViewProjection& view);
 
 	Vector3 GetWorldPosition();
+
+	Vector3 GetTransformRotation();
+
+	Vector3 GetTransformPosition();
 
 	~Player();
 
 	void SetViewProjection(const ViewProjection* viewProjection) {
 		viewProjection_ = viewProjection;
 	}
+	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+	
+	const WorldTransform* GetWorldTransformPtr() const { return &worldTransform_; }
 };
