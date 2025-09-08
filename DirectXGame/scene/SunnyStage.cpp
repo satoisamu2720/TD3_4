@@ -190,19 +190,24 @@ void SunnyStage::Update() {
 
 #pragma region プレイヤーとボックスの当たり判定
 
-		Vector3 playerPos = player_->GetWorldPosition();
+		Vector3 playerPos;
+
+		playerPos.x = player_->GetWorldPosition().x;
+	    playerPos.y = player_->GetWorldPosition().y;
+
+
 	    float playerFeetY = playerPos.y; // プレイヤーの足元
 
 	    for (const std::unique_ptr<Box>& box : boxs_) {
 		    Vector3 boxPos = box->GetWorldPosition();
-		    float boxLeftX = boxPos.x - 1.0f;  // ブロックの左端
-		    float boxRightX = boxPos.x + 1.0f; // ブロックの右端
-		    float boxTopY = boxPos.y + 1.0f;   // ブロックの上面
-		    float boxBottomY = boxPos.y;       // ブロックの底面
+		    float boxLeftX = boxPos.x - 0.5f;  // ブロックの左端
+		    float boxRightX = boxPos.x + 0.5f; // ブロックの右端
+		    float boxTopY = boxPos.y + 0.5f;   // ブロックの上面
+		    //float boxBottomY = boxPos.y - 0.5f;       // ブロックの底面
 
 		    // プレイヤーの幅（簡易）
-		    float playerLeftX = playerPos.x - 0.5f;
-		    float playerRightX = playerPos.x + 0.5f;
+		    float playerLeftX = playerPos.x - 0.25f;
+		    float playerRightX = playerPos.x + 0.25f;
 
 		    // X方向でブロックに接触しているか
 		    bool hitX = (playerRightX > boxLeftX && playerLeftX < boxRightX);
