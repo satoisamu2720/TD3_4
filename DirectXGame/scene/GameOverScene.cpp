@@ -5,15 +5,14 @@ void GameOverScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	texHandle_ = TextureManager::Load("gameClear.png");
-	buttonhandle_ = TextureManager::Load("PlayerHP3.png");
+	texHandle_ = TextureManager::Load("gameOver.png");
+	//buttonhandle_ = TextureManager::Load("PlayerHP3.png");
 
 	sprite_ = Sprite::Create(texHandle_, {0, 0});
 	buttonSprite_ = Sprite::Create(buttonhandle_, {0, 0});
 }
 
 void GameOverScene::Update() {
-
 	if (input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = SELECT;
 	}

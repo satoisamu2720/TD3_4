@@ -15,7 +15,7 @@ void TitleScene::Initialize() {
 	// gameOverSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameOver.mp3");
 	// gameClearSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameClear.mp3");
 
-	titleTexHandle_ = TextureManager::Load("Title.png");
+	titleTexHandle_ = TextureManager::Load("TitleScene.png");
 	titleSprite_ = Sprite::Create(titleTexHandle_, {0, 0});
 
 	worldTransform_.Initialize();
@@ -39,7 +39,7 @@ void TitleScene::Initialize() {
 	worldTransformTitle_.scale_ = {2, 2, 2};
 
 	// 背景スプライト
-	titleTexHandle_ = TextureManager::Load("title.png");
+	titleTexHandle_ = TextureManager::Load("titleScene.png");
 	titleSprite_ =
 	    Sprite::Create(titleTexHandle_, {640, 360}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 }

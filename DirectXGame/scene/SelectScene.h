@@ -29,8 +29,8 @@ private:
 	uint32_t backSceneTexHandle_ = 0;
 	Sprite* backSceneSprite_ = nullptr;
 
-	uint32_t testSceneTexHandle_ = 0;
-	Sprite* testSceneSprite_ = nullptr;
+	uint32_t explanationTexHandle_ = 0;
+	Sprite* explanationSprite_ = nullptr;
 
 	uint32_t gameSceneTexHandle_ = 0;
 	Sprite* gameSceneSprite_ = nullptr;
@@ -41,5 +41,5 @@ private:
 	uint32_t stageTexHandle_ = 0;
 	Sprite* stageSprite_ = nullptr;
 
-	int selectCount = 0;
+	bool isExplanation = 0;
 };
