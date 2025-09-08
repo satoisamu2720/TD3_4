@@ -335,4 +335,7 @@ private:
 
 	// サウンドフラグ
 	bool setFlag_ = false;
+
+	//重力
+	float GravitySpeed;
 };

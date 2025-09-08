@@ -114,7 +114,6 @@
     <ClCompile Include="DownPanel.cpp" />
     <ClCompile Include="Easings.cpp" />
     <ClCompile Include="camera\railCamera\RailCamera.cpp" />
-    <ClCompile Include="FogStage.cpp" />
     <ClCompile Include="InvisibleBox.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle\accelerator\Accelerator.cpp" />

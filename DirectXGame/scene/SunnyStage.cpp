@@ -113,6 +113,8 @@ void SunnyStage::Initialize() {
 	CarSound_ = Audio::GetInstance()->LoadWave("Sound/Car.mp3"); // 車走行
 
 	Audio::GetInstance()->Audio::PauseWave(summerSound_);
+
+	GravitySpeed = 5.0f;
 }
 
 void SunnyStage::Update() {
@@ -120,6 +122,8 @@ void SunnyStage::Update() {
 #pragma region 更新処理
 
 	player_->Update();
+
+	
 
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Update();
@@ -131,7 +135,6 @@ void SunnyStage::Update() {
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Update();
 	}
-	player_->SunnyUpdate();
 		for (const std::unique_ptr<Box>& box_ : boxs_) {
 			box_->Update();
 		}
@@ -239,7 +242,7 @@ void SunnyStage::Update() {
 
 #pragma endregion
 
-#pragma region プレイヤーとボックスの当たり判定
+#pragma region プレイヤーと幽世ボックスの当たり判定
 
 		Vector3 playerPos;
 
@@ -247,8 +250,11 @@ void SunnyStage::Update() {
 	    playerPos.y = player_->GetWorldPosition().y;
 
 
+		playerPos.y -= GravitySpeed;
+
 	    float playerFeetY = playerPos.y; // プレイヤーの足元
 
+		
 	    for (const std::unique_ptr<InvisibleBox>& Inbox : InvisiBoxs_) {
 		    Vector3 boxPos = Inbox->GetWorldPosition();
 		    float boxLeftX = boxPos.x - 0.5f;  // ブロックの左端
@@ -285,6 +291,45 @@ void SunnyStage::Update() {
 	    if (playerPos.x > stageMaxX)
 		    playerPos.x = stageMaxX;
 
+
+#pragma endregion
+
+
+#pragma region プレイヤーとボックスの当たり判定
+
+
+	    playerPos.x = player_->GetWorldPosition().x;
+	    playerPos.y = player_->GetWorldPosition().y;
+
+	    playerPos.y -= GravitySpeed;
+
+	    for (const std::unique_ptr<Box>& box : boxs_) {
+		    Vector3 boxPos = box->GetWorldPosition();
+		    float boxLeftX = boxPos.x - 0.5f;  // ブロックの左端
+		    float boxRightX = boxPos.x + 0.5f; // ブロックの右端
+		    float boxTopY = boxPos.y + 0.5f;   // ブロックの上面
+		    // float boxBottomY = boxPos.y - 0.5f;       // ブロックの底面
+
+		    // プレイヤーの幅（簡易）
+		    float playerLeftX = playerPos.x - 0.25f;
+		    float playerRightX = playerPos.x + 0.25f;
+
+		    // X方向でブロックに接触しているか
+		    bool hitX = (playerRightX > boxLeftX && playerLeftX < boxRightX);
+
+		    if (hitX) {
+			    // 上から落ちてきた場合、足場に乗せる
+			    if (playerFeetY >= boxTopY - 0.2f && playerFeetY <= boxTopY + 1.0f) {
+				    playerPos.y = boxTopY; // 足元をブロック上に固定
+			    }
+
+			    // 左右にめり込んでいたら押し戻す
+			    if (playerPos.x < boxLeftX)
+				    playerPos.x = boxLeftX - 0.5f;
+			    if (playerPos.x > boxRightX)
+				    playerPos.x = boxRightX + 0.5f;
+		    }
+	    }
 
 #pragma endregion
 
