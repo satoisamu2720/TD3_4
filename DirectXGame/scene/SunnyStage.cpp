@@ -27,14 +27,9 @@ void SunnyStage::Initialize() {
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
-	modelPlayerFront_.reset(Model::CreateFromOBJ("player_Front", true));
-	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
-
 	// 自キャラモデル配列
 	std::vector<Model*> playerModels = {
 	    modelPlayerBody_.get(),
-	    modelPlayerFront_.get(),
-	    modelPlayerBack_.get(),
 	};
 	// プレイヤー初期化
 	player_ = std::make_unique<Player>();
@@ -84,13 +79,11 @@ void SunnyStage::Initialize() {
 #pragma endregion
 
 #pragma region カメラ
-	// レールカメラ初期化
-	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 4.0f, 10.0f}, {0.0f, 0.0f, 0.0f});
-	railCamera_->SetTarget(&player_->GetWorldTransform());
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
+	followCamera_->SetTarget(player_->GetWorldTransformPtr());
 	// 追従対象をプレイヤーに
-	player_->SetParent(&railCamera_->GetWorldTransform());
-	player_->SetViewProjection(&railCamera_->GetViewProjection());
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
 #pragma endregion
 
@@ -124,14 +117,7 @@ void SunnyStage::Update() {
 
 #pragma region 更新処理
 	
-	
-
-	timer_->SetStartTimerFlag(true);
-
-	timer_->Update();
-	player_->SetStart(start);
 	player_->Update();
-	player_->SunnyUpdate();
 		for (const std::unique_ptr<Box>& box_ : boxs_) {
 			box_->Update();
 		}
@@ -161,8 +147,6 @@ void SunnyStage::Update() {
 		
 
 		if (timer_->GetStartTime() <= 0 && start == false) {
-			start = true;
-			railCamera_->SetStart(start);
 		    timer_->SetTimerFlag(true);
 		    //Audio::GetInstance()->Audio::PlayWave(CarSound_, true, 1.0f);
 		}
@@ -170,9 +154,9 @@ void SunnyStage::Update() {
 #pragma endregion
 
 #pragma region カメラセット
-		railCamera_->Update();
-		viewProjection_.matView = railCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+		followCamera_->Update();
+	    viewProjection_.matView = followCamera_->GetViewProjection().matView;
+	    viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 
 #pragma endregion
@@ -211,9 +195,7 @@ void SunnyStage::Update() {
 					tmpTranslate.y += 7.0f;
 
 					if (timerFlag == false) {
-						player_->SetNormalHit(true);
 						// player_->SetThunderHit(true);
-						railCamera_->SetIsSpeedDown(true);
 						timerFlag = true;
 					}
 
@@ -236,7 +218,7 @@ void SunnyStage::Update() {
 
 			if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
 			    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
-				railCamera_->SetIsSpeedUp(true);
+				
 			}
 		}
 
@@ -333,24 +315,20 @@ void SunnyStage::Update() {
 
 #ifdef _DEBUG
 	
-		if (input_->TriggerKey(DIK_SPACE)) {
-		    Reset();
-	    }
 
 	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
 		start = true;
-		railCamera_->SetStart(start);
+		
 		timer_->SetTimerFlag(true);
 	} else if (input_->TriggerKey(DIK_LSHIFT) && start == true) {
 		start = false;
-		railCamera_->SetStart(start);
+		
 	}
 
 	if (input_->TriggerKey(DIK_R)) {
 		timer_->SetTimerFlag(false);
-		railCamera_->SetStart(false);
 		timer_->SetTime(0, 30);
-		railCamera_->SetPos({0, 4, 0});
+		followCamera_->SetPos({0, 4, 0});
 		
 	}
 	ImGui::Begin("stage");
@@ -875,8 +853,8 @@ void SunnyStage::Reset() {
 	
 	timer_->SetTime(0, 30);
 	timer_->SetTimerFlag(false);
-	railCamera_->SetPos({0, 4, 0});
-	railCamera_->SetStart(false);
+	followCamera_->SetPos({0, 4, 0});
+	
 	start = false;
 
 	sceneNo = SELECT;
@@ -898,8 +876,6 @@ void SunnyStage::Goal() {
 		goalTimerFlag = false;
 		start = false;
 
-		railCamera_->SetStart(false);
-
 		if (timer_->GetTimeSecond() > 0) {
 
 			//Audio::GetInstance()->Audio::StopWave(summerSound_);
@@ -907,7 +883,7 @@ void SunnyStage::Goal() {
 			
 			timer_->SetTime(0, 30); 
 			timer_->SetTimerFlag(false);
-			railCamera_->SetPos({0, 4, 0});
+			followCamera_->SetPos({0, 4, 0});
 			
 			sceneNo = CLEAR;
 		} else {
@@ -916,7 +892,7 @@ void SunnyStage::Goal() {
 
 			timer_->SetTime(0, 30);
 			timer_->SetTimerFlag(false);
-			railCamera_->SetPos({0, 4, 0});
+			followCamera_->SetPos({0, 4, 0});
 			
 			sceneNo = END;
 		}

@@ -10,6 +10,7 @@
 #include "ImGuiManager.h"
 #include "player/Player.h"
 #include "camera/railCamera/RailCamera.h"
+#include "camera/followCameta/FollowCamera.h"
 #include "stage/skydome/Skydome.h"
 #include "stage/ground/Ground.h"
 #include "stage/guardRail/GuardRail.h"
@@ -170,6 +171,7 @@ private:
 	// カメラ
 	std::unique_ptr<DebugCamera> debugCamera_;
 	std::unique_ptr<RailCamera> railCamera_;
+	std::unique_ptr<FollowCamera> followCamera_;
 
 	// スタートステージ
 	std::list<std::unique_ptr<Skydome>> startSkydomes_;
