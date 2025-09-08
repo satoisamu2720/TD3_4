@@ -19,7 +19,7 @@ void SunnyStage::Initialize() {
 		spriteStartTime_[i] =
 		    Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
-	timer_->SetTime(0, 15);
+	timer_->SetTime(0, 30);
 	timer_->SetStartTimer(4);
 #pragma endregion
 
@@ -115,9 +115,29 @@ void SunnyStage::Update() {
 
 #pragma region 更新処理
 
+	if (input_->PushKey(DIK_LEFT)) {
+		onInversion = true;
+		followCamera_->SetInversion(onInversion);
+		timer_->SetTimerFlag(true);
+		player_->SetTranslate({
+		    player_->GetWorldPosition().x,
+		    player_->GetWorldPosition().y,
+			3
+		});
+	} else if (input_->PushKey(DIK_RIGHT)) {
+		onInversion = false;
+		followCamera_->SetInversion(onInversion);
+		timer_->SetTimerFlag(false);
+		player_->SetTranslate({
+			player_->GetWorldPosition().x, 
+			player_->GetWorldPosition().y, 
+			0
+		});
+	}
+
 	player_->Update();
 
-	player_->SetPosition(followCamera_->GetPos().z);
+	timer_->Update();
 
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Update();
@@ -425,15 +445,15 @@ void SunnyStage::Update() {
 
 void SunnyStage::DrawTime() {
 
-	// ゲームスタートタイマー秒数
-	int eachMathNumber[2] = {};
-	int mathNumber = timer_->GetStartTime();
-	int mathKeta = 10;
-	for (int i = 0; i < 2; i++) {
-		eachMathNumber[i] = mathNumber / mathKeta;
-		mathNumber = mathNumber % mathKeta;
-		mathKeta = mathKeta / 10;
-	}
+	//// ゲームスタートタイマー秒数
+	//int eachMathNumber[2] = {};
+	//int mathNumber = timer_->GetStartTime();
+	//int mathKeta = 10;
+	//for (int i = 0; i < 2; i++) {
+	//	eachMathNumber[i] = mathNumber / mathKeta;
+	//	mathNumber = mathNumber % mathKeta;
+	//	mathKeta = mathKeta / 10;
+	//}
 	// 秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
@@ -450,13 +470,13 @@ void SunnyStage::DrawTime() {
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 
-		// スタート秒数描画
-		spriteStartTime_[1]->SetSize({128, 256});
-		spriteStartTime_[1]->SetPosition(testPosTimer);
-		spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
-		if (start == false) {
-			spriteStartTime_[1]->Draw();
-		}
+		//// スタート秒数描画
+		//spriteStartTime_[1]->SetSize({128, 256});
+		//spriteStartTime_[1]->SetPosition(testPosTimer);
+		//spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
+		//if (start == false) {
+		//	spriteStartTime_[1]->Draw();
+		//}
 	}
 }
 

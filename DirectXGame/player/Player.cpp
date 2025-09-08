@@ -78,14 +78,14 @@ void Player::Update() {
 	if (len > 0.0001f) {
 		lightDir.x /= len;
 		lightDir.y /= len;
-		lightDir.z /= len;
+		//lightDir.z /= len;
 	}
 
 	// ライトをプレイヤーから一定距離に
 	float lightDistance = 2.5f; // プレイヤーからの距離
 	lightDir.x *= lightDistance;
-	lightDir.y *= lightDistance;
-	lightDir.z *= lightDistance;
+	/*lightDir.y *= lightDistance;
+	lightDir.z *= lightDistance;*/
 
 	// カメラ回転補正
 	float cameraYaw = viewProjection_->rotation_.y;

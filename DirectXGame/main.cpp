@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	PrimitiveDrawer* primitiveDrawer = nullptr;
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow(L"3141_天機");
+	win->CreateGameWindow(L"4048_現世");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
