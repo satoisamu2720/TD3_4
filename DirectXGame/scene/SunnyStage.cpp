@@ -6,19 +6,18 @@ void SunnyStage::Initialize() {
 	input_ = Input::GetInstance();
 	light_ = LightGroup::Create();
 
-	
-	
 	texHandle_ = TextureManager::Load("Box/Tex.png");
 
 #pragma region タイム
 
 	timer_ = std::make_unique<Timer>();
-	
+
 	textureHandleNumber_ = TextureManager::Load("number.png");
 
 	for (int i = 0; i < 2; i++) {
 		spriteSecondTime_[i] = Sprite::Create(textureHandleNumber_, {10.0f + i * 46, 20});
-		spriteStartTime_[i] = Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
+		spriteStartTime_[i] =
+		    Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
 	timer_->SetTime(0, 15);
 	timer_->SetStartTimer(4);
@@ -26,15 +25,13 @@ void SunnyStage::Initialize() {
 
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
-	modelPlayerBody_.reset(Model::CreateFromOBJ("player_Body", true));
-	modelPlayerFront_.reset(Model::CreateFromOBJ("player_Front", true));
-	modelPlayerBack_.reset(Model::CreateFromOBJ("player_Back", true));
+	modelPlayerBody_.reset(Model::CreateFromOBJ("cube", true));
+	modelPlayerLight_.reset(Model::CreateFromOBJ("cube", true));
 
 	// 自キャラモデル配列
 	std::vector<Model*> playerModels = {
 	    modelPlayerBody_.get(),
-	    modelPlayerFront_.get(),
-	    modelPlayerBack_.get(),
+	    modelPlayerLight_.get(),
 	};
 	// プレイヤー初期化
 	player_ = std::make_unique<Player>();
@@ -57,6 +54,9 @@ void SunnyStage::Initialize() {
 	// 加速装置のCSVファイル読み込み
 	LoadAcceleratorPopData();
 
+	evilSpiritModel_ = (Model::CreateFromOBJ("cube", true));
+
+	LoadEvilSpiritPopData();
 
 #pragma endregion
 
@@ -79,22 +79,18 @@ void SunnyStage::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
 
-	//ガードレール
+	// ガードレール
 
-	//LoadGuardRailPopData();
-
-	
+	// LoadGuardRailPopData();
 
 #pragma endregion
 
 #pragma region カメラ
-	// レールカメラ初期化
-	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize({0.0f, 4.0f, 10.0f}, {0.0f, 0.0f, 0.0f});
-	railCamera_->SetTarget(&player_->GetWorldTransform());
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
+	followCamera_->SetTarget(player_->GetWorldTransformPtr());
 	// 追従対象をプレイヤーに
-	player_->SetParent(&railCamera_->GetWorldTransform());
-	player_->SetViewProjection(&railCamera_->GetViewProjection());
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
 #pragma endregion
 
@@ -102,13 +98,10 @@ void SunnyStage::Initialize() {
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
-	
+	// summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3"); // 晴BGM
 
-	
-	//summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3"); // 晴BGM
-
-	//Audio::GetInstance()->Audio::PlayWave(summerSound_, true, 0.5f);
-	//  サウンド
+	// Audio::GetInstance()->Audio::PlayWave(summerSound_, true, 0.5f);
+	//   サウンド
 
 	BGM_ = Audio::GetInstance()->LoadWave("Sound/BGM.mp3");
 	cloudSound_ = Audio::GetInstance()->LoadWave("Sound/cloud.mp3");       // 雲
@@ -119,22 +112,25 @@ void SunnyStage::Initialize() {
 	gameClearSound_ = Audio::GetInstance()->Audio::LoadWave("Sound/gameClear.mp3");
 	CarSound_ = Audio::GetInstance()->LoadWave("Sound/Car.mp3"); // 車走行
 
-
-
 	Audio::GetInstance()->Audio::PauseWave(summerSound_);
 }
 
 void SunnyStage::Update() {
 
 #pragma region 更新処理
-	
-	
 
-	timer_->SetStartTimerFlag(true);
-
-	timer_->Update();
-	player_->SetStart(start);
 	player_->Update();
+
+	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
+		evilSpirit_->Update();
+	}
+	for (const std::unique_ptr<Box>& box_ : boxs_) {
+		box_->Update();
+	}
+	// 加速装置
+	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+		accelerator_->Update();
+	}
 	player_->SunnyUpdate();
 		for (const std::unique_ptr<Box>& box_ : boxs_) {
 			box_->Update();
@@ -150,51 +146,96 @@ void SunnyStage::Update() {
 			accelerator_->Update();
 		}
 
-		for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
-			MiddleSkydome_->Update();
-		}
+	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
+		MiddleSkydome_->Update();
+	}
 
-		for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-			goalSkydome_->Update();
-		}
-	    for (const std::unique_ptr<TrafficLight>& guardRail_ : trafficLight_) {
-			guardRail_->Update();
-		}
+	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+		goalSkydome_->Update();
+	}
+	for (const std::unique_ptr<TrafficLight>& guardRail_ : trafficLight_) {
+		guardRail_->Update();
+	}
 
-		//ground_->Update();
+	// ground_->Update();
 
-		
+	if (timer_->GetStartTime() == 3) {
+	}
 
-		if (timer_->GetStartTime() == 3) {
-			
-	    }
-		
-
-		if (timer_->GetStartTime() <= 0 && start == false) {
-			start = true;
-			railCamera_->SetStart(start);
-		    timer_->SetTimerFlag(true);
-		    //Audio::GetInstance()->Audio::PlayWave(CarSound_, true, 1.0f);
-		}
+	if (timer_->GetStartTime() <= 0 && start == false) {
+		timer_->SetTimerFlag(true);
+		// Audio::GetInstance()->Audio::PlayWave(CarSound_, true, 1.0f);
+	}
 
 #pragma endregion
 
 #pragma region カメラセット
-		railCamera_->Update();
-		viewProjection_.matView = railCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
+	followCamera_->Update();
+	viewProjection_.matView = followCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
 
 #pragma endregion
 
-		// 当たり判定
+	// 当たり判定
 
 #pragma region プレイヤーの当たり判定
 
-		PlayerRightX_ = player_->GetWorldPosition().x - 2.4f;
-		PlayerLeftX_ = player_->GetWorldPosition().x + 2.3f;
-		PlayerBackZ_ = player_->GetWorldPosition().z - 1.3f;
-		PlayerFlontZ_ = player_->GetWorldPosition().z + 1.3f;
+	PlayerBackZ_ = player_->GetWorldPosition().z - 1.0f;
+	PlayerFlontZ_ = player_->GetWorldPosition().z + 1.0f;
+	PlayerLeftX_ = player_->GetWorldPosition().x - 1.0f;
+	PlayerRightX_ = player_->GetWorldPosition().x + 1.0f;
+	PlayerDownY_ = player_->GetWorldPosition().y - 1.0f;
+	PlayerUpY_ = player_->GetWorldPosition().y + 1.0f;
+
+#pragma endregion
+
+	#pragma region ライトの当たり判定
+
+	lightBackZ_ = player_->GetLightWorldPosition().z - 1.0f;
+	lightFlontZ_ = player_->GetLightWorldPosition().z + 1.0f;
+	lightLeftX_ = player_->GetLightWorldPosition().x - 1.0f;
+	lightRightX_ = player_->GetLightWorldPosition().x + 1.0f;
+	lightDownY_ = player_->GetLightWorldPosition().y - 1.0f;
+	lightUpY_ = player_->GetLightWorldPosition().y + 1.0f;
+
+#pragma endregion
+
+#pragma region ライトと悪例の当たり判定
+
+	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
+
+		bool boxMoveFlag = evilSpirit_->IsDead();
+
+		EvilSpiritBackZ_ = evilSpirit_->GetWorldPosition().z - BackZHit_;
+		EvilSpiritFlontZ_ = evilSpirit_->GetWorldPosition().z + FlontZHit_;
+		EvilSpiritLeftX_ = evilSpirit_->GetWorldPosition().x - LeftXHit_;
+		EvilSpiritRightX_ = evilSpirit_->GetWorldPosition().x + RightXHit_;
+		EvilSpiritDownY_ = evilSpirit_->GetWorldPosition().y - DownHit_;
+		EvilSpiritUpY_ = evilSpirit_->GetWorldPosition().y +   UpHit_;
+
+		if ((lightLeftX_ < EvilSpiritRightX_ && lightRightX_ > EvilSpiritLeftX_) &&
+		    (EvilSpiritFlontZ_ > lightBackZ_ && EvilSpiritBackZ_ < lightFlontZ_) &&
+		    lightDownY_ < EvilSpiritUpY_ && lightUpY_ > EvilSpiritDownY_ && player_->GetLight()) {
+
+			boxMoveFlag = true;
+
+			if (boxMoveFlag) {
+
+				Vector3 tmpTranslate = evilSpirit_->GetWorldPosition();
+
+				tmpTranslate.y += 7.0f;
+
+				if (timerFlag == false) {
+					// player_->SetThunderHit(true);
+					timerFlag = true;
+				}
+
+				evilSpirit_->SetTranslate(tmpTranslate);
+				evilSpirit_->SetBoxFlag(boxMoveFlag);
+			}
+		}
+	}
 
 #pragma endregion
 
@@ -248,47 +289,59 @@ void SunnyStage::Update() {
 #pragma endregion
 
 #pragma region プレイヤーと加速装置の当たり判定
-		// 加速装置
+	// 加速装置
 
-		for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-			SpeedBackZ_ = accelerator_->GetWorldPosition().z - 1.0f;
-			SpeedFlontZ_ = accelerator_->GetWorldPosition().z + 1.0f;
-			SpeedLeftX_ = accelerator_->GetWorldPosition().x - 5.0f;
-			SpeedRightX_ = accelerator_->GetWorldPosition().x + 5.0f;
+	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+		SpeedBackZ_ = accelerator_->GetWorldPosition().z - 1.0f;
+		SpeedFlontZ_ = accelerator_->GetWorldPosition().z + 1.0f;
+		SpeedLeftX_ = accelerator_->GetWorldPosition().x - 5.0f;
+		SpeedRightX_ = accelerator_->GetWorldPosition().x + 5.0f;
 
-			if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
-			    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
-				railCamera_->SetIsSpeedUp(true);
-			}
+		if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
+		    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
 		}
+	}
 
 #pragma endregion
 
 #pragma region プレイヤーとゴールの当たり判定
 
-		for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-			goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
-			goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
-		    goalLeftX_ = goalSkydome_->GetWorldPosition().x - 20.0f;
-		    goalRightX_ = goalSkydome_->GetWorldPosition().x + 20.0f;
+	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+		goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
+		goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
+		goalLeftX_ = goalSkydome_->GetWorldPosition().x - 20.0f;
+		goalRightX_ = goalSkydome_->GetWorldPosition().x + 20.0f;
 
-			if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
-			    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
+		if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
+		    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
 
-				goalTimerFlag = true;
-			}
+			goalTimerFlag = true;
 		}
+	}
 #pragma endregion
 
 #pragma region CSV 更新処理, デスフラグ
-		// デスフラグの立った敵を削除
-		boxs_.remove_if([](std::unique_ptr<Box>& item) {
-			if (item->IsDead()) {
-				item.release();
-				return true;
-			}
-			return false;
-		});
+
+	// デスフラグの立った敵を削除
+	evilSpirits_.remove_if([](std::unique_ptr<EvilSpirit>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
+	// ボックスのCSVファイルの更新処理
+	UpdateEvilSpiritPopCommands();
+
+	// デスフラグの立った敵を削除
+	boxs_.remove_if([](std::unique_ptr<Box>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
 
 		InvisiBoxs_.remove_if([](std::unique_ptr<InvisibleBox>& item) {
 		    if (item->IsDead()) {
@@ -312,80 +365,81 @@ void SunnyStage::Update() {
 			}
 			return false;
 		});
+	// デスフラグの立った敵を削除
+	accelerators_.remove_if([](std::unique_ptr<Accelerator>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
 
-		// 加速装置のCSVファイルの更新処理
-		UpdateAcceleratorPopCommands();
+	// 加速装置のCSVファイルの更新処理
+	UpdateAcceleratorPopCommands();
 
-		// デスフラグの立った敵を削除
-		middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-			if (item->IsDead()) {
-				item.release();
-				return true;
-			}
-			return false;
-		});
+	// デスフラグの立った敵を削除
+	middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
 
-		// 装置のCSVファイルの更新処理
-		UpdateMiddleSkydomePopCommands();
+	// 装置のCSVファイルの更新処理
+	UpdateMiddleSkydomePopCommands();
 
-		startSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-			if (item->IsDead()) {
-				item.release();
-				return true;
-			}
-			return false;
-		});
+	startSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
 
-		UpdateStartSkydomePopCommands();
+	UpdateStartSkydomePopCommands();
 
-		goalSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-			if (item->IsDead()) {
-				item.release();
-				return true;
-			}
-			return false;
-		});
+	goalSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
 
-		UpdateGoalSkydomePopCommands();
+	UpdateGoalSkydomePopCommands();
 
-		trafficLight_.remove_if([](std::unique_ptr<TrafficLight>& item) {
-			if (item->IsDead()) {
-				item.release();
-				return true;
-			}
-			return false;
-		});
+	trafficLight_.remove_if([](std::unique_ptr<TrafficLight>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
 
-		UpdateGuardRailPopCommands();
+	UpdateGuardRailPopCommands();
 
 #pragma endregion
 
-		Time();
-		Goal();
-	
+	Time();
+	Goal();
 
 #ifdef _DEBUG
-	
-		if (input_->TriggerKey(DIK_SPACE)) {
-		    Reset();
-	    }
 
 	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
 		start = true;
-		railCamera_->SetStart(start);
+
 		timer_->SetTimerFlag(true);
 	} else if (input_->TriggerKey(DIK_LSHIFT) && start == true) {
 		start = false;
-		railCamera_->SetStart(start);
 	}
 
 	if (input_->TriggerKey(DIK_R)) {
 		timer_->SetTimerFlag(false);
-		railCamera_->SetStart(false);
 		timer_->SetTime(0, 30);
-		railCamera_->SetPos({0, 4, 0});
-		
+		followCamera_->SetPos({0, 4, 0});
 	}
+
 	ImGui::Begin("stage");
 	ImGui::Text("SunnyStage");
 	ImGui::Checkbox("Game Start", &start);
@@ -396,6 +450,8 @@ void SunnyStage::Update() {
 	ImGui::InputFloat("PlayerBackZSize_", &BackZHit_, 0.1f);
 	ImGui::InputFloat("PlayerRightXSize_", &RightXHit_, 0.1f);
 	ImGui::InputFloat("PlayerLeftXSize_", &LeftXHit_, 0.1f);
+	ImGui::InputFloat("PlayerDownSize_", &DownHit_, 0.1f);
+	ImGui::InputFloat("PlayerUpSize_", &UpHit_, 0.1f);
 	ImGui::End();
 
 	ImGui::Begin("Clear ");
@@ -409,7 +465,6 @@ void SunnyStage::Update() {
 	ImGui::End();
 
 #endif
-
 }
 
 #pragma region タイム
@@ -436,7 +491,7 @@ void SunnyStage::DrawTime() {
 	}
 
 	for (int i = 0; i < 2; i++) {
-		//残り時間描画
+		// 残り時間描画
 		spriteSecondTime_[i]->SetSize({64, 128});
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
@@ -492,8 +547,8 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	//}
 	////ground_->Draw(viewProjection_);
 
-	for (const std::unique_ptr<Box>& box_ : boxs_) {
-		box_->Draw(viewProjection_);
+	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
+		evilSpirit_->Draw(viewProjection_);
 	}
 
 	for (const std::unique_ptr<InvisibleBox>& Blockbox_ : InvisiBoxs_) {
@@ -504,7 +559,7 @@ void SunnyStage::Draw() { // コマンドリストの取得
 		accelerator_->Draw(viewProjection_);
 	}
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
-		guardRail_->Draw(viewProjection_);
+	    guardRail_->Draw(viewProjection_);
 	}*/
 
 	Model::PostDraw();
@@ -530,8 +585,68 @@ void SunnyStage::Time() {
 		timerFlag = false;
 	}
 }
+#pragma region 悪例 CSV
 
-#pragma region  ボックス CSV
+void SunnyStage::LoadEvilSpiritPopData() {
+	evilSpiritPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/BoxPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	evilSpiritPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdateEvilSpiritPopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(evilSpiritPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			EvilSpiritGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::EvilSpiritGenerate(Vector3 position) {
+
+	// アイテムの生成と初期化処理
+	EvilSpirit* evilSpirit_ = new EvilSpirit();
+	evilSpirit_->Initialize(evilSpiritModel_, position);
+	evilSpirits_.push_back(static_cast<std::unique_ptr<EvilSpirit>>(evilSpirit_));
+}
+#pragma endregion
+
+#pragma region ボックス CSV
 
 void SunnyStage::LoadBoxPopData() {
 	boxPopCommands.clear();
@@ -583,7 +698,7 @@ void SunnyStage::UpdateBoxPopCommands() {
 	}
 }
 
-void SunnyStage::BoxGenerate(Vector3 position) { 
+void SunnyStage::BoxGenerate(Vector3 position) {
 
 	// アイテムの生成と初期化処理
 	Box* box_ = new Box();
@@ -718,8 +833,6 @@ void SunnyStage::AcceleratorGenerate(Vector3 position) {
 	accelerators_.push_back(static_cast<std::unique_ptr<Accelerator>>(accelerator_));
 }
 
-
-
 #pragma endregion
 
 #pragma region 開始背景 CSV
@@ -774,7 +887,7 @@ void SunnyStage::UpdateStartSkydomePopCommands() {
 	}
 }
 
-void SunnyStage::StartSkydomeGenerate(Vector3 position) {// アイテムの生成と初期化処理
+void SunnyStage::StartSkydomeGenerate(Vector3 position) { // アイテムの生成と初期化処理
 	Skydome* startSkydome_ = new Skydome();
 	startSkydome_->Initialize(modelStartSkydome_, position);
 	startSkydomes_.push_back(static_cast<std::unique_ptr<Skydome>>(startSkydome_));
@@ -967,19 +1080,18 @@ void SunnyStage::trafficLight(Vector3 position) {
 
 #pragma endregion
 
-
-void SunnyStage::Reset() { 
+void SunnyStage::Reset() {
 	boxs_.clear();
 	InvisiBoxs_.clear();
 	accelerators_.clear();
 	startSkydomes_.clear();
 	middleSkydomes_.clear();
 	goalSkydomes_.clear();
-	
+
 	timer_->SetTime(0, 30);
 	timer_->SetTimerFlag(false);
-	railCamera_->SetPos({0, 4, 0});
-	railCamera_->SetStart(false);
+	followCamera_->SetPos({0, 4, 0});
+
 	start = false;
 
 	sceneNo = SELECT;
@@ -1001,28 +1113,25 @@ void SunnyStage::Goal() {
 		goalTimerFlag = false;
 		start = false;
 
-		railCamera_->SetStart(false);
-
 		if (timer_->GetTimeSecond() > 0) {
 
-			//Audio::GetInstance()->Audio::StopWave(summerSound_);
-			//Audio::GetInstance()->Audio::StopWave(CarSound_);
-			
-			timer_->SetTime(0, 30); 
-			timer_->SetTimerFlag(false);
-			railCamera_->SetPos({0, 4, 0});
-			
-			sceneNo = CLEAR;
-		} else {
-			//Audio::GetInstance()->Audio::StopWave(summerSound_);
-			//Audio::GetInstance()->Audio::StopWave(CarSound_);
+			// Audio::GetInstance()->Audio::StopWave(summerSound_);
+			// Audio::GetInstance()->Audio::StopWave(CarSound_);
 
 			timer_->SetTime(0, 30);
 			timer_->SetTimerFlag(false);
-			railCamera_->SetPos({0, 4, 0});
-			
+			followCamera_->SetPos({0, 4, 0});
+
+			sceneNo = CLEAR;
+		} else {
+			// Audio::GetInstance()->Audio::StopWave(summerSound_);
+			// Audio::GetInstance()->Audio::StopWave(CarSound_);
+
+			timer_->SetTime(0, 30);
+			timer_->SetTimerFlag(false);
+			followCamera_->SetPos({0, 4, 0});
+
 			sceneNo = END;
 		}
 	}
 }
- 

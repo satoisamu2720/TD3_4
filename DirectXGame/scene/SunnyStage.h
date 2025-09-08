@@ -1,35 +1,36 @@
 ﻿#pragma once
 #include "Audio.h"
+#include "AxisIndicator.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
-#include "Input.h"
-#include "scene/IScene.h"
-#include "Model.h"
-#include "AxisIndicator.h"
-#include "TextureManager.h"
 #include "ImGuiManager.h"
-#include "player/Player.h"
-#include "camera/railCamera/RailCamera.h"
-#include "stage/skydome/Skydome.h"
-#include "stage/ground/Ground.h"
-#include "stage/guardRail/GuardRail.h"
-#include "Obstacle/box/Box.h"
+#include "Input.h"
+#include "MT.h"
+#include "Model.h"
 #include "Obstacle/accelerator/Accelerator.h"
-#include "timer.h"
+#include "Obstacle/box/Box.h"
 #include "Sprite.h"
+#include "TextureManager.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "MT.h"
-#include <memory>
-#include <fstream>
+#include "camera/followCameta/FollowCamera.h"
+#include "camera/railCamera/RailCamera.h"
+#include "player/Player.h"
+#include "scene/IScene.h"
+#include "spirit/evilSpirit/EvilSpirit.h"
+#include "stage/ground/Ground.h"
+#include "stage/guardRail/GuardRail.h"
+#include "stage/skydome/Skydome.h"
+#include "timer.h"
 #include <cassert>
+#include <fstream>
+#include <memory>
 
 #include "CircleShadow.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "InvisibleBox.h"
-
 
 class SunnyStage : public IScene {
 
@@ -42,12 +43,25 @@ public:
 
 	void Time();
 
-	//タイム
+	// タイム
 	void DrawTime();
 
 	void Reset();
 
 	void Goal();
+
+#pragma region 悪霊CSV関数
+
+	// ボックス発生データを読み込み
+	void LoadEvilSpiritPopData();
+
+	// ボックスの発生コマンドの更新
+	void UpdateEvilSpiritPopCommands();
+
+	/// ボックスの生成
+	void EvilSpiritGenerate(Vector3 position);
+
+#pragma endregion
 
 #pragma region ボックスCSV関数
 
@@ -99,8 +113,6 @@ public:
 	/// 開始背景の生成
 	void StartSkydomeGenerate(Vector3 position);
 
-
-
 	// 直線背景の発生データを読み込み
 	void LoadMiddleSkydomePopData();
 
@@ -109,8 +121,6 @@ public:
 
 	/// 直線背景の生成
 	void MiddleSkydomeGenerate(Vector3 position);
-
-
 
 	// ゴール背景の発生データを読み込み
 	void LoadGoalSkydomePopData();
@@ -121,36 +131,41 @@ public:
 	/// ゴール背景の生成
 	void GoalSkydomeGenerate(Vector3 position);
 
-	
 	// ガードレールの発生データを読み込み
 	void LoadGuardRailPopData();
 
 	// ガードレールの発生コマンドの更新
 	void UpdateGuardRailPopCommands();
 
-	///　信号機の生成
+	/// 　信号機の生成
 	void trafficLight(Vector3 position);
 #pragma endregion
 
 private:
-
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	//ライト
+	// ライト
 	LightGroup* light_ = nullptr;
-
 
 	std::unique_ptr<Timer> timer_;
 
 	// プレイヤー
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Model> modelPlayerBody_;
-	std::unique_ptr<Model> modelPlayerFront_;
+	std::unique_ptr<Model> modelPlayerLight_;
 	std::unique_ptr<Model> modelPlayerBack_;
 	std::list<Player*> players_;
 
 	// 障害物
+
+	// 悪霊
+	std::list<std::unique_ptr<EvilSpirit>> evilSpirits_;
+	// ボックスの発生コマンド
+	std::stringstream evilSpiritPopCommands;
+	// モデル
+	Model* evilSpiritModel_ = nullptr;
+
 
 	// ボックス
 	std::list<std::unique_ptr<Box>> boxs_;
@@ -173,7 +188,6 @@ private:
 	// モデル
 	Model* acceleratorModel_ = nullptr;
 
-
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 
@@ -188,6 +202,7 @@ private:
 	// カメラ
 	std::unique_ptr<DebugCamera> debugCamera_;
 	std::unique_ptr<RailCamera> railCamera_;
+	std::unique_ptr<FollowCamera> followCamera_;
 
 	// スタートステージ
 	std::list<std::unique_ptr<Skydome>> startSkydomes_;
@@ -204,12 +219,10 @@ private:
 	// ステージの発生コマンド
 	std::stringstream goalSkydomePopCommands;
 
-	//ガードレール
+	// ガードレール
 	std::list<std::unique_ptr<TrafficLight>> trafficLight_;
-	//発生コマンド
+	// 発生コマンド
 	std::stringstream trafficLightPopCommands;
-
-	
 
 	Model* modelSkydome_ = nullptr;
 	Model* modelStartSkydome_ = nullptr;
@@ -224,27 +237,46 @@ private:
 	Vector3 velocity_;
 	bool isDebugcameraActive_ = false;
 
-	//確認用あたり判定
+	// 確認用あたり判定
 
-	float FlontZHit_ = 2.0f;
-	float BackZHit_ =  2.0f;
-	float RightXHit_ = 2.0f;
-	float LeftXHit_ =  2.0f;
+	float FlontZHit_ = 1.0f;
+	float BackZHit_ = 1.0f;
+	float RightXHit_ = 1.0f;
+	float LeftXHit_ = 1.0f;
+	float UpHit_ = 1.0f;
+	float DownHit_ = 1.0f;
 
 	// プレイヤーの当たり判定
 	float PlayerFlontZ_;
 	float PlayerBackZ_;
 	float PlayerRightX_;
 	float PlayerLeftX_;
+	float PlayerUpY_;
+	float PlayerDownY_;
 
+	// ライトの当たり判定
+	float lightFlontZ_;
+	float lightBackZ_;
+	float lightRightX_;
+	float lightLeftX_;
+	float lightUpY_;
+	float lightDownY_;
 
 	// ボックスの当たり判定
 	float BoxFlontZ_;
 	float BoxBackZ_;
 	float BoxRightX_;
 	float BoxLeftX_;
+	float BoxUpY_;
+	float BoxDownY_;
 
-	
+	// 悪例の当たり判定
+	float EvilSpiritFlontZ_;
+	float EvilSpiritBackZ_;
+	float EvilSpiritRightX_;
+	float EvilSpiritLeftX_;
+	float EvilSpiritUpY_;
+	float EvilSpiritDownY_;
 
 	// 加速装置の当たり判定
 	float SpeedFlontZ_;
@@ -252,21 +284,21 @@ private:
 	float SpeedRightX_;
 	float SpeedLeftX_;
 
-	//ゴールの当たり判定
+	// ゴールの当たり判定
 	float goalFlontZ_;
 	float goalBackZ_;
 	float goalRightX_;
 	float goalLeftX_;
 
-	//天候
+	// 天候
 	float weather = 0;
 
-	//ゲームスタート
+	// ゲームスタート
 	bool start;
 	bool gameStart;
 	int startTimer = 3 * 60;
 	Sprite* spriteStartTime_[2] = {};
-	Vector2 testPosTimer = {570.0f,170.0f};
+	Vector2 testPosTimer = {570.0f, 170.0f};
 
 	bool timerFlag = false;
 	float timer = 0;
@@ -283,11 +315,11 @@ private:
 	Sprite* spriteSecondTime_[2] = {};
 	int gameScore_ = 10;
 
-	//クリアフラグ
+	// クリアフラグ
 	bool clearTimerFlag = false;
 	float clearTimer = 0;
 
-	//ゴールフラグ
+	// ゴールフラグ
 	bool goalTimerFlag = false;
 	float goalTimer = 0;
 

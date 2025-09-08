@@ -1,14 +1,10 @@
 ﻿#pragma once
 #include "scene/ClearScene.h"
 #include "scene/GameOverScene.h"
-#include "scene/GameScene.h"
 #include "scene/IScene.h"
 #include "scene/SelectScene.h"
 #include "scene/TitleScene.h"
 #include "scene/SunnyStage.h"
-#include "scene/RainStage.h"
-#include "SnowStage.h"
-#include "scene/FogStage.h"
 #include <memory>
 
 class GameManager {
