@@ -117,6 +117,8 @@ void SunnyStage::Update() {
 
 	player_->Update();
 
+	player_->SetPosition(followCamera_->GetPos().z);
+
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Update();
 	}

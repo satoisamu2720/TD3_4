@@ -14,6 +14,7 @@ public:
 
 	void SetTarget(const WorldTransform* target) { target_ = target; }
 	void SetPos(const Vector3 pos) { worldTransform_.translation_ = pos; }
+	bool SetPos() { return Inversion; }
 
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 	Matrix4x4 GetRotateYMatrix_() { return rotateYMatrix_; }
@@ -29,4 +30,7 @@ private:
 	Vector3 playerSetTransformPosition;
 	Input* input_ = nullptr;
 	Matrix4x4 rotateYMatrix_;
+
+	//境界線
+	bool Inversion = false;
 };

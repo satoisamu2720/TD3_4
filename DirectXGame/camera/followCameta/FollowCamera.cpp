@@ -20,17 +20,17 @@ void FollowCamera::Update() {
 		float kRotSpeed = 0.05f;
 
 		// 正面/裏切替
-		if (input_->PushKey(DIK_LEFT)) {
+		if (!Inversion) {
 			viewProjection_.rotation_.y = 0.0f; // 右横
-		} else if (input_->PushKey(DIK_RIGHT)) {
+		} else {
 			viewProjection_.rotation_.y = 3.14f; // 左横
 		}
 
 		// 上下方向の微調整
 		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.translation_.y += kRotSpeed;
+			viewProjection_.rotation_.y += kRotSpeed;
 		} else if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.translation_.y -= kRotSpeed;
+			viewProjection_.rotation_.y -= kRotSpeed;
 		}
 
 		// Y回転を反映してオフセットを回転
