@@ -61,6 +61,19 @@ public:
 
 #pragma endregion
 
+#pragma region 現世ボックスCSV関数
+
+	//ボックス発生データ読み込み
+	void LoadInvisibleBoxPopData();
+
+	//ボックス発生コマンドの更新
+	void UpdateInvisibleBoxPopCommands();
+
+	//ボックスの生成
+	void InvisibleBoxGenerate(Vector3 position);
+
+
+
 #pragma region 加速装置CSV関数
 
 	// 加速装置の発生データを読み込み

@@ -181,47 +181,54 @@ void SunnyStage::Update() {
 
 #pragma region プレイヤーの当たり判定
 
-		PlayerBackZ_ = player_->GetWorldPosition().z - 2.4f;
-		PlayerFlontZ_ = player_->GetWorldPosition().z + 2.3f;
-		PlayerLeftX_ = player_->GetWorldPosition().x - 1.3f;
-		PlayerRightX_ = player_->GetWorldPosition().x + 1.3f;
+		PlayerRightX_ = player_->GetWorldPosition().x - 2.4f;
+		PlayerLeftX_ = player_->GetWorldPosition().x + 2.3f;
+		PlayerBackZ_ = player_->GetWorldPosition().z - 1.3f;
+		PlayerFlontZ_ = player_->GetWorldPosition().z + 1.3f;
 
 #pragma endregion
 
 #pragma region プレイヤーとボックスの当たり判定
 
-		for (const std::unique_ptr<Box>& box : boxs_) {
+		Vector3 playerPos = player_->GetWorldPosition();
+	    float playerFeetY = playerPos.y; // プレイヤーの足元
 
-			bool boxMoveFlag = box->IsDead();
+	    for (const std::unique_ptr<Box>& box : boxs_) {
+		    Vector3 boxPos = box->GetWorldPosition();
+		    float boxLeftX = boxPos.x - 1.0f;  // ブロックの左端
+		    float boxRightX = boxPos.x + 1.0f; // ブロックの右端
+		    float boxTopY = boxPos.y + 1.0f;   // ブロックの上面
+		    float boxBottomY = boxPos.y;       // ブロックの底面
 
-			BoxBackZ_ = box->GetWorldPosition().z - 1.0f;
-			BoxFlontZ_ = box->GetWorldPosition().z + 1.0f;
-			BoxLeftX_ = box->GetWorldPosition().x - 1.0f;
-			BoxRightX_ = box->GetWorldPosition().x + 1.0f;
+		    // プレイヤーの幅（簡易）
+		    float playerLeftX = playerPos.x - 0.5f;
+		    float playerRightX = playerPos.x + 0.5f;
 
-			if ((PlayerLeftX_ < BoxRightX_ && PlayerRightX_ > BoxLeftX_) &&
-			    (BoxFlontZ_ > PlayerBackZ_ && BoxBackZ_ < PlayerFlontZ_)) {
+		    // X方向でブロックに接触しているか
+		    bool hitX = (playerRightX > boxLeftX && playerLeftX < boxRightX);
 
-				boxMoveFlag = true;
+		    if (hitX) {
+			    // 上から落ちてきた場合、足場に乗せる
+			    if (playerFeetY >= boxTopY - 0.2f && playerFeetY <= boxTopY + 1.0f) {
+				    playerPos.y = boxTopY; // 足元をブロック上に固定
+			    }
 
-				if (boxMoveFlag) {
+			    // 左右にめり込んでいたら押し戻す
+			    if (playerPos.x < boxLeftX)
+				    playerPos.x = boxLeftX - 0.5f;
+			    if (playerPos.x > boxRightX)
+				    playerPos.x = boxRightX + 0.5f;
+		    }
+	    }
 
-					Vector3 tmpTranslate = box->GetWorldPosition();
+	    // 画面端制限（ステージ外に出さない）
+	    const float stageMinX = -20.0f;
+	    const float stageMaxX = 120.0f;
+	    if (playerPos.x < stageMinX)
+		    playerPos.x = stageMinX;
+	    if (playerPos.x > stageMaxX)
+		    playerPos.x = stageMaxX;
 
-					tmpTranslate.y += 7.0f;
-
-					if (timerFlag == false) {
-						player_->SetNormalHit(true);
-						// player_->SetThunderHit(true);
-						railCamera_->SetIsSpeedDown(true);
-						timerFlag = true;
-					}
-
-					box->SetTranslate(tmpTranslate);
-					box->SetBoxFlag(boxMoveFlag);
-				}
-			}
-		}
 
 #pragma endregion
 
@@ -384,14 +391,14 @@ void SunnyStage::Update() {
 void SunnyStage::DrawTime() {
 
 	//ゲームスタートタイマー秒数
-	int eachMathNumber[2] = {};
+	/*int eachMathNumber[2] = {};
 	int mathNumber = timer_->GetStartTime();
 	int mathKeta = 10;
 	for (int i = 0; i < 2; i++) {
 		eachMathNumber[i] = mathNumber / mathKeta;
 		mathNumber = mathNumber % mathKeta;
 		mathKeta = mathKeta / 10;
-	}
+	}*/
 	//秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
@@ -408,13 +415,13 @@ void SunnyStage::DrawTime() {
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 
-		//スタート秒数描画
-		spriteStartTime_[1]->SetSize({128, 256});
-		spriteStartTime_[1]->SetPosition(testPosTimer);
-		spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
-		if (start == false) {
-		 spriteStartTime_[1]->Draw();
-		}
+		////スタート秒数描画
+		//spriteStartTime_[1]->SetSize({128, 256});
+		//spriteStartTime_[1]->SetPosition(testPosTimer);
+		//spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
+		//if (start == false) {
+		// spriteStartTime_[1]->Draw();
+		//}
 		
 	}
 }
@@ -555,9 +562,75 @@ void SunnyStage::BoxGenerate(Vector3 position) {
 	boxs_.push_back(static_cast<std::unique_ptr<Box>>(box_));
 }
 
+#pragma region 幽世ボックス
+
+void SunnyStage::LoadInvisibleBoxPopData()
+{
+	boxPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/InvisibleBoxPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	boxPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdateInvisibleBoxPopCommands() 
+{
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(boxPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			BoxGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::InvisibleBoxGenerate(Vector3 position)
+{
+	// アイテムの生成と初期化処理
+	Box* box_ = new Box();
+	box_->Initialize(BoxModel_, position);
+	boxs_.push_back(static_cast<std::unique_ptr<Box>>(box_));
+}
+
+
+
+
+
 #pragma endregion
 
-#pragma region 加速装置 CSV
+#pragma region 敵 CSV
 
 void SunnyStage::LoadAcceleratorPopData() {
 	acceleratorPopCommands.clear();
