@@ -23,7 +23,7 @@ private:
 	Vector3 position = {-4, 1, 0.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 lightPosition_ = {2, 0, 0}; 
-
+	
 public:
 	//プレイヤー初期化
 	void Initialize(const std::vector<Model*>& models);
@@ -59,6 +59,9 @@ public:
 	void SetStart(bool start) { gameStart = start; }
 
 	const WorldTransform* GetWorldTransformPtr() const { return &worldTransform_; }
+
+	Vector3 GetSpeed() const { return move_; }
+
 
 	~Player();
 

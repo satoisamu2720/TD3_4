@@ -338,4 +338,6 @@ private:
 
 	//重力
 	float GravitySpeed;
+
+	Vector3 PlayerSpeed;
 };
