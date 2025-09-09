@@ -41,11 +41,11 @@ void SunnyStage::Initialize() {
 #pragma region 障害物
 
 	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("cube", true));
+	BoxModel_ = (Model::CreateFromOBJ("block_Blue", true));
 	// ボックスのCSVファイル読み込み
 	LoadBoxPopData();
 
-	BlockModel_ = (Model::CreateFromOBJ("block.mtl", true));
+	BlockModel_ = (Model::CreateFromOBJ("block_WB", true));
 	//CSVファイル読み込み
 	LoadInvisibleBoxPopData();
 
@@ -1289,7 +1289,8 @@ void SunnyStage::MiddleSkydomeGenerate(Vector3 position) {
 
 #pragma region ゴール背景 CSV
 
-void SunnyStage::LoadGoalSkydomePopData() {
+void SunnyStage::LoadGoalSkydomePopData() 
+{
 
 	goalSkydomePopCommands.clear();
 	std::ifstream file;
