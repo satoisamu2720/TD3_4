@@ -19,14 +19,14 @@ void SunnyStage::Initialize() {
 		spriteStartTime_[i] =
 		    Sprite::Create(textureHandleNumber_, {testPosTimer.x + i * 26, testPosTimer.y});
 	}
-	timer_->SetTime(0, 15);
+	timer_->SetTime(0, 30);
 	timer_->SetStartTimer(4);
 #pragma endregion
 
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
-	modelPlayerBody_.reset(Model::CreateFromOBJ("cube", true));
-	modelPlayerLight_.reset(Model::CreateFromOBJ("cube", true));
+	modelPlayerBody_.reset(Model::CreateFromOBJ("player", true));
+	modelPlayerLight_.reset(Model::CreateFromOBJ("light", true));
 
 	// 自キャラモデル配列
 	std::vector<Model*> playerModels = {
@@ -54,9 +54,24 @@ void SunnyStage::Initialize() {
 	// 加速装置のCSVファイル読み込み
 	LoadAcceleratorPopData();
 
-	evilSpiritModel_ = (Model::CreateFromOBJ("cube", true));
+#pragma endregion
 
+#pragma region オブジェクト
+
+	// 　悪霊モデル読み込み
+	evilSpiritModel_ = (Model::CreateFromOBJ("enemy", true));
+	// 悪霊のCSVファイル読み込み
 	LoadEvilSpiritPopData();
+
+	// 　良霊モデル読み込み
+	goodSpiritModel_ = (Model::CreateFromOBJ("enemy_2", true));
+	// 悪霊のCSVファイル読み込み
+	LoadGoodSpiritPopData();
+
+	// 　鏡モデル読み込み
+	mirrorModel_ = (Model::CreateFromOBJ("mirror", true));
+	// 鏡のCSVファイル読み込み
+	LoadMirrorPopData();
 
 #pragma endregion
 
@@ -131,9 +146,20 @@ void SunnyStage::Update() {
 	playerPos.y -= GravitySpeed;
 	
 
+	timer_->Update();
+#pragma region CSV更新処理
+	// 悪霊
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Update();
+	} // 良霊
+	for (const std::unique_ptr<GoodSpirit>& goodSpirit_ : goodSpirits_) {
+		goodSpirit_->Update();
 	}
+	// 鏡
+	for (const std::unique_ptr<Mirror>& mirror_ : mirrors_) {
+		mirror_->Update();
+	}
+
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
 	}
@@ -165,7 +191,7 @@ void SunnyStage::Update() {
 	for (const std::unique_ptr<TrafficLight>& guardRail_ : trafficLight_) {
 		guardRail_->Update();
 	}
-
+#pragma endregion
 	// ground_->Update();
 
 	if (timer_->GetStartTime() == 3) {
@@ -199,7 +225,7 @@ void SunnyStage::Update() {
 
 #pragma endregion
 
-	#pragma region ライトの当たり判定
+#pragma region ライトの当たり判定
 
 	lightBackZ_ = player_->GetLightWorldPosition().z - 1.0f;
 	lightFlontZ_ = player_->GetLightWorldPosition().z + 1.0f;
@@ -210,7 +236,7 @@ void SunnyStage::Update() {
 
 #pragma endregion
 
-#pragma region ライトと悪例の当たり判定
+#pragma region ライトと悪霊の当たり判定
 
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 
@@ -221,16 +247,15 @@ void SunnyStage::Update() {
 		EvilSpiritLeftX_ = evilSpirit_->GetWorldPosition().x - LeftXHit_;
 		EvilSpiritRightX_ = evilSpirit_->GetWorldPosition().x + RightXHit_;
 		EvilSpiritDownY_ = evilSpirit_->GetWorldPosition().y - DownHit_;
-		EvilSpiritUpY_ = evilSpirit_->GetWorldPosition().y +   UpHit_;
+		EvilSpiritUpY_ = evilSpirit_->GetWorldPosition().y + UpHit_;
 
 		if ((lightLeftX_ < EvilSpiritRightX_ && lightRightX_ > EvilSpiritLeftX_) &&
 		    (EvilSpiritFlontZ_ > lightBackZ_ && EvilSpiritBackZ_ < lightFlontZ_) &&
-		    lightDownY_ < EvilSpiritUpY_ && lightUpY_ > EvilSpiritDownY_ && player_->GetLight()) {
+		    (lightDownY_ < EvilSpiritUpY_ && lightUpY_ > EvilSpiritDownY_ && player_->GetLight())) {
 
 			boxMoveFlag = true;
 
 			if (boxMoveFlag) {
-
 				Vector3 tmpTranslate = evilSpirit_->GetWorldPosition();
 
 				tmpTranslate.y += 7.0f;
@@ -242,12 +267,53 @@ void SunnyStage::Update() {
 
 				evilSpirit_->SetTranslate(tmpTranslate);
 				evilSpirit_->SetBoxFlag(boxMoveFlag);
+				EnemyCount += 1;
 			}
 		}
 	}
 
 #pragma endregion
 
+#pragma region プレイヤーと良霊の当たり判定
+
+	for (const std::unique_ptr<GoodSpirit>& goodSpirit_ : goodSpirits_) {
+
+		bool boxMoveFlag = goodSpirit_->IsDead();
+
+		GoodSpiritBackZ_ = goodSpirit_->GetWorldPosition().z - BackZHit_;
+		GoodSpiritFlontZ_ = goodSpirit_->GetWorldPosition().z + FlontZHit_;
+		GoodSpiritLeftX_ = goodSpirit_->GetWorldPosition().x - LeftXHit_;
+		GoodSpiritRightX_ = goodSpirit_->GetWorldPosition().x + RightXHit_;
+		GoodSpiritDownY_ = goodSpirit_->GetWorldPosition().y - DownHit_;
+		GoodSpiritUpY_ = goodSpirit_->GetWorldPosition().y + UpHit_;
+
+		if ((PlayerLeftX_ < GoodSpiritRightX_ && PlayerRightX_ > GoodSpiritLeftX_) &&
+		    (GoodSpiritFlontZ_ > PlayerBackZ_ && GoodSpiritBackZ_ < PlayerFlontZ_) &&
+		    (PlayerDownY_ < GoodSpiritUpY_ && PlayerUpY_ > GoodSpiritDownY_)) {
+
+			boxMoveFlag = true;
+
+			if (input_->IsTriggerMouse(1) && boxMoveFlag) {
+				Vector3 tmpTranslate = goodSpirit_->GetWorldPosition();
+
+				tmpTranslate.y += 7.0f;
+
+				if (timerFlag == false) {
+					// player_->SetThunderHit(true);
+					timerFlag = true;
+				}
+
+				goodSpirit_->SetTranslate(tmpTranslate);
+				goodSpirit_->SetBoxFlag(boxMoveFlag);
+
+				player_->SetLightCount(1);
+			}
+		}
+	}
+
+#pragma endregion
+
+#pragma region プレイヤーとボックスの当たり判定
 #pragma region プレイヤーと幽世ボックスの当たり判定
 
 		playerPos.y -= GravitySpeed;
@@ -333,6 +399,67 @@ void SunnyStage::Update() {
 	    
 #pragma endregion
 
+#pragma region プレイヤーと鏡の当たり判定
+
+	for (const std::unique_ptr<Mirror>& mirror : mirrors_) {
+
+		mirrorBackZ_ = mirror->GetWorldPosition().z - 1.0f;
+		mirrorFlontZ_ = mirror->GetWorldPosition().z + 1.0f;
+		mirrorLeftX_ = mirror->GetWorldPosition().x - 1.0f;
+		mirrorRightX_ = mirror->GetWorldPosition().x + 1.0f;
+		mirrorDownY_ = mirror->GetWorldPosition().y - 0.5f;
+		mirrorUpY_ = mirror->GetWorldPosition().y + 1.5f;
+
+		if ((PlayerLeftX_ < mirrorRightX_ && PlayerRightX_ > mirrorLeftX_) &&
+		    (mirrorFlontZ_ > PlayerBackZ_ && mirrorBackZ_ < PlayerFlontZ_) &&
+		    (PlayerDownY_ < mirrorUpY_ && PlayerUpY_ > mirrorDownY_)) {
+
+			if (input_->IsTriggerMouse(1) && !mirrorFlag) {
+				mirrorFlag = true;
+				onInversion = true;
+				followCamera_->SetInversion(onInversion);
+				timer_->SetTimerFlag(true);
+				mirrorCollider = true;
+				player_->SetMirror(mirrorCollider);
+				start = true;
+				player_->SetStart(start);
+				player_->SetTranslate(
+				    {player_->GetWorldPosition().x, player_->GetWorldPosition().y, 3});
+			} else if (input_->IsTriggerMouse(1) && mirrorFlag) {
+				mirrorFlag = false;
+				onInversion = false;
+				followCamera_->SetInversion(onInversion);
+				timer_->SetTimerFlag(false);
+				mirrorCollider = false;
+				player_->SetMirror(mirrorCollider);
+				player_->SetTranslate(
+				{player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
+			}
+		}
+		if ((PlayerLeftX_ > mirrorRightX_ && PlayerRightX_ < mirrorLeftX_) &&
+		    (mirrorFlontZ_ < PlayerBackZ_ && mirrorBackZ_ > PlayerFlontZ_) &&
+		    (PlayerDownY_ > mirrorUpY_ && PlayerUpY_ < mirrorDownY_)) {
+
+			mirrorCollider = false;
+			player_->SetMirror(mirrorCollider);
+		}
+	}
+
+#ifdef _DEBUG
+	if (input_->PushKey(DIK_LEFT)) {
+		onInversion = true;
+		followCamera_->SetInversion(onInversion);
+		timer_->SetTimerFlag(true);
+		player_->SetTranslate({player_->GetWorldPosition().x, player_->GetWorldPosition().y, 3});
+	} else if (input_->PushKey(DIK_RIGHT)) {
+		onInversion = false;
+		followCamera_->SetInversion(onInversion);
+		timer_->SetTimerFlag(false);
+		player_->SetTranslate({player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
+	}
+#endif
+#pragma endregion
+
 #pragma region プレイヤーと加速装置の当たり判定
 	// 加速装置
 
@@ -376,8 +503,32 @@ void SunnyStage::Update() {
 		return false;
 	});
 
-	// ボックスのCSVファイルの更新処理
+	// 悪霊のCSVファイルの更新処理
 	UpdateEvilSpiritPopCommands();
+
+	// デスフラグの立った敵を削除
+	goodSpirits_.remove_if([](std::unique_ptr<GoodSpirit>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
+	// 良霊のCSVファイルの更新処理
+	UpdateGoodSpiritPopCommands();
+
+	// デスフラグの立った敵を削除
+	mirrors_.remove_if([](std::unique_ptr<Mirror>& item) {
+		if (item->IsDead()) {
+			item.release();
+			return true;
+		}
+		return false;
+	});
+
+	// 鏡のCSVファイルの更新処理
+	UpdateMirrorPopCommands();
 
 	// デスフラグの立った敵を削除
 	boxs_.remove_if([](std::unique_ptr<Box>& item) {
@@ -501,7 +652,7 @@ void SunnyStage::Update() {
 
 	ImGui::Begin("Clear ");
 	ImGui::Checkbox("clearFlag", &goalTimerFlag);
-	ImGui::InputFloat("clearTimer", &goalTimer, 0.1f);
+	ImGui::InputInt("clearTimer", &EnemyCount);
 	ImGui::End();
 
 	ImGui::Begin("start timer ");
@@ -516,9 +667,9 @@ void SunnyStage::Update() {
 
 void SunnyStage::DrawTime() {
 
-	//ゲームスタートタイマー秒数
-	/*int eachMathNumber[2] = {};
-	int mathNumber = timer_->GetStartTime();
+	// ライトの数
+	int eachMathNumber[2] = {};
+	int mathNumber = player_->GetLightCount();
 	int mathKeta = 10;
 	for (int i = 0; i < 2; i++) {
 		eachMathNumber[i] = mathNumber / mathKeta;
@@ -541,20 +692,18 @@ void SunnyStage::DrawTime() {
 		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
 		spriteSecondTime_[i]->Draw();
 
-		////スタート秒数描画
-		//spriteStartTime_[1]->SetSize({128, 256});
-		//spriteStartTime_[1]->SetPosition(testPosTimer);
-		//spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
-		//if (start == false) {
-		// spriteStartTime_[1]->Draw();
-		//}
-		
+		// 数描画
+		spriteStartTime_[1]->SetSize({64, 128});
+		spriteStartTime_[1]->SetPosition(testPosTimer);
+		spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
+		spriteStartTime_[1]->Draw();
 	}
 }
 
 #pragma endregion
 
-void SunnyStage::Draw() { // コマンドリストの取得
+void SunnyStage::Draw() { 
+	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	// 背景スプライト描画前処理
@@ -595,14 +744,16 @@ void SunnyStage::Draw() { // コマンドリストの取得
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Draw(viewProjection_);
 	}
-
-	for (const std::unique_ptr<InvisibleBox>& Blockbox_ : InvisiBoxs_) {
-		Blockbox_->Draw(viewProjection_);
+	for (const std::unique_ptr<GoodSpirit>& goodSpirit_ : goodSpirits_) {
+		goodSpirit_->Draw(viewProjection_);
 	}
-	// 加速装置
-	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-		accelerator_->Draw(viewProjection_);
+	for (const std::unique_ptr<Mirror>& mirror_ : mirrors_) {
+		mirror_->Draw(viewProjection_);
 	}
+	//// 加速装置
+	// for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+	//	accelerator_->Draw(viewProjection_);
+	// }
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 	    guardRail_->Draw(viewProjection_);
 	}*/
@@ -630,12 +781,13 @@ void SunnyStage::Time() {
 		timerFlag = false;
 	}
 }
-#pragma region 悪例 CSV
+
+#pragma region 悪霊 CSV
 
 void SunnyStage::LoadEvilSpiritPopData() {
 	evilSpiritPopCommands.clear();
 	std::ifstream file;
-	file.open("Resources/CSV/BoxPop.csv");
+	file.open("Resources/CSV/EvilSpiritPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -688,6 +840,128 @@ void SunnyStage::EvilSpiritGenerate(Vector3 position) {
 	EvilSpirit* evilSpirit_ = new EvilSpirit();
 	evilSpirit_->Initialize(evilSpiritModel_, position);
 	evilSpirits_.push_back(static_cast<std::unique_ptr<EvilSpirit>>(evilSpirit_));
+}
+#pragma endregion
+
+#pragma region 良霊 CSV
+
+void SunnyStage::LoadGoodSpiritPopData() {
+	goodSpiritPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/GoodSpiritPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	goodSpiritPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdateGoodSpiritPopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(goodSpiritPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			GoodSpiritGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::GoodSpiritGenerate(Vector3 position) {
+
+	// アイテムの生成と初期化処理
+	GoodSpirit* goodSpirit_ = new GoodSpirit();
+	goodSpirit_->Initialize(goodSpiritModel_, position);
+	goodSpirits_.push_back(static_cast<std::unique_ptr<GoodSpirit>>(goodSpirit_));
+}
+#pragma endregion
+
+#pragma region 鏡 CSV
+
+void SunnyStage::LoadMirrorPopData() {
+	mirrorPopCommands.clear();
+	std::ifstream file;
+	file.open("Resources/CSV/MirrorPop.csv");
+	assert(file.is_open());
+
+	// ファイルの内容を文字列ストリームにコピー
+	mirrorPopCommands << file.rdbuf();
+
+	// ファイルを閉じる
+	file.close();
+}
+
+void SunnyStage::UpdateMirrorPopCommands() {
+	std::string line;
+
+	// コマンド実行ループ
+	while (getline(mirrorPopCommands, line)) {
+		std::istringstream line_stream(line);
+
+		std::string word;
+		// 　,区切りで行の先頭文字列を所得
+
+		getline(line_stream, word, ',');
+
+		// "//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			// コメント行を飛ばす
+			continue;
+		}
+
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// x座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			// y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			// z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			MirrorGenerate({x, y, z});
+		}
+	}
+}
+
+void SunnyStage::MirrorGenerate(Vector3 position) {
+
+	// アイテムの生成と初期化処理
+	Mirror* mirror_ = new Mirror();
+	mirror_->Initialize(mirrorModel_, position);
+	mirrors_.push_back(static_cast<std::unique_ptr<Mirror>>(mirror_));
 }
 #pragma endregion
 
@@ -1128,6 +1402,9 @@ void SunnyStage::trafficLight(Vector3 position) {
 void SunnyStage::Reset() {
 	boxs_.clear();
 	InvisiBoxs_.clear();
+	evilSpirits_.clear();
+	mirrors_.clear();
+	goodSpirits_.clear();
 	accelerators_.clear();
 	startSkydomes_.clear();
 	middleSkydomes_.clear();
@@ -1137,18 +1414,22 @@ void SunnyStage::Reset() {
 	timer_->SetTimerFlag(false);
 	followCamera_->SetPos({0, 4, 0});
 
-	start = false;
-
 	sceneNo = SELECT;
 }
 
 void SunnyStage::Goal() {
 
-	if (goalTimerFlag == true) {
-		goalTimer++;
+	if (EnemyCount > 5)
+	{
+		EnemyCount = 0;
+		mirrors_.clear();
+		sceneNo = CLEAR;
 	}
-	if (goalTimer >= 60) {
+	else if (timer_->GetTimeSecond() < 0 || player_->GetLightCount() <= 0 && start) {
 		boxs_.clear();
+		evilSpirits_.clear();
+		mirrors_.clear();
+		goodSpirits_.clear();
 		accelerators_.clear();
 		startSkydomes_.clear();
 		middleSkydomes_.clear();
@@ -1157,26 +1438,16 @@ void SunnyStage::Goal() {
 		goalTimer = 0;
 		goalTimerFlag = false;
 		start = false;
+		EnemyCount = 0;
+		//mirrorFlag = false;
 
-		if (timer_->GetTimeSecond() > 0) {
+		// Audio::GetInstance()->Audio::StopWave(summerSound_);
+		// Audio::GetInstance()->Audio::StopWave(CarSound_);
 
-			// Audio::GetInstance()->Audio::StopWave(summerSound_);
-			// Audio::GetInstance()->Audio::StopWave(CarSound_);
+		timer_->SetTime(0, 30);
+		timer_->SetTimerFlag(false);
+		followCamera_->SetPos({0, 4, 0});
 
-			timer_->SetTime(0, 30);
-			timer_->SetTimerFlag(false);
-			followCamera_->SetPos({0, 4, 0});
-
-			sceneNo = CLEAR;
-		} else {
-			// Audio::GetInstance()->Audio::StopWave(summerSound_);
-			// Audio::GetInstance()->Audio::StopWave(CarSound_);
-
-			timer_->SetTime(0, 30);
-			timer_->SetTimerFlag(false);
-			followCamera_->SetPos({0, 4, 0});
-
-			sceneNo = END;
-		}
+		sceneNo = END;
 	}
 }

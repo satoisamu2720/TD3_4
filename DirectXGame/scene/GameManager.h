@@ -8,6 +8,7 @@
 #include <memory>
 
 class GameManager {
+
 private:
 	std::unique_ptr<IScene> sceneArr_[KSCENEMAX];
 

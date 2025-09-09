@@ -17,20 +17,27 @@ void FollowCamera::Update() {
 
 	if (target_) {
 
-		float kRotSpeed = 0.05f;
+	
 
 		// 正面/裏切替
-		if (input_->PushKey(DIK_LEFT)) {
+		if (!Inversion && !notCamera) {
 			viewProjection_.rotation_.y = 0.0f; // 右横
-		} else if (input_->PushKey(DIK_RIGHT)) {
+		} 
+		if (Inversion && !notCamera) {
 			viewProjection_.rotation_.y = 3.14f; // 左横
 		}
 
 		// 上下方向の微調整
 		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.translation_.y += kRotSpeed;
+			viewProjection_.rotation_.y = 1.57f; // 右横
+			notCamera = true;
 		} else if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.translation_.y -= kRotSpeed;
+			viewProjection_.rotation_.y = 4.71f; // 右横
+			notCamera = true;
+		}
+		else
+		{
+			notCamera = false;
 		}
 
 		// Y回転を反映してオフセットを回転

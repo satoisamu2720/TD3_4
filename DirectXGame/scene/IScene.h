@@ -6,6 +6,7 @@ enum SceneType {
 	TITLE,
 	SELECT,
 	TEST,
+	GAME,
 	SUNNYSTAGE,
 	RAINSTAGE,
 	SNOWSTAGE,
