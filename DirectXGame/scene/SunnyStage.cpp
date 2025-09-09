@@ -25,8 +25,8 @@ void SunnyStage::Initialize() {
 
 #pragma region プレイヤー初期化
 	// 自キャラモデル読み込み
-	modelPlayerBody_.reset(Model::CreateFromOBJ("cube", true));
-	modelPlayerLight_.reset(Model::CreateFromOBJ("cube", true));
+	modelPlayerBody_.reset(Model::CreateFromOBJ("player", true));
+	modelPlayerLight_.reset(Model::CreateFromOBJ("light", true));
 
 	// 自キャラモデル配列
 	std::vector<Model*> playerModels = {
@@ -60,7 +60,7 @@ void SunnyStage::Initialize() {
 	LoadEvilSpiritPopData();
 
 	// 　良霊モデル読み込み
-	goodSpiritModel_ = (Model::CreateFromOBJ("cube", true));
+	goodSpiritModel_ = (Model::CreateFromOBJ("enemy_2", true));
 	// 悪霊のCSVファイル読み込み
 	LoadGoodSpiritPopData();
 
@@ -685,6 +685,7 @@ void SunnyStage::Time() {
 		timerFlag = false;
 	}
 }
+
 #pragma region 悪霊 CSV
 
 void SunnyStage::LoadEvilSpiritPopData() {
