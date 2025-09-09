@@ -671,11 +671,12 @@ void SunnyStage::DrawTime() {
 	int eachMathNumber[2] = {};
 	int mathNumber = player_->GetLightCount();
 	int mathKeta = 10;
+
 	for (int i = 0; i < 2; i++) {
 		eachMathNumber[i] = mathNumber / mathKeta;
 		mathNumber = mathNumber % mathKeta;
 		mathKeta = mathKeta / 10;
-	}*/
+	}
 	//秒数
 	int eachSecondNumber[2] = {};
 	int secondNumber = timer_->GetTimeSecond();
@@ -740,6 +741,17 @@ void SunnyStage::Draw() {
 	//	goalSkydome_->Draw(viewProjection_);
 	//}
 	////ground_->Draw(viewProjection_);
+
+
+	for (const std::unique_ptr<Box>& box : boxs_) {
+		box->Draw(viewProjection_);
+	}
+
+	for (const std::unique_ptr<InvisibleBox>& InBox : InvisiBoxs_)
+	{
+		InBox->Draw(viewProjection_);
+	}
+
 
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Draw(viewProjection_);
