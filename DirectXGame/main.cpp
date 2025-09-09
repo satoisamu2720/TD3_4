@@ -92,7 +92,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		gameManager->Draw();
 		 
 		// 軸表示の描画
-		axisIndicator->Draw();
+		//axisIndicator->Draw();
 		// プリミティブ描画のリセット
 		primitiveDrawer->Reset();
 		// ImGui描画
