@@ -29,7 +29,7 @@ void SelectScene::Initialize() {
 void SelectScene::Update() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
-		sceneNo = END;
+		sceneNo = SUNNYSTAGE;
 	}
 
 	if (input_->TriggerKey(DIK_TAB)) {

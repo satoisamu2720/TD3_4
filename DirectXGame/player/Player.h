@@ -30,9 +30,7 @@ public:
 
 	//更新処理
 	void Update();
-
 	
-
 	//プレイヤー描画
 	void Draw(ViewProjection& view);
 	

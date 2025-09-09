@@ -55,7 +55,7 @@ void SunnyStage::Initialize() {
 #pragma region オブジェクト
 
 	// 　悪霊モデル読み込み
-	evilSpiritModel_ = (Model::CreateFromOBJ("cube", true));
+	evilSpiritModel_ = (Model::CreateFromOBJ("enemy", true));
 	// 悪霊のCSVファイル読み込み
 	LoadEvilSpiritPopData();
 
@@ -65,7 +65,7 @@ void SunnyStage::Initialize() {
 	LoadGoodSpiritPopData();
 
 	// 　鏡モデル読み込み
-	mirrorModel_ = (Model::CreateFromOBJ("cube", true));
+	mirrorModel_ = (Model::CreateFromOBJ("mirror", true));
 	// 鏡のCSVファイル読み込み
 	LoadMirrorPopData();
 
@@ -137,7 +137,7 @@ void SunnyStage::Update() {
 	// 悪霊
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Update();
-	}// 良霊
+	} // 良霊
 	for (const std::unique_ptr<GoodSpirit>& goodSpirit_ : goodSpirits_) {
 		goodSpirit_->Update();
 	}
@@ -278,10 +278,8 @@ void SunnyStage::Update() {
 
 				goodSpirit_->SetTranslate(tmpTranslate);
 				goodSpirit_->SetBoxFlag(boxMoveFlag);
-				
 
-			    player_->SetLightCount(1);
-				
+				player_->SetLightCount(1);
 			}
 		}
 	}
@@ -360,7 +358,7 @@ void SunnyStage::Update() {
 				mirrorCollider = false;
 				player_->SetMirror(mirrorCollider);
 				player_->SetTranslate(
-				    {player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
+				{player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
 			}
 		}
 		if ((PlayerLeftX_ > mirrorRightX_ && PlayerRightX_ < mirrorLeftX_) &&
@@ -610,7 +608,8 @@ void SunnyStage::DrawTime() {
 
 #pragma endregion
 
-void SunnyStage::Draw() { // コマンドリストの取得
+void SunnyStage::Draw() { 
+	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	// 背景スプライト描画前処理
@@ -1256,9 +1255,13 @@ void SunnyStage::Reset() {
 
 void SunnyStage::Goal() {
 
-	if (EnemyCount > 5) {
+	if (EnemyCount > 5)
+	{
+		EnemyCount = 0;
+		mirrors_.clear();
 		sceneNo = CLEAR;
-	} else if (timer_->GetTimeSecond() < 0 || player_->GetLightCount() <= 0 && start) {
+	}
+	else if (timer_->GetTimeSecond() < 0 || player_->GetLightCount() <= 0 && start) {
 		boxs_.clear();
 		evilSpirits_.clear();
 		mirrors_.clear();
@@ -1271,6 +1274,8 @@ void SunnyStage::Goal() {
 		goalTimer = 0;
 		goalTimerFlag = false;
 		start = false;
+		EnemyCount = 0;
+		//mirrorFlag = false;
 
 		// Audio::GetInstance()->Audio::StopWave(summerSound_);
 		// Audio::GetInstance()->Audio::StopWave(CarSound_);
