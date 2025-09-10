@@ -835,9 +835,9 @@ void SunnyStage::Draw() {
 	}
 
 
-	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
+	/*for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Draw(viewProjection_);
-	}
+	}*/
 	for (const std::unique_ptr<GoodSpirit>& goodSpirit_ : goodSpirits_) {
 		goodSpirit_->Draw(viewProjection_);
 	}
