@@ -7,7 +7,7 @@ void Wall::Initialize(Model* model, Vector3 scele) {
 	worldTransform_.Initialize();
 	worldTransform_.scale_ = scele;
 	worldTransform_.rotation_ = {3.14f/2.0f, 3.14f, 0.0f};
-	worldTransform_.translation_ = {0,0,1.5f};
+	worldTransform_.translation_ = {0,1.5f};
 	worldTransform_.UpdateMatrix();
 }
 

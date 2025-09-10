@@ -28,11 +28,13 @@ void SunnyStage::Initialize() {
 	modelPlayerBody_.reset(Model::CreateFromOBJ("player", true));
 	modelPlayerLight_.reset(Model::CreateFromOBJ("light", true));
 
+	
 	// 自キャラモデル配列
 	std::vector<Model*> playerModels = {
 	    modelPlayerBody_.get(),
 	    modelPlayerLight_.get(),
 	};
+
 	// プレイヤー初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
@@ -122,7 +124,7 @@ void SunnyStage::Initialize() {
 
 	wall_ = std::make_unique<Wall>();
 	// ステージ地面モデル読み込み
-	wallModel_ = Model::CreateFromOBJ("block_WB", true);
+	wallModel_ = Model::CreateFromOBJ("block_G", true);
 
 	wall_->Initialize(wallModel_, {130.0f, 0.0f, 20.0f});
 

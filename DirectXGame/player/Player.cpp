@@ -11,7 +11,6 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformBody_.Initialize();
 	worldTransformLight_.Initialize();
 
-
 	// 初期ポジティブ
 	worldTransform_.translation_ = position;
 	worldTransformBody_.translation_ = bodyPosition;
