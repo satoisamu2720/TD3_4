@@ -519,11 +519,13 @@ void SunnyStage::Update() {
 		for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 			SpeedBackZ_ = accelerator_->GetWorldPosition().z - 1.0f;
 			SpeedFlontZ_ = accelerator_->GetWorldPosition().z + 1.0f;
-			SpeedLeftX_ = accelerator_->GetWorldPosition().x - 5.0f;
-			SpeedRightX_ = accelerator_->GetWorldPosition().x + 5.0f;
+			SpeedLeftX_ = accelerator_->GetWorldPosition().x - 1.0f;
+			SpeedRightX_ = accelerator_->GetWorldPosition().x + 1.0f;
 
 			if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
 			    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
+
+				playerSpeed.x = 0.0f;
 			}
 		}
 
@@ -814,10 +816,11 @@ void SunnyStage::Draw() {
 	for (const std::unique_ptr<Mirror>& mirror_ : mirrors_) {
 		mirror_->Draw(viewProjection_);
 	}
-	//// 加速装置
-	// for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-	//	accelerator_->Draw(viewProjection_);
-	// }
+
+	// 加速装置
+	 for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+		accelerator_->Draw(viewProjection_);
+	 }
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 	    guardRail_->Draw(viewProjection_);
 	}*/
