@@ -122,6 +122,9 @@ void Player::Update() {
 	worldTransformBody_.UpdateMatrix();
 	worldTransformLight_.UpdateMatrix();
 
+
+	
+
 #ifdef _DEBUG
 	if (!lightFlag) {
 		ImGui::Begin("Player SunnyUpdate");
