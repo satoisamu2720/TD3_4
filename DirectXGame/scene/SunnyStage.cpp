@@ -36,6 +36,9 @@ void SunnyStage::Initialize() {
 	// プレイヤー初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
+
+	
+
 #pragma endregion
 
 #pragma region 障害物
@@ -72,6 +75,10 @@ void SunnyStage::Initialize() {
 	mirrorModel_ = (Model::CreateFromOBJ("mirror", true));
 	// 鏡のCSVファイル読み込み
 	LoadMirrorPopData();
+
+	// 境界の壁モデル読み込み
+	wallModel_ = (Model::CreateFromOBJ("block_WB", true));
+
 
 #pragma endregion
 
@@ -112,6 +119,11 @@ void SunnyStage::Initialize() {
 	viewProjection_.farZ = 200.0f;
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+
+	Wall* wall_ = new Wall;
+	wall_->Initialize(wallModel_, {130.0f, 0.0f, 20.0f});
+
+	wall_->GetWorldPosition();
 
 	// summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3"); // 晴BGM
 
@@ -156,7 +168,7 @@ void SunnyStage::Update() {
 	for (const std::unique_ptr<Mirror>& mirror_ : mirrors_) {
 		mirror_->Update();
 	}
-
+	
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
 	}

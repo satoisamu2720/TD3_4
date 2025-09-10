@@ -46,7 +46,7 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() {
 
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->IsTriggerMouse(0)) {
 		sceneNo = SELECT;
 	}
 	if (input_->IsTriggerMouse(0)) {
