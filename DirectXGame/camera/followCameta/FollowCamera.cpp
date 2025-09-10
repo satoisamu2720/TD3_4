@@ -1,7 +1,6 @@
 ﻿#include "FollowCamera.h"
 
-    void
-    FollowCamera::Initialize(const Vector3& position, const Vector3& rotation) {
+void FollowCamera::Initialize(const Vector3& position, const Vector3& rotation) {
 
 	viewProjection_.Initialize();
 	viewProjection_.translation_ = position;
@@ -13,16 +12,14 @@
 void FollowCamera::Update() {
 
 	// 追従対象からカメラまでのオフセット
-	Vector3 offset = {0.0f, 0.0f, -20.0f};
+	Vector3 offset = {0.0f, 2.0f, -20.0f};
 
 	if (target_) {
-
-	
 
 		// 正面/裏切替
 		if (!Inversion && !notCamera) {
 			viewProjection_.rotation_.y = 0.0f; // 右横
-		} 
+		}
 		if (Inversion && !notCamera) {
 			viewProjection_.rotation_.y = 3.14f; // 左横
 		}
@@ -34,9 +31,7 @@ void FollowCamera::Update() {
 		} else if (input_->PushKey(DIK_DOWN)) {
 			viewProjection_.rotation_.y = 4.71f; // 右横
 			notCamera = true;
-		}
-		else
-		{
+		} else {
 			notCamera = false;
 		}
 

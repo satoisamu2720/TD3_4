@@ -50,7 +50,7 @@ void SunnyStage::Initialize() {
 	LoadInvisibleBoxPopData();
 
 	// 加速装置モデル読み込み
-	acceleratorModel_ = (Model::CreateFromOBJ("SpeedUP", true));
+	acceleratorModel_ = (Model::CreateFromOBJ("enemy", true));
 	// 加速装置のCSVファイル読み込み
 	LoadAcceleratorPopData();
 

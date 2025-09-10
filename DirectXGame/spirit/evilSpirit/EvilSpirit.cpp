@@ -6,7 +6,7 @@ void EvilSpirit::Initialize(Model* model, Vector3 position) {
 
 	worldTransform_.Initialize();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
-	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.rotation_ = {0.0f, -3.14f / 2.0f, 0.0f};
 	worldTransform_.translation_ = position;
 }
 

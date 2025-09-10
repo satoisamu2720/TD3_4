@@ -5,8 +5,7 @@ void Accelerator::Initialize(Model* model, Vector3 position) {
 	model_ = model;
 
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = {1.0f, 1.5f, 2.0f};
-	worldTransform_.rotation_.x = 3.14f;
+	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.rotation_.y = 3.14f/2.0f;
 	worldTransform_.translation_ = position;
 }
