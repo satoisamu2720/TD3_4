@@ -23,6 +23,8 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 
+	worldTransformLight_.rotation_.z = 1.57f;
+
 	worldTransform_.translation_ = Add(worldTransform_.translation_, position);
 	worldTransform_.UpdateMatrix();
 }
@@ -56,47 +58,55 @@ void Player::Update() {
 		lightTimer = 0;
 		lightFlag = false;
 	}
-
 	// --- マウス位置に応じてライト位置を決定 ---
 	POINT mousePos;
 	GetCursorPos(&mousePos);
 	ScreenToClient(GetActiveWindow(), &mousePos);
 
-	int screenWidth = 1280; // 実際の画面幅に置き換え
-	int screenHeight = 720; // 実際の画面高さに置き換え
+	int screenWidth = 1280; // ウィンドウサイズに置き換え
+	int screenHeight = 720;
 
-	// 画面中心を0,0に正規化
+	// マウス座標を[-1,1]に正規化
 	float mouseX = (mousePos.x - screenWidth / 2.0f) / (screenWidth / 2.0f);
 	float mouseY = (mousePos.y - screenHeight / 2.0f) / (screenHeight / 2.0f);
+	mouseY = -mouseY; // 上下反転
 
-	// Yは上下反転（スクリーン座標の上が0のため）
-	mouseY = -mouseY;
-
-	// マウス方向ベクトルを作成
+	// 方向ベクトル（XZ平面ベース）
 	Vector3 lightDir = {mouseX, 0.0f, mouseY};
-
-	// 正規化
-	float len = sqrtf(lightDir.x * lightDir.x + lightDir.y * lightDir.y + lightDir.z * lightDir.z);
+	float len = sqrtf(lightDir.x * lightDir.x + lightDir.z * lightDir.z);
 	if (len > 0.0001f) {
 		lightDir.x /= len;
-		lightDir.y /= len;
-		//lightDir.z /= len;
+		lightDir.z /= len;
 	}
 
-	// ライトをプレイヤーから一定距離に
-	float lightDistance = 2.5f; // プレイヤーからの距離
+	// プレイヤーからの距離
+	float lightDistance = 2.5f;
 	lightDir.x *= lightDistance;
-	/*lightDir.y *= lightDistance;
-	lightDir.z *= lightDistance;*/
+	lightDir.z *= lightDistance;
 
-	// カメラ回転補正
+	// カメラ回転を反映
 	float cameraYaw = viewProjection_->rotation_.y;
 	Matrix4x4 camRotMat = MakeRotateYmatrix(cameraYaw);
 	lightDir = TransformNormal(lightDir, camRotMat);
 
-	// 最終的なライト座標
+	// ライトの相対位置を設定
 	worldTransformLight_.translation_ = lightDir;
+	// ---- 向きの計算 ----
+	Vector3 playerPos = {
+	    worldTransform_.matWorld_.m[3][0], worldTransform_.matWorld_.m[3][1],
+	    worldTransform_.matWorld_.m[3][2]};
 
+	Vector3 lightWorldPos = Add(playerPos, lightDir);
+	Vector3 dir = {
+	    lightWorldPos.x - playerPos.x, lightWorldPos.y - playerPos.y,
+	    lightWorldPos.z - playerPos.z};
+
+
+	if (dir.x > 0) {
+		worldTransformLight_.rotation_.x = 3.14f;
+	} else {
+		worldTransformLight_.rotation_.x = 0.0f;
+	}
 
 	// --- 移動処理 ---
 	move_ = TransformNormal(move_, MakeRotateYmatrix(viewProjection_->rotation_.y));

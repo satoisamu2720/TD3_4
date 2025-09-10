@@ -16,6 +16,9 @@ void GameOverScene::Update() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 		sceneNo = TITLE;
 	}
+	if (input_->IsTriggerMouse(0)) {
+		sceneNo = TITLE;
+	}
 }
 
 void GameOverScene::Draw() {
