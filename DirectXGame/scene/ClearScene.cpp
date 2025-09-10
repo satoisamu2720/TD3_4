@@ -11,16 +11,10 @@ void ClearScene::Initialize() {
 
 void ClearScene::Update() {
 
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->IsTriggerMouse(0)) {
 		sceneNo = SELECT;
 	}
-#ifdef _DEBUG
-	ImGui::Begin("stageNum");
 
-	ImGui::Text("ClearScene");
-
-	ImGui::End();
-#endif
 }
 
 void ClearScene::Draw() {
