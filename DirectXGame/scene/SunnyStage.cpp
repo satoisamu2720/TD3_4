@@ -1515,7 +1515,7 @@ void SunnyStage::Reset() {
 
 void SunnyStage::Goal() {
 
-	if (EnemyCount > 5)
+	if (EnemyCount > 12)
 	{
 		EnemyCount = 0;
 		player_->SetLightCount(0);
