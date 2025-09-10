@@ -371,6 +371,15 @@ void SunnyStage::Update() {
 				}
 			}
 		}
+
+		float MapMaxX = 61.0f;
+	    float MapMinX = -61.0f;
+
+		 if (playerPos.x > MapMaxX)
+		    playerPos.x = MapMaxX;
+	    if (playerPos.x < MapMinX)
+		    playerPos.x = MapMinX;
+
 		// --- 最終更新 ---
 		player_->SetTranslate(playerPos);
 		player_->SetSpeed(playerSpeed);

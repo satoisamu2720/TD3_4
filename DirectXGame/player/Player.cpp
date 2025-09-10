@@ -100,6 +100,8 @@ void Player::Update() {
 	Matrix4x4 camRotMat = MakeRotateYmatrix(cameraYaw);
 	lightDir = TransformNormal(lightDir, camRotMat);
 
+	
+
 	// 最終的なライト座標
 	worldTransformLight_.translation_ = lightDir;
 
@@ -111,6 +113,9 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();
 	worldTransformLight_.UpdateMatrix();
+
+
+	
 
 #ifdef _DEBUG
 	if (!lightFlag) {
