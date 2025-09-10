@@ -41,11 +41,11 @@ void SunnyStage::Initialize() {
 #pragma region 障害物
 
 	// 箱モデル読み込み
-	BoxModel_ = (Model::CreateFromOBJ("cube", true));
+	BoxModel_ = (Model::CreateFromOBJ("block_Blue", true));
 	// ボックスのCSVファイル読み込み
 	LoadBoxPopData();
 
-	BlockModel_ = (Model::CreateFromOBJ("block.mtl", true));
+	BlockModel_ = (Model::CreateFromOBJ("block_WB", true));
 	//CSVファイル読み込み
 	LoadInvisibleBoxPopData();
 
@@ -137,14 +137,9 @@ void SunnyStage::Update() {
 #pragma region 更新処理
 
 	player_->Update();
-
-	Vector3 playerPos;
-
-	playerPos.x = player_->GetWorldPosition().x;
-	playerPos.y = player_->GetWorldPosition().y;
-
-	playerPos.y -= GravitySpeed;
-	
+	// Player の境界 (サイズ 0.25)
+	Vector3 playerPos = player_->GetTranslate();
+	Vector3 playerSpeed = player_->GetSpeed();
 
 	timer_->Update();
 #pragma region CSV更新処理
@@ -167,19 +162,18 @@ void SunnyStage::Update() {
 	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 		accelerator_->Update();
 	}
-		for (const std::unique_ptr<Box>& box_ : boxs_) {
-			box_->Update();
-		}
+	for (const std::unique_ptr<Box>& box_ : boxs_) {
+		box_->Update();
+	}
 
-		for (const std::unique_ptr<InvisibleBox>& Blockbox_ : InvisiBoxs_) {
-		    Blockbox_->Update();
-	    }
+	for (const std::unique_ptr<InvisibleBox>& Blockbox_ : InvisiBoxs_) {
+		Blockbox_->Update();
+	}
 
-
-		// 加速装置
-		for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-			accelerator_->Update();
-		}
+	// 加速装置
+	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+		accelerator_->Update();
+	}
 
 	for (const std::unique_ptr<Skydome>& MiddleSkydome_ : middleSkydomes_) {
 		MiddleSkydome_->Update();
@@ -314,244 +308,304 @@ void SunnyStage::Update() {
 #pragma endregion
 
 #pragma region プレイヤーとボックスの当たり判定
+
+	bool isGrounded = false;
+
+	// --- X方向の移動と判定 ---
+	for (const std::unique_ptr<Box>& box : boxs_) {
+		Vector3 boxPos = box->GetWorldPosition();
+
+		float boxLeftX = boxPos.x - 1.0f;
+		float boxRightX = boxPos.x + 1.0f;
+		float boxTopY = boxPos.y + 1.5f;
+		float boxBottomY = boxPos.y - 1.5f;
+
+		float playerLeftX = playerPos.x - 1.0f;
+		float playerRightX = playerPos.x + 1.0f;
+		float playerTopY = playerPos.y + 1.5f;
+		float playerBottomY = playerPos.y - 1.5f;
+
+		// Y方向で重なっているときのみX判定する
+		if (playerTopY > boxBottomY && playerBottomY < boxTopY) {
+			if (playerRightX > boxLeftX && playerLeftX < boxRightX) {
+				if (playerSpeed.x > 0) {
+					/*	playerPos.x = boxLeftX - 1.5f;
+					} else if (playerSpeed.x < 0) {
+					    playerPos.x = boxRightX + 1.5f;
+					}*/
+					playerSpeed.x = 0.0f;
+				}
+			}
+		}
+	}
+
+		// --- Y方向の移動と判定 ---
+		for (const std::unique_ptr<Box>& box : boxs_) {
+			Vector3 boxPos = box->GetWorldPosition();
+
+			float boxLeftX = boxPos.x - 1.0f;
+			float boxRightX = boxPos.x + 1.0f;
+			float boxTopY = boxPos.y + 1.5f;
+			float boxBottomY = boxPos.y - 1.5f;
+
+			float playerLeftX = playerPos.x - 1.0f;
+			float playerRightX = playerPos.x + 1.0f;
+			float playerTopY = playerPos.y + 1.5f;
+			float playerBottomY = playerPos.y - 1.5f;
+
+			// X方向で重なっているときのみY判定する
+			if (playerRightX > boxLeftX && playerLeftX < boxRightX) {
+				if (playerSpeed.y > 0) {
+					// 上に移動中 → 天井
+					if (playerTopY > boxBottomY && playerBottomY < boxTopY) {
+						playerPos.y = boxBottomY - 1.5f;
+						playerSpeed.y = 0.0f;
+					}
+				} else if (playerSpeed.y < 0) {
+					// 下に移動中 → 床
+					if (playerTopY > boxBottomY && playerBottomY < boxTopY) {
+						playerPos.y = boxTopY + 1.5f;
+						playerSpeed.y = 0.0f;
+						isGrounded = true;
+					}
+				}
+			}
+		}
+		// --- 最終更新 ---
+		player_->SetTranslate(playerPos);
+		player_->SetSpeed(playerSpeed);
+
 #pragma region プレイヤーと幽世ボックスの当たり判定
 
 		playerPos.y -= GravitySpeed;
 
-	    float playerFeetY = playerPos.y; // プレイヤーの足元
+		float playerFeetY = playerPos.y; // プレイヤーの足元
 
-		
-	    for (const std::unique_ptr<InvisibleBox>& Inbox : InvisiBoxs_) {
-		    Vector3 boxPos = Inbox->GetWorldPosition();
-		    float boxLeftX = boxPos.x - 0.5f;  // ブロックの左端
-		    float boxRightX = boxPos.x + 0.5f; // ブロックの右端
-		    float boxTopY = boxPos.y + 0.5f;   // ブロックの上面
-		    //float boxBottomY = boxPos.y - 0.5f;       // ブロックの底面
+		for (const std::unique_ptr<InvisibleBox>& Inbox : InvisiBoxs_) {
+			Vector3 boxPos = Inbox->GetWorldPosition();
+			float boxLeftX = boxPos.x - 0.5f;  // ブロックの左端
+			float boxRightX = boxPos.x + 0.5f; // ブロックの右端
+			float boxTopY = boxPos.y + 0.5f;   // ブロックの上面
+			// float boxBottomY = boxPos.y - 0.5f;       // ブロックの底面
 
-		    // プレイヤーの幅（簡易）
-		    float playerLeftX = playerPos.x - 0.25f;
-		    float playerRightX = playerPos.x + 0.25f;
+			// プレイヤーの幅（簡易）
+			float playerLeftX = playerPos.x - 0.25f;
+			float playerRightX = playerPos.x + 0.25f;
 
-		    // X方向でブロックに接触しているか
-		    bool hitX = (playerRightX > boxLeftX && playerLeftX < boxRightX);
+			// X方向でブロックに接触しているか
+			bool hitX = (playerRightX > boxLeftX && playerLeftX < boxRightX);
 
-		    if (hitX) {
-			    // 上から落ちてきた場合、足場に乗せる
-			    if (playerFeetY >= boxTopY - 0.2f && playerFeetY <= boxTopY + 1.0f) {
-				    playerPos.y = boxTopY; // 足元をブロック上に固定
-			    }
+			if (hitX) {
+				// 上から落ちてきた場合、足場に乗せる
+				if (playerFeetY >= boxTopY - 0.2f && playerFeetY <= boxTopY + 1.0f) {
+					playerPos.y = boxTopY; // 足元をブロック上に固定
+				}
 
-			    // 左右にめり込んでいたら押し戻す
-			    if (playerPos.x < boxLeftX)
-				    playerPos.x = boxLeftX - 0.5f;
-			    if (playerPos.x > boxRightX)
-				    playerPos.x = boxRightX + 0.5f;
-		    }
-	    }
-
-	    // 画面端制限（ステージ外に出さない）
-	    const float stageMinX = -20.0f;
-	    const float stageMaxX = 120.0f;
-	    if (playerPos.x < stageMinX)
-		    playerPos.x = stageMinX;
-	    if (playerPos.x > stageMaxX)
-		    playerPos.x = stageMaxX;
-
+				//// 左右にめり込んでいたら押し戻す
+				// if (playerPos.x < boxLeftX)
+				//  playerPos.x = boxLeftX - 0.5f;
+				// if (playerPos.x > boxRightX)
+				//  playerPos.x = boxRightX + 0.5f;
+			}
+		}
 
 #pragma endregion
 
-
 #pragma region プレイヤーとボックスの当たり判定
-	    // プレイヤーの移動速度（floatやVector2/3 などプロジェクトに合わせて定義済み想定）
-	    PlayerSpeed = player_->GetSpeed();
+		// プレイヤーの移動速度（floatやVector2/3 などプロジェクトに合わせて定義済み想定）
+		// playerSpeed = player_->GetSpeed();
 
-	    for (const std::unique_ptr<Box>& box : boxs_) {
-		    Vector3 boxPos = box->GetWorldPosition();
+		// for (const std::unique_ptr<Box>& box : boxs_) {
+		//  Vector3 boxPos = box->GetWorldPosition();
 
-		    // Box の境界
-		    float boxLeftX = boxPos.x - 0.5f;
-		    float boxRightX = boxPos.x + 0.5f;
-		    float boxTopY = boxPos.y + 0.5f;
-		    float boxBottomY = boxPos.y - 0.5f;
+		// // Box の境界
+		// float boxLeftX = boxPos.x - 0.5f;
+		// float boxRightX = boxPos.x;
+		// float boxTopY = boxPos.y;
+		// float boxBottomY = boxPos.y - 0.5f;
 
-		    // Player の境界
-		    float playerLeftX = playerPos.x - 0.25f;
-		    float playerRightX = playerPos.x + 0.25f;
-		    float playerTopY = playerPos.y + 0.25f;
-		    float playerBottomY = playerPos.y - 0.25f;
+		// // Player の境界
+		// float playerLeftX = playerPos.x - 0.25f;
+		// float playerRightX = playerPos.x;
+		// float playerTopY = playerPos.y;
+		// float playerBottomY = playerPos.y - 0.25f;
 
-		    // AABB判定
-		    bool isColliding = (playerRightX > boxLeftX) && (playerLeftX < boxRightX) &&
-		                       (playerTopY > boxBottomY) && (playerBottomY < boxTopY);
+		// // AABB判定
+		// bool isColliding = (playerRightX > boxLeftX) && (playerLeftX < boxRightX) &&
+		//                    (playerTopY > boxBottomY) && (playerBottomY < boxTopY);
 
-		    if (isColliding) {
-			    // 横スクロールなので X 方向のスピードだけ止める
-			    //player_->GetSpeed().y = 0.0f;
-			    PlayerSpeed.x = 0.0f;
-			    PlayerSpeed.y = 0.0f;
-			    // Y方向の速度はそのまま（ジャンプや重力用）
-			    //break; // 1つでも当たったら止めるなら break
-		    }
+		// if (isColliding) {
+		//  // 横スクロールなので X 方向のスピードだけ止める
+		//  //player_->GetSpeed().y = 0.0f;
+		//  playerSpeed.x = 0.0f;
+		//  playerSpeed.y = 0.0f;
+		//  // Y方向の速度はそのまま（ジャンプや重力用）
+		//  //break; // 1つでも当たったら止めるなら break
+		// }
 
-	    }
+		//}
 
-
-	    
 #pragma endregion
 
 #pragma region プレイヤーと鏡の当たり判定
 
-	for (const std::unique_ptr<Mirror>& mirror : mirrors_) {
+		for (const std::unique_ptr<Mirror>& mirror : mirrors_) {
 
-		mirrorBackZ_ = mirror->GetWorldPosition().z - 1.0f;
-		mirrorFlontZ_ = mirror->GetWorldPosition().z + 1.0f;
-		mirrorLeftX_ = mirror->GetWorldPosition().x - 1.0f;
-		mirrorRightX_ = mirror->GetWorldPosition().x + 1.0f;
-		mirrorDownY_ = mirror->GetWorldPosition().y - 0.5f;
-		mirrorUpY_ = mirror->GetWorldPosition().y + 1.5f;
+			mirrorBackZ_ = mirror->GetWorldPosition().z - 1.0f;
+			mirrorFlontZ_ = mirror->GetWorldPosition().z + 1.0f;
+			mirrorLeftX_ = mirror->GetWorldPosition().x - 1.0f;
+			mirrorRightX_ = mirror->GetWorldPosition().x + 1.0f;
+			mirrorDownY_ = mirror->GetWorldPosition().y - 0.5f;
+			mirrorUpY_ = mirror->GetWorldPosition().y + 1.5f;
 
-		if ((PlayerLeftX_ < mirrorRightX_ && PlayerRightX_ > mirrorLeftX_) &&
-		    (mirrorFlontZ_ > PlayerBackZ_ && mirrorBackZ_ < PlayerFlontZ_) &&
-		    (PlayerDownY_ < mirrorUpY_ && PlayerUpY_ > mirrorDownY_)) {
+			if ((PlayerLeftX_ < mirrorRightX_ && PlayerRightX_ > mirrorLeftX_) &&
+			    (mirrorFlontZ_ > PlayerBackZ_ && mirrorBackZ_ < PlayerFlontZ_) &&
+			    (PlayerDownY_ < mirrorUpY_ && PlayerUpY_ > mirrorDownY_)) {
 
-			if (input_->IsTriggerMouse(1) && !mirrorFlag) {
-				mirrorFlag = true;
-				onInversion = true;
-				followCamera_->SetInversion(onInversion);
-				timer_->SetTimerFlag(true);
-				mirrorCollider = true;
-				player_->SetMirror(mirrorCollider);
-				start = true;
-				player_->SetStart(start);
-				player_->SetTranslate(
-				    {player_->GetWorldPosition().x, player_->GetWorldPosition().y, 3});
-			} else if (input_->IsTriggerMouse(1) && mirrorFlag) {
-				mirrorFlag = false;
-				onInversion = false;
-				followCamera_->SetInversion(onInversion);
-				timer_->SetTimerFlag(false);
+				if (input_->IsTriggerMouse(1) && !mirrorFlag) {
+					mirrorFlag = true;
+					onInversion = true;
+					followCamera_->SetInversion(onInversion);
+					timer_->SetTimerFlag(true);
+					mirrorCollider = true;
+					player_->SetMirror(mirrorCollider);
+					start = true;
+					player_->SetStart(start);
+				    player_->SetTranslate({
+					    player_->GetWorldPosition().x,
+						player_->GetWorldPosition().y,
+				         player_->GetWorldPosition().z-50.0f
+				    });
+				} else if (input_->IsTriggerMouse(1) && mirrorFlag) {
+					mirrorFlag = false;
+					onInversion = false;
+					followCamera_->SetInversion(onInversion);
+					timer_->SetTimerFlag(false);
+					mirrorCollider = false;
+					player_->SetMirror(mirrorCollider);
+					player_->SetTranslate(
+					    {player_->GetWorldPosition().x, player_->GetWorldPosition().y,0});
+				}
+			}
+			if ((PlayerLeftX_ > mirrorRightX_ && PlayerRightX_ < mirrorLeftX_) &&
+			    (mirrorFlontZ_ < PlayerBackZ_ && mirrorBackZ_ > PlayerFlontZ_) &&
+			    (PlayerDownY_ > mirrorUpY_ && PlayerUpY_ < mirrorDownY_)) {
+
 				mirrorCollider = false;
 				player_->SetMirror(mirrorCollider);
-				player_->SetTranslate(
-				{player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
 			}
 		}
-		if ((PlayerLeftX_ > mirrorRightX_ && PlayerRightX_ < mirrorLeftX_) &&
-		    (mirrorFlontZ_ < PlayerBackZ_ && mirrorBackZ_ > PlayerFlontZ_) &&
-		    (PlayerDownY_ > mirrorUpY_ && PlayerUpY_ < mirrorDownY_)) {
-
-			mirrorCollider = false;
-			player_->SetMirror(mirrorCollider);
-		}
-	}
 
 #ifdef _DEBUG
-	if (input_->PushKey(DIK_LEFT)) {
-		onInversion = true;
-		followCamera_->SetInversion(onInversion);
-		timer_->SetTimerFlag(true);
-		player_->SetTranslate({player_->GetWorldPosition().x, player_->GetWorldPosition().y, 3});
-	} else if (input_->PushKey(DIK_RIGHT)) {
-		onInversion = false;
-		followCamera_->SetInversion(onInversion);
-		timer_->SetTimerFlag(false);
-		player_->SetTranslate({player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
-	}
+		if (input_->PushKey(DIK_LEFT)) {
+			onInversion = true;
+			followCamera_->SetInversion(onInversion);
+			timer_->SetTimerFlag(true);
+			player_->SetTranslate(
+			    {player_->GetWorldPosition().x, player_->GetWorldPosition().y, 3});
+		} else if (input_->PushKey(DIK_RIGHT)) {
+			onInversion = false;
+			followCamera_->SetInversion(onInversion);
+			timer_->SetTimerFlag(false);
+			player_->SetTranslate(
+			    {player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
+		}
 #endif
 #pragma endregion
 
 #pragma region プレイヤーと加速装置の当たり判定
-	// 加速装置
+		// 加速装置
 
-	for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-		SpeedBackZ_ = accelerator_->GetWorldPosition().z - 1.0f;
-		SpeedFlontZ_ = accelerator_->GetWorldPosition().z + 1.0f;
-		SpeedLeftX_ = accelerator_->GetWorldPosition().x - 5.0f;
-		SpeedRightX_ = accelerator_->GetWorldPosition().x + 5.0f;
+		for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+			SpeedBackZ_ = accelerator_->GetWorldPosition().z - 1.0f;
+			SpeedFlontZ_ = accelerator_->GetWorldPosition().z + 1.0f;
+			SpeedLeftX_ = accelerator_->GetWorldPosition().x - 1.0f;
+			SpeedRightX_ = accelerator_->GetWorldPosition().x + 1.0f;
 
-		if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
-		    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
+			if ((PlayerLeftX_ < SpeedRightX_ && PlayerRightX_ > SpeedLeftX_) &&
+			    (SpeedFlontZ_ > PlayerBackZ_ && SpeedBackZ_ < PlayerFlontZ_)) {
+
+				playerSpeed.x = 0.0f;
+			}
 		}
-	}
 
 #pragma endregion
 
 #pragma region プレイヤーとゴールの当たり判定
 
-	for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
-		goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
-		goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
-		goalLeftX_ = goalSkydome_->GetWorldPosition().x - 20.0f;
-		goalRightX_ = goalSkydome_->GetWorldPosition().x + 20.0f;
+		for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
+			goalBackZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
+			goalFlontZ_ = goalSkydome_->GetWorldPosition().z + 5.0f;
+			goalLeftX_ = goalSkydome_->GetWorldPosition().x - 20.0f;
+			goalRightX_ = goalSkydome_->GetWorldPosition().x + 20.0f;
 
-		if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
-		    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
+			if ((PlayerLeftX_ < goalRightX_ && PlayerRightX_ > goalLeftX_) &&
+			    (goalFlontZ_ > PlayerBackZ_ && goalBackZ_ < PlayerFlontZ_)) {
 
-			goalTimerFlag = true;
+				goalTimerFlag = true;
+			}
 		}
-	}
 #pragma endregion
 
 #pragma region CSV 更新処理, デスフラグ
 
-	// デスフラグの立った敵を削除
-	evilSpirits_.remove_if([](std::unique_ptr<EvilSpirit>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		// デスフラグの立った敵を削除
+		evilSpirits_.remove_if([](std::unique_ptr<EvilSpirit>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	// 悪霊のCSVファイルの更新処理
-	UpdateEvilSpiritPopCommands();
+		// 悪霊のCSVファイルの更新処理
+		UpdateEvilSpiritPopCommands();
 
-	// デスフラグの立った敵を削除
-	goodSpirits_.remove_if([](std::unique_ptr<GoodSpirit>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		// デスフラグの立った敵を削除
+		goodSpirits_.remove_if([](std::unique_ptr<GoodSpirit>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	// 良霊のCSVファイルの更新処理
-	UpdateGoodSpiritPopCommands();
+		// 良霊のCSVファイルの更新処理
+		UpdateGoodSpiritPopCommands();
 
-	// デスフラグの立った敵を削除
-	mirrors_.remove_if([](std::unique_ptr<Mirror>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		// デスフラグの立った敵を削除
+		mirrors_.remove_if([](std::unique_ptr<Mirror>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	// 鏡のCSVファイルの更新処理
-	UpdateMirrorPopCommands();
+		// 鏡のCSVファイルの更新処理
+		UpdateMirrorPopCommands();
 
-	// デスフラグの立った敵を削除
-	boxs_.remove_if([](std::unique_ptr<Box>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		// デスフラグの立った敵を削除
+		boxs_.remove_if([](std::unique_ptr<Box>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
 		InvisiBoxs_.remove_if([](std::unique_ptr<InvisibleBox>& item) {
-		    if (item->IsDead()) {
-			    item.release();
-			    return true;
-		    }
-		    return false;
-	    });
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
 		// ボックスのCSVファイルの更新処理
 		UpdateBoxPopCommands();
 
 		UpdateInvisibleBoxPopCommands();
-
 
 		// デスフラグの立った敵を削除
 		accelerators_.remove_if([](std::unique_ptr<Accelerator>& item) {
@@ -561,146 +615,146 @@ void SunnyStage::Update() {
 			}
 			return false;
 		});
-	// デスフラグの立った敵を削除
-	accelerators_.remove_if([](std::unique_ptr<Accelerator>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		// デスフラグの立った敵を削除
+		accelerators_.remove_if([](std::unique_ptr<Accelerator>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	// 加速装置のCSVファイルの更新処理
-	UpdateAcceleratorPopCommands();
+		// 加速装置のCSVファイルの更新処理
+		UpdateAcceleratorPopCommands();
 
-	// デスフラグの立った敵を削除
-	middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		// デスフラグの立った敵を削除
+		middleSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	// 装置のCSVファイルの更新処理
-	UpdateMiddleSkydomePopCommands();
+		// 装置のCSVファイルの更新処理
+		UpdateMiddleSkydomePopCommands();
 
-	startSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		startSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	UpdateStartSkydomePopCommands();
+		UpdateStartSkydomePopCommands();
 
-	goalSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		goalSkydomes_.remove_if([](std::unique_ptr<Skydome>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	UpdateGoalSkydomePopCommands();
+		UpdateGoalSkydomePopCommands();
 
-	trafficLight_.remove_if([](std::unique_ptr<TrafficLight>& item) {
-		if (item->IsDead()) {
-			item.release();
-			return true;
-		}
-		return false;
-	});
+		trafficLight_.remove_if([](std::unique_ptr<TrafficLight>& item) {
+			if (item->IsDead()) {
+				item.release();
+				return true;
+			}
+			return false;
+		});
 
-	UpdateGuardRailPopCommands();
+		UpdateGuardRailPopCommands();
 
 #pragma endregion
 
-	Time();
-	Goal();
+		Time();
+		Goal();
 
 #ifdef _DEBUG
 
-	if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
-		start = true;
+		if (input_->TriggerKey(DIK_LSHIFT) && start == false) {
+			start = true;
 
-		timer_->SetTimerFlag(true);
-	} else if (input_->TriggerKey(DIK_LSHIFT) && start == true) {
-		start = false;
-	}
+			timer_->SetTimerFlag(true);
+		} else if (input_->TriggerKey(DIK_LSHIFT) && start == true) {
+			start = false;
+		}
 
-	if (input_->TriggerKey(DIK_R)) {
-		timer_->SetTimerFlag(false);
-		timer_->SetTime(0, 30);
-		followCamera_->SetPos({0, 4, 0});
-	}
+		if (input_->TriggerKey(DIK_R)) {
+			timer_->SetTimerFlag(false);
+			timer_->SetTime(0, 30);
+			followCamera_->SetPos({0, 4, 0});
+		}
 
-	ImGui::Begin("stage");
-	ImGui::Text("SunnyStage");
-	ImGui::Checkbox("Game Start", &start);
-	ImGui::End();
+		ImGui::Begin("stage");
+		ImGui::Text("SunnyStage");
+		ImGui::Checkbox("Game Start", &start);
+		ImGui::End();
 
-	ImGui::Begin("Collision ");
-	ImGui::InputFloat("PlayerFlontZSize_", &FlontZHit_, 0.1f);
-	ImGui::InputFloat("PlayerBackZSize_", &BackZHit_, 0.1f);
-	ImGui::InputFloat("PlayerRightXSize_", &RightXHit_, 0.1f);
-	ImGui::InputFloat("PlayerLeftXSize_", &LeftXHit_, 0.1f);
-	ImGui::InputFloat("PlayerDownSize_", &DownHit_, 0.1f);
-	ImGui::InputFloat("PlayerUpSize_", &UpHit_, 0.1f);
-	ImGui::End();
+		ImGui::Begin("Collision ");
+		ImGui::InputFloat("PlayerFlontZSize_", &FlontZHit_, 0.1f);
+		ImGui::InputFloat("PlayerBackZSize_", &BackZHit_, 0.1f);
+		ImGui::InputFloat("PlayerRightXSize_", &RightXHit_, 0.1f);
+		ImGui::InputFloat("PlayerLeftXSize_", &LeftXHit_, 0.1f);
+		ImGui::InputFloat("PlayerDownSize_", &DownHit_, 0.1f);
+		ImGui::InputFloat("PlayerUpSize_", &UpHit_, 0.1f);
+		ImGui::End();
 
-	ImGui::Begin("Clear ");
-	ImGui::Checkbox("clearFlag", &goalTimerFlag);
-	ImGui::InputInt("clearTimer", &EnemyCount);
-	ImGui::End();
+		ImGui::Begin("Clear ");
+		ImGui::Checkbox("clearFlag", &goalTimerFlag);
+		ImGui::InputInt("clearTimer", &EnemyCount);
+		ImGui::End();
 
-	ImGui::Begin("start timer ");
-	ImGui::DragFloat("start timer pos x", &testPosTimer.x);
-	ImGui::DragFloat("start timer pos y", &testPosTimer.y);
-	ImGui::End();
+		ImGui::Begin("start timer ");
+		ImGui::DragFloat("start timer pos x", &testPosTimer.x);
+		ImGui::DragFloat("start timer pos y", &testPosTimer.y);
+		ImGui::End();
 
 #endif
-}
+	}
 
 #pragma region タイム
 
-void SunnyStage::DrawTime() {
+	void SunnyStage::DrawTime() 
+	{
 
-	// ライトの数
-	int eachMathNumber[2] = {};
-	int mathNumber = player_->GetLightCount();
-	int mathKeta = 10;
+		// ライトの数
+		int eachMathNumber[2] = {};
+		int mathNumber = player_->GetLightCount();
+		int mathKeta = 10;
 
-	for (int i = 0; i < 2; i++) {
-		eachMathNumber[i] = mathNumber / mathKeta;
-		mathNumber = mathNumber % mathKeta;
-		mathKeta = mathKeta / 10;
+		for (int i = 0; i < 2; i++) {
+			eachMathNumber[i] = mathNumber / mathKeta;
+			mathNumber = mathNumber % mathKeta;
+			mathKeta = mathKeta / 10;
+		}
+		// 秒数
+		int eachSecondNumber[2] = {};
+		int secondNumber = timer_->GetTimeSecond();
+		int secondKeta = 10;
+		for (int i = 0; i < 2; i++) {
+			eachSecondNumber[i] = secondNumber / secondKeta;
+			secondNumber = secondNumber % secondKeta;
+			secondKeta = secondKeta / 10;
+		}
+
+		for (int i = 0; i < 2; i++) {
+			// 残り時間描画
+			spriteSecondTime_[i]->SetSize({64, 128});
+			spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
+			spriteSecondTime_[i]->Draw();
+
+			// 数描画
+			spriteStartTime_[1]->SetSize({64, 128});
+			spriteStartTime_[1]->SetPosition(testPosTimer);
+			spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
+			spriteStartTime_[1]->Draw();
+		}
 	}
-	//秒数
-	int eachSecondNumber[2] = {};
-	int secondNumber = timer_->GetTimeSecond();
-	int secondKeta = 10;
-	for (int i = 0; i < 2; i++) {
-		eachSecondNumber[i] = secondNumber / secondKeta;
-		secondNumber = secondNumber % secondKeta;
-		secondKeta = secondKeta / 10;
-	}
-
-	for (int i = 0; i < 2; i++) {
-		// 残り時間描画
-		spriteSecondTime_[i]->SetSize({64, 128});
-		spriteSecondTime_[i]->SetTextureRect({32.0f * eachSecondNumber[i], 0}, {32, 64});
-		spriteSecondTime_[i]->Draw();
-
-		// 数描画
-		spriteStartTime_[1]->SetSize({64, 128});
-		spriteStartTime_[1]->SetPosition(testPosTimer);
-		spriteStartTime_[1]->SetTextureRect({32.0f * eachMathNumber[1], 0}, {32, 64});
-		spriteStartTime_[1]->Draw();
-	}
-}
-
 #pragma endregion
 
 void SunnyStage::Draw() { 
@@ -762,10 +816,11 @@ void SunnyStage::Draw() {
 	for (const std::unique_ptr<Mirror>& mirror_ : mirrors_) {
 		mirror_->Draw(viewProjection_);
 	}
-	//// 加速装置
-	// for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
-	//	accelerator_->Draw(viewProjection_);
-	// }
+
+	// 加速装置
+	 for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
+		accelerator_->Draw(viewProjection_);
+	 }
 	/*for (const std::unique_ptr<GuardRail>& guardRail_ : guardRails_) {
 	    guardRail_->Draw(viewProjection_);
 	}*/
@@ -1289,7 +1344,8 @@ void SunnyStage::MiddleSkydomeGenerate(Vector3 position) {
 
 #pragma region ゴール背景 CSV
 
-void SunnyStage::LoadGoalSkydomePopData() {
+void SunnyStage::LoadGoalSkydomePopData() 
+{
 
 	goalSkydomePopCommands.clear();
 	std::ifstream file;

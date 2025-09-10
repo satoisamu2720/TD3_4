@@ -33,23 +33,29 @@ void Player::Update() {
 
 	move_ = {0, 0, 0};
 
+	move_.y -= Gravity;
 	// キー入力で移動
 	if (input_->PushKey(DIK_A)) {
 		move_.x -= kCharacterSpeed;
 	} else if (input_->PushKey(DIK_D)) {
 		move_.x += kCharacterSpeed;
 	}
-	if (input_->PushKey(DIK_S)) {
+	/*if (input_->PushKey(DIK_S)) {
 		move_.y -= kCharacterSpeed;
 	} else if (input_->PushKey(DIK_W)) {
 		move_.y += kCharacterSpeed;
-	}
+	}*/
 	if (!mirror && gameStart) {
 		if (input_->IsTriggerMouse(0) && !lightFlag) {
 			lightFlag = true;
 			lightCount--;
 		}
 	}
+
+	/*if (input_->PushKey(DIK_SPACE))
+	{
+		move_.y =+ JumpSpeed;
+	}*/
 
 	if (lightFlag) {
 		lightTimer++;

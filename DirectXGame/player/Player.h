@@ -20,7 +20,7 @@ private:
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformLight_;
 
-	Vector3 position = {-4, 0, 0.0f};
+	Vector3 position = {-30.0f, -1.0f, 0.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 lightPosition_ = {2, 0, 0}; 
 	
@@ -63,6 +63,13 @@ public:
 
 	Vector3 GetSpeed() const { return move_; }
 
+	void SetPosition(const Vector3& pos) {
+		position = pos;                     // 内部データ
+		worldTransform_.translation_ = pos; // 描画座標も同期
+	}
+
+	void SetSpeed(const Vector3& speed) { move_ = speed; }
+
 
 	~Player();
 
@@ -79,6 +86,8 @@ private:
 	// キャラクターの移動速度
 	const float kCharacterSpeed = 0.2f;
 
+	const float Gravity = 0.5f;
+	const float JumpSpeed = 1.0f;
 	Input* input_ = nullptr;
 
 	const ViewProjection* viewProjection_ = nullptr;
