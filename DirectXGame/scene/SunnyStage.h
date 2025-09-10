@@ -23,6 +23,7 @@
 #include "stage/ground/Ground.h"
 #include "stage/guardRail/GuardRail.h"
 #include "stage/skydome/Skydome.h"
+#include "Wall.h"
 #include "timer.h"
 #include <cassert>
 #include <fstream>
@@ -169,9 +170,10 @@ private:
 	std::unique_ptr<Model> modelPlayerBody_;
 	std::unique_ptr<Model> modelPlayerLight_;
 	std::unique_ptr<Model> modelPlayerBack_;
+	//std::unique_ptr<Model> wallModel_;
 	std::list<Player*> players_;
 
-	// 障害物
+	//std::unique_ptr<Wall> wall_;
 
 	// 悪霊
 	std::list<std::unique_ptr<EvilSpirit>> evilSpirits_;
@@ -200,6 +202,9 @@ private:
 	std::stringstream boxPopCommands;
 	// モデル
 	Model* BoxModel_ = nullptr;
+
+	// モデル
+	Model* wallModel_ = nullptr;
 
 	// 加速装置
 	std::list<std::unique_ptr<Accelerator>> accelerators_;

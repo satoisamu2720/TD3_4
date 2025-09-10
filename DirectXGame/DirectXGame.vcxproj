@@ -136,6 +136,7 @@
     <ClCompile Include="stage\guardRail\GuardRail.cpp" />
     <ClCompile Include="stage\skydome\Skydome.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="Wall.cpp" />
     <ClCompile Include="WorldTransform.EX.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +195,7 @@
     <ClInclude Include="stage\guardRail\GuardRail.h" />
     <ClInclude Include="stage\skydome\Skydome.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\TerrainPS.hlsl">

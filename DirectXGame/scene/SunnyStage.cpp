@@ -36,6 +36,9 @@ void SunnyStage::Initialize() {
 	// プレイヤー初期化
 	player_ = std::make_unique<Player>();
 	player_->Initialize(playerModels);
+
+	
+
 #pragma endregion
 
 #pragma region 障害物
@@ -68,6 +71,10 @@ void SunnyStage::Initialize() {
 	mirrorModel_ = (Model::CreateFromOBJ("mirror", true));
 	// 鏡のCSVファイル読み込み
 	LoadMirrorPopData();
+
+	// 境界の壁モデル読み込み
+	wallModel_ = (Model::CreateFromOBJ("block_WB", true));
+
 
 #pragma endregion
 
@@ -109,6 +116,11 @@ void SunnyStage::Initialize() {
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
+	Wall* wall_ = new Wall;
+	wall_->Initialize(wallModel_, {130.0f, 0.0f, 20.0f});
+
+	wall_->GetWorldPosition();
+
 	// summerSound_ = Audio::GetInstance()->LoadWave("Sound/summer.mp3"); // 晴BGM
 
 	// Audio::GetInstance()->Audio::PlayWave(summerSound_, true, 0.5f);
@@ -145,7 +157,7 @@ void SunnyStage::Update() {
 	for (const std::unique_ptr<Mirror>& mirror_ : mirrors_) {
 		mirror_->Update();
 	}
-
+	
 	for (const std::unique_ptr<Box>& box_ : boxs_) {
 		box_->Update();
 	}
@@ -441,7 +453,7 @@ void SunnyStage::Update() {
 	});
 
 	// 良霊のCSVファイルの更新処理
-	UpdateGoodSpiritPopCommands();
+	UpdateGoodSpiritPopCommands();	
 
 	// デスフラグの立った敵を削除
 	mirrors_.remove_if([](std::unique_ptr<Mirror>& item) {
@@ -634,6 +646,8 @@ void SunnyStage::Draw() {
 	// 3Dオブジェクト描画後処理
 	player_->Draw(viewProjection_);
 
+	wallModel_->Draw(worldTransform_, viewProjection_);
+
 	/*for (const std::unique_ptr<Skydome>& startSkydome_ : startSkydomes_) {
 	    startSkydome_->Draw(viewProjection_);
 	}
@@ -654,6 +668,7 @@ void SunnyStage::Draw() {
 	for (const std::unique_ptr<Mirror>& mirror_ : mirrors_) {
 		mirror_->Draw(viewProjection_);
 	}
+
 	//// 加速装置
 	// for (const std::unique_ptr<Accelerator>& accelerator_ : accelerators_) {
 	//	accelerator_->Draw(viewProjection_);
