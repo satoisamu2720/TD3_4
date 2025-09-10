@@ -471,8 +471,11 @@ void SunnyStage::Update() {
 					player_->SetMirror(mirrorCollider);
 					start = true;
 					player_->SetStart(start);
-					player_->SetTranslate(
-					    {player_->GetWorldPosition().x, player_->GetWorldPosition().y, 3});
+				    player_->SetTranslate({
+					    player_->GetWorldPosition().x,
+						player_->GetWorldPosition().y,
+				         player_->GetWorldPosition().z-50.0f
+				    });
 				} else if (input_->IsTriggerMouse(1) && mirrorFlag) {
 					mirrorFlag = false;
 					onInversion = false;
@@ -481,7 +484,7 @@ void SunnyStage::Update() {
 					mirrorCollider = false;
 					player_->SetMirror(mirrorCollider);
 					player_->SetTranslate(
-					    {player_->GetWorldPosition().x, player_->GetWorldPosition().y, 0});
+					    {player_->GetWorldPosition().x, player_->GetWorldPosition().y,0});
 				}
 			}
 			if ((PlayerLeftX_ > mirrorRightX_ && PlayerRightX_ < mirrorLeftX_) &&

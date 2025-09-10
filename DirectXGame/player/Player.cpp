@@ -50,10 +50,10 @@ void Player::Update() {
 		}
 	}
 
-	if (input_->PushKey(DIK_SPACE))
+	/*if (input_->PushKey(DIK_SPACE))
 	{
-		move_.y = kCharacterSpeed; 
-	}
+		move_.y =+ JumpSpeed;
+	}*/
 
 	if (lightFlag) {
 		lightTimer++;

@@ -20,7 +20,7 @@ private:
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformLight_;
 
-	Vector3 position = {-4, 0, 0.0f};
+	Vector3 position = {-30.0f, -1.0f, 0.0f};
 	Vector3 bodyPosition = {0, 0, 0};
 	Vector3 lightPosition_ = {2, 0, 0}; 
 	
@@ -86,7 +86,8 @@ private:
 	// キャラクターの移動速度
 	const float kCharacterSpeed = 0.2f;
 
-	const float Gravity = 0.05f;
+	const float Gravity = 0.5f;
+	const float JumpSpeed = 1.0f;
 	Input* input_ = nullptr;
 
 	const ViewProjection* viewProjection_ = nullptr;
