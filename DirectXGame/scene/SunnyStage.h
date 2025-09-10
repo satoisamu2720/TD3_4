@@ -224,9 +224,6 @@ private:
 	Model* BlockModel_ = nullptr;
 	
 
-	// モデル
-	Model* wallModel_ = nullptr;
-
 	// 加速装置
 	std::list<std::unique_ptr<Accelerator>> accelerators_;
 	// 加速装置の発生コマンド
@@ -251,6 +248,8 @@ private:
 	std::unique_ptr<FollowCamera> followCamera_;
 
 	std::unique_ptr<Skydome> skydome_;
+	std::unique_ptr<Wall>wall_;
+	Model* wallModel_ = nullptr;
 
 
 

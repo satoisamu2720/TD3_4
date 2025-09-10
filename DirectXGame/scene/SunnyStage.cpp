@@ -76,8 +76,8 @@ void SunnyStage::Initialize() {
 	// 鏡のCSVファイル読み込み
 	LoadMirrorPopData();
 
-	// 境界の壁モデル読み込み
-	wallModel_ = (Model::CreateFromOBJ("block_WB", true));
+	//// 境界の壁モデル読み込み
+	//wallModel_ = (Model::CreateFromOBJ("block_WB", true));
 
 
 #pragma endregion
@@ -120,7 +120,10 @@ void SunnyStage::Initialize() {
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
-	Wall* wall_ = new Wall;
+	wall_ = std::make_unique<Wall>();
+	// ステージ地面モデル読み込み
+	wallModel_ = Model::CreateFromOBJ("block_WB", true);
+
 	wall_->Initialize(wallModel_, {130.0f, 0.0f, 20.0f});
 
 	wall_->GetWorldPosition();
@@ -156,6 +159,7 @@ void SunnyStage::Update() {
 	if (start) {
 		timer_->Update();
 	}
+	wall_->Update();
 #pragma region CSV更新処理
 	// 悪霊
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
@@ -497,7 +501,7 @@ void SunnyStage::Update() {
 				    player_->SetTranslate({
 					    player_->GetWorldPosition().x,
 						player_->GetWorldPosition().y,
-				         player_->GetWorldPosition().z-50.0f
+				         player_->GetWorldPosition().z +3.0f
 				    });
 				} else if (input_->IsTriggerMouse(1) && mirrorFlag) {
 					mirrorFlag = false;
@@ -819,6 +823,7 @@ void SunnyStage::Draw() {
 	//}
 	skydome_->Draw(viewProjection_);
 
+	wall_->Draw(viewProjection_);
 
 	for (const std::unique_ptr<Box>& box : boxs_) {
 		box->Draw(viewProjection_);
