@@ -61,7 +61,7 @@ void SunnyStage::Initialize() {
 
 #pragma endregion
 
-#pragma region オブジェクト
+#pragma region オブジェクトd
 
 	// 　悪霊モデル読み込み
 	evilSpiritModel_ = (Model::CreateFromOBJ("enemy", true));
@@ -126,7 +126,7 @@ void SunnyStage::Initialize() {
 	// ステージ地面モデル読み込み
 	wallModel_ = Model::CreateFromOBJ("block_G", true);
 
-	wall_->Initialize(wallModel_, {130.0f, 0.0f, 20.0f});
+	wall_->Initialize(wallModel_, {130.0f, 0.0f, 40.0f});
 
 	wall_->GetWorldPosition();
 
@@ -164,9 +164,9 @@ void SunnyStage::Update() {
 	wall_->Update();
 #pragma region CSV更新処理
 	// 悪霊
-	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
+	/*for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
 		evilSpirit_->Update();
-	} // 良霊
+	}*/ // 良霊
 	for (const std::unique_ptr<GoodSpirit>& goodSpirit_ : goodSpirits_) {
 		goodSpirit_->Update();
 	}
@@ -1517,7 +1517,7 @@ void SunnyStage::Reset() {
 
 void SunnyStage::Goal() {
 
-	if (EnemyCount > 5)
+	if (EnemyCount > 9)
 	{
 		EnemyCount = 0;
 		player_->SetLightCount(0);
