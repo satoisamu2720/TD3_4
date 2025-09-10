@@ -89,10 +89,10 @@ void SunnyStage::Initialize() {
 	LoadGoalSkydomePopData();
 
 	// ステージ地面モデル読み込み
-	modelGround_ = Model::CreateFromOBJ("ground", true);
+	modelSkydome_ = Model::CreateFromOBJ("Sky", true);
 	// 地面モデル初期化
-	ground_ = std::make_unique<Ground>();
-	ground_->Initialize(modelGround_, {0.0f, -6.0f, 0.0f});
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize(modelSkydome_, {0.0f, -6.0f, 0.0f});
 
 	// ガードレール
 
@@ -141,7 +141,9 @@ void SunnyStage::Update() {
 	Vector3 playerPos = player_->GetTranslate();
 	Vector3 playerSpeed = player_->GetSpeed();
 
-	timer_->Update();
+	if (start) {
+		timer_->Update();
+	}
 #pragma region CSV更新処理
 	// 悪霊
 	for (const std::unique_ptr<EvilSpirit>& evilSpirit_ : evilSpirits_) {
@@ -186,7 +188,7 @@ void SunnyStage::Update() {
 		guardRail_->Update();
 	}
 #pragma endregion
-	// ground_->Update();
+	skydome_->Update();
 
 	if (timer_->GetStartTime() == 3) {
 	}
@@ -794,7 +796,7 @@ void SunnyStage::Draw() {
 	//for (const std::unique_ptr<Skydome>& goalSkydome_ : goalSkydomes_) {
 	//	goalSkydome_->Draw(viewProjection_);
 	//}
-	////ground_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
 
 
 	for (const std::unique_ptr<Box>& box : boxs_) {
@@ -1490,10 +1492,13 @@ void SunnyStage::Goal() {
 	if (EnemyCount > 5)
 	{
 		EnemyCount = 0;
+		player_->SetLightCount(0);
 		mirrors_.clear();
 		sceneNo = CLEAR;
+
 	}
-	else if (timer_->GetTimeSecond() < 0 || player_->GetLightCount() <= 0 && start) {
+
+	if (timer_->GetTimeSecond() <= 0 ) {
 		boxs_.clear();
 		evilSpirits_.clear();
 		mirrors_.clear();
@@ -1511,7 +1516,32 @@ void SunnyStage::Goal() {
 
 		// Audio::GetInstance()->Audio::StopWave(summerSound_);
 		// Audio::GetInstance()->Audio::StopWave(CarSound_);
+		player_->SetLightCount(0);
+		timer_->SetTime(0, 30);
+		timer_->SetTimerFlag(false);
+		followCamera_->SetPos({0, 4, 0});
 
+		sceneNo = END;
+	}
+	if (player_->GetLightCount() <= 0 && start) {
+		boxs_.clear();
+		evilSpirits_.clear();
+		mirrors_.clear();
+		goodSpirits_.clear();
+		accelerators_.clear();
+		startSkydomes_.clear();
+		middleSkydomes_.clear();
+		goalSkydomes_.clear();
+		trafficLight_.clear();
+		goalTimer = 0;
+		goalTimerFlag = false;
+		start = false;
+		EnemyCount = 0;
+		// mirrorFlag = false;
+
+		// Audio::GetInstance()->Audio::StopWave(summerSound_);
+		// Audio::GetInstance()->Audio::StopWave(CarSound_);
+		player_->SetLightCount(0);
 		timer_->SetTime(0, 30);
 		timer_->SetTimerFlag(false);
 		followCamera_->SetPos({0, 4, 0});

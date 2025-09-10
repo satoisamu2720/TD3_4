@@ -245,6 +245,10 @@ private:
 	std::unique_ptr<RailCamera> railCamera_;
 	std::unique_ptr<FollowCamera> followCamera_;
 
+	std::unique_ptr<Skydome> skydome_;
+
+
+
 	// スタートステージ
 	std::list<std::unique_ptr<Skydome>> startSkydomes_;
 	// ステージの発生コマンド
